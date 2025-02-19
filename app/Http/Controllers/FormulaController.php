@@ -6,7 +6,7 @@ use App\Models\Bundle;
 use App\Models\Color;
 use App\Models\Item;
 use App\Models\Renewal;
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ class FormulaController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $userFormulaJpa = UserFormulas::find($request->formula);
+        $userFormulaJpa = UserFormula::find($request->formula);
         if (!$userFormulaJpa) return redirect()->route('Test.jsx');
 
         $itemsJpa = Item::with('colors')

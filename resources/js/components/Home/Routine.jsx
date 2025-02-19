@@ -36,7 +36,7 @@ const Routine = ({ items }) => {
     >
       {
         items.map((item, index) => <SwiperSlide>
-          <a href="/test">
+          <a key={index} href="/test">
             <article className="bg-[#FBF5F1] rounded-lg" data-aos="fade-up">
               <img src={`/api/items/media/${item.image}`} className="aspect-[3/4] object-cover object-center bg-[#d0cddc] rounded-t-xl w-full border border-[#fbf5f1]" onError={(e) => e.target.src = "/assets/img/routine/conditioner.png"} alt="Shampoo" />
               <div className="p-2">

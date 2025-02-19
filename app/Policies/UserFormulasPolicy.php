@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Auth\Access\Response;
 
-class UserFormulasPolicy
+class UserFormulaPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class UserFormulasPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, UserFormulas $userFormulas): bool
+    public function view(User $user, UserFormula $userFormulas): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class UserFormulasPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, UserFormulas $userFormulas): bool
+    public function update(User $user, UserFormula $userFormulas): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class UserFormulasPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, UserFormulas $userFormulas): bool
+    public function delete(User $user, UserFormula $userFormulas): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class UserFormulasPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, UserFormulas $userFormulas): bool
+    public function restore(User $user, UserFormula $userFormulas): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class UserFormulasPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, UserFormulas $userFormulas): bool
+    public function forceDelete(User $user, UserFormula $userFormulas): bool
     {
         //
     }

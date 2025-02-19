@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Formula;
 use App\Models\Fragrance;
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +26,7 @@ class TestController extends BasicController
 
         $userFormulasCount = 0;
         if (Auth::check() && Auth::user()->hasRole('Customer')) {
-            $userFormulasCount = UserFormulas::where('user_id', Auth::user()->id)
+            $userFormulasCount = UserFormula::where('user_id', Auth::user()->id)
             ->orWhere('email', Auth::user()->email)
             ->count();
         }

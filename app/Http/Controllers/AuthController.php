@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Services\ReCaptchaService;
 use App\Models\User;
 use App\Models\PreUser;
+use App\Models\Subscription;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\RedirectResponse;
@@ -43,7 +44,6 @@ class AuthController extends Controller
     if ($confirmation) {
       $userJpa = new User();
       try {
-        //code...
         $preUserJpa = PreUser::select()
           ->where('confirmation_token', $confirmation)
           ->first();
@@ -63,6 +63,11 @@ class AuthController extends Controller
           'notify_me' => $preUserJpa->notify_me,
           'status' => true
         ])->assignRole($roleJpa->name);
+
+        try {
+          Subscription::updateOrCreate(['description' => $userJpa->email], ['is_user' => true]);
+        } catch (\Throwable $th) {
+        }
 
         $message = 'La confirmacion se ha realizado con exito';
 

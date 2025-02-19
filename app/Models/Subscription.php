@@ -16,6 +16,9 @@ class Subscription extends Model
     protected $fillable = [
         'name',
         'description',
-        'status'
+        'is_user',
+        'created_formula',
+        'made_order',
+        'status',
     ];
 }

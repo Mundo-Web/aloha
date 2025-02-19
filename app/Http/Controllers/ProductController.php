@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Http\Request;
 
 class ProductController extends BasicController
@@ -12,7 +12,7 @@ class ProductController extends BasicController
 
     function setReactViewProperties(Request $request)
     {
-        $userFormulaJpa = UserFormulas::find($request->formula);
+        $userFormulaJpa = UserFormula::find($request->formula);
 
         if (!$userFormulaJpa) return redirect()->route('Home.jsx');
 

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -13,11 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use Notifiable;
-    use HasRoles;
-    use HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasPermissions, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -84,7 +78,8 @@ class User extends Authenticatable
         return $this->getRoleNames()[0];
     }
 
-    public function sales() {
+    public function sales()
+    {
         return $this->hasMany(Sale::class, 'email', 'email');
     }
 }

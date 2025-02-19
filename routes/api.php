@@ -31,7 +31,7 @@ use App\Http\Controllers\Admin\SupplyController as AdminSupplyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 // Customer
-use App\Http\Controllers\Customer\UserFormulasController as CustomerUserFormulasController;
+use App\Http\Controllers\Customer\UserFormulaController as CustomerUserFormulaController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\SaleController as CustomerSaleController;
 
@@ -49,7 +49,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SupplyController;
-use App\Http\Controllers\UserFormulasController;
+use App\Http\Controllers\UserFormulaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +84,7 @@ Route::post('/subscriptions', [SubscriptionController::class, 'save']);
 Route::get('/cover/{uuid}', [CoverController::class, 'full']);
 Route::get('/cover/thumbnail/{uuid}', [CoverController::class, 'thumbnail']);
 
-Route::post('/user-formulas', [UserFormulasController::class, 'save']);
+Route::post('/user-formulas', [UserFormulaController::class, 'save']);
 
 Route::post('/coupons', [CouponController::class, 'save']);
 Route::post('/coupons/is-first', [CouponController::class, 'isFirst']);
@@ -257,7 +257,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/sales/paginate', [CustomerSaleController::class, 'paginate']);
         Route::delete('/sales/{id}', [CustomerSaleController::class, 'delete']);
 
-        Route::post('/user-formulas', [CustomerUserFormulasController::class, 'save']);
+        Route::post('/user-formulas', [CustomerUserFormulaController::class, 'save']);
         Route::patch('/profile', [CustomerProfileController::class, 'save']);
     });
 });

@@ -7,6 +7,7 @@ use App\Jobs\SendSaleWhatsApp;
 use App\Models\CulqiCharge;
 use App\Models\CulqiSubscription;
 use App\Models\Sale;
+use App\Models\Subscription;
 use App\Models\User;
 use Culqi\Culqi;
 use Error;
@@ -109,6 +110,11 @@ class CulqiController extends Controller
         $this->createCharge($request->token, $sale);
         $sale->status_id = '312f9a91-d3f2-4672-a6bf-678967616cac';
         $sale->save();
+
+        try {
+          Subscription::updateOrCreate(['description' => $sale->email], ['made_order' => true]);
+        } catch (\Throwable $th) {
+        }
 
         SendSaleWhatsApp::dispatchAfterResponse($sale);
         SendSaleEmail::dispatchAfterResponse($sale);
@@ -341,6 +347,11 @@ class CulqiController extends Controller
       $sale->update(['status_id' => '312f9a91-d3f2-4672-a6bf-678967616cac']);
       $culqiSubscription->update(['already_paid' => true]);
 
+      try {
+        Subscription::updateOrCreate(['description' => $sale->email], ['made_order' => true]);
+      } catch (\Throwable $th) {
+      }
+
       SendSaleWhatsApp::dispatchAfterResponse($sale);
       SendSaleEmail::dispatchAfterResponse($sale);
     } else {
@@ -371,6 +382,14 @@ class CulqiController extends Controller
       $sale->details->each(function ($detail) use ($newSale) {
         $newSale->details()->create($detail->toArray());
       });
+
+      try {
+        Subscription::updateOrCreate(['description' => $newSale->email], ['made_order' => true]);
+      } catch (\Throwable $th) {
+      }
+
+      SendSaleWhatsApp::dispatchAfterResponse($newSale);
+      SendSaleEmail::dispatchAfterResponse($newSale);
     }
   }
 
@@ -400,6 +419,11 @@ class CulqiController extends Controller
     $sale = Sale::where('code', $code)->first();
     $sale->status_id = '312f9a91-d3f2-4672-a6bf-678967616cac';
     $sale->save();
+
+    try {
+      Subscription::updateOrCreate(['description' => $sale->email], ['made_order' => true]);
+    } catch (\Throwable $th) {
+    }
 
     SendSaleWhatsApp::dispatchAfterResponse($sale);
     SendSaleEmail::dispatchAfterResponse($sale);

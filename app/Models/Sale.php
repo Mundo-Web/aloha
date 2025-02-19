@@ -47,7 +47,7 @@ class Sale extends Model
 
     public function formula(): BelongsTo
     {
-        return $this->belongsTo(UserFormulas::class, 'user_formula_id', 'id');
+        return $this->belongsTo(UserFormula::class, 'user_formula_id', 'id');
     }
 
     public function status(): BelongsTo

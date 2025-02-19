@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserFormulas;
-use App\Http\Requests\StoreUserFormulasRequest;
-use App\Http\Requests\UpdateUserFormulasRequest;
+use App\Models\UserFormula;
 use App\Models\Formula;
 use App\Models\FormulaHasSupply;
 use App\Models\Subscription;
@@ -14,9 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SoDe\Extend\Text;
 
-class UserFormulasController extends BasicController
+class UserFormulaController extends BasicController
 {
-    public $model = UserFormulas::class;
+    public $model = UserFormula::class;
 
     public function beforeSave(Request $request)
     {
@@ -31,7 +29,7 @@ class UserFormulasController extends BasicController
         $body = $request->all();
         $body['fragrance_id'] = $body['fragrance'];
 
-        $jpa = UserFormulas::select()
+        $jpa = UserFormula::select()
             ->where('has_treatment', $body['has_treatment'])
             ->where('scalp_type', $body['scalp_type'])
             ->where('hair_type', $body['hair_type'])
@@ -63,7 +61,7 @@ class UserFormulasController extends BasicController
         }
         if ($isNew) {
             try {
-                $userFormulaJpa = UserFormulas::with([
+                $userFormulaJpa = UserFormula::with([
                     'hasTreatment',
                     'scalpType',
                     'hairType',

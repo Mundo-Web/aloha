@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Formula;
 use App\Models\Gift;
 use App\Models\Sale;
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ class MyAccountController extends BasicController
     public function setReactViewProperties(Request $request)
     {
         $user = Auth::user();
-        $formulasJpa = UserFormulas::with([
+        $formulasJpa = UserFormula::with([
             'hasTreatment',
             'scalpType',
             'hairType',

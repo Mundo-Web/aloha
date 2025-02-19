@@ -11,8 +11,6 @@ import Logout from './Actions/Logout';
 
 const MyAccount = ({ session, formulas, gifts }) => {
 
-  console.log(gifts)
-
   const [activeComponent, setActiveComponent] = useState('formulas');
 
   const renderComponent = () => {

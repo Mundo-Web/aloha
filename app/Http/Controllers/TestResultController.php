@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Formula;
 use App\Models\FormulaHasSupply;
 use App\Models\Supply;
-use App\Models\UserFormulas;
+use App\Models\UserFormula;
 use Illuminate\Http\Request;
 
 class TestResultController extends BasicController
@@ -15,7 +15,7 @@ class TestResultController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $userFormulaJpa = UserFormulas::with(['hasTreatment', 'scalpType', 'hairType'])->find($request->formula);
+        $userFormulaJpa = UserFormula::with(['hasTreatment', 'scalpType', 'hairType'])->find($request->formula);
 
         $hairGoalsJpa = Formula::whereIn('id', $userFormulaJpa->hair_goals)->get();
 

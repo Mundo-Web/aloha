@@ -1,18 +1,18 @@
+import BaseAdminto from '@Adminto/Base';
+import Tippy from '@tippyjs/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import BaseAdminto from '@Adminto/Base';
-import CreateReactScript from '../Utils/CreateReactScript';
+import { renderToString } from 'react-dom/server';
+import Swal from 'sweetalert2';
+import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
+import SalesRest from '../Actions/Admin/SalesRest';
+import Modal from '../Components/Modal';
 import Table from '../Components/Table';
 import DxButton from '../Components/dx/DxButton';
-import ReactAppend from '../Utils/ReactAppend';
-import Swal from 'sweetalert2';
-import SalesRest from '../Actions/Admin/SalesRest';
+import CreateReactScript from '../Utils/CreateReactScript';
 import Global from '../Utils/Global';
 import Number2Currency from '../Utils/Number2Currency';
-import Modal from '../Components/Modal';
-import Tippy from '@tippyjs/react';
-import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
-import { renderToString } from 'react-dom/server';
+import ReactAppend from '../Utils/ReactAppend';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
@@ -25,9 +25,25 @@ const Sales = ({ statuses }) => {
   const [saleStatuses, setSaleStatuses] = useState([]);
 
   const onStatusChange = async (e) => {
+    const status_id = e.target.value
+    const option = $(e.target).find(`option[value="${status_id}"]`)
+    const confirm = option.data('confirm')
+
+    if (confirm) {
+      const { isConfirmed } = await Swal.fire({
+        title: 'Actualizar estado',
+        text: `¿Estás seguro de actualizar la venta al estado "${option.text()}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, actualizar',
+        cancelButtonText: 'Cancelar'
+      })
+      if (!isConfirmed) return
+    }
+
     const result = await salesRest.save({
       id: saleLoaded.id,
-      status_id: e.target.value
+      status_id
     })
     if (!result) return
     setSaleLoaded(result.data)
@@ -393,7 +409,7 @@ const Sales = ({ statuses }) => {
                 <select className="form-select" id="statusSelect" value={saleLoaded?.status_id} onChange={onStatusChange} disabled={!saleLoaded?.status?.reversible}>
                   {
                     statuses.map((status, index) => {
-                      return <option key={index} value={status.id}>{status.name}</option>
+                      return <option key={index} value={status.id} data-confirm={!!status.confirm}>{status.name}</option>
                     })
                   }
                 </select>
@@ -411,7 +427,7 @@ const Sales = ({ statuses }) => {
             }}>
               {
                 saleStatuses?.map((ss, index) => {
-                  return <article key={index} class="border py-1 px-2 ms-3" style={{
+                  return <article key={index} className="border py-1 px-2 ms-3" style={{
                     position: 'relative',
                     borderRadius: '16px 4px 4px 16px',
                     backgroundColor: ss.status.color ? `${ss.status.color}2e` : '#3333332e',

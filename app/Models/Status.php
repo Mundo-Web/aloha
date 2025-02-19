@@ -16,6 +16,8 @@ class Status extends Model
     protected $fillable = [
         'name',
         'description',
+        'is_ok',
+        'confirm',
         'color',
         'reversible',
         'visible',
