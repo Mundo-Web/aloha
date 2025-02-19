@@ -27,6 +27,7 @@ class HomeController extends BasicController
             ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
             ->join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
             ->whereIn('user_formulas.id', Sale::select('user_formula_id'))
             ->groupBy('user_formulas.has_treatment', 'user_formulas.scalp_type', 'user_formulas.hair_type')
             ->orderBy('count', 'DESC')
