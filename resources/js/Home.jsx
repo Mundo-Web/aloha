@@ -14,9 +14,6 @@ import CallToAction from './Components/Home/CallToAction';
 import Popups from './Components/Home/Popups';
 
 const Home = ({ sliders, items, supplies, testimonies, popups }) => {
-
-  const tipoSlider = 'vua';
-
   return (<>
     <Banner sliders={sliders} />
     <hr className='h-4 bg-transparent border-none' />

@@ -37,6 +37,7 @@ class HomeController extends BasicController
         // Obtener el total de ventas con is_ok en true
         $totalSales = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
             ->count();
 
         // Obtener el total de ventas con is_ok en true agrupadas por día para los últimos 30 días
@@ -71,9 +72,9 @@ class HomeController extends BasicController
             'newClients' => $newClients,
             'topFormulas' => $topFormulas,
             'totalSales' => $totalSales,
-            'totalSalesLast30Days' => $totalSalesLast30Days,
-            'totalSalesLast12Months' => $totalSalesLast12Months,
-            'totalSalesLast10Years' => $totalSalesLast10Years,
+            'totalSalesLast30Days' => array_reverse($totalSalesLast30Days->toArray()),
+            'totalSalesLast12Months' => array_reverse($totalSalesLast12Months->toArray()),
+            'totalSalesLast10Years' => array_reverse($totalSalesLast10Years->toArray()),
         ];
     }
 }

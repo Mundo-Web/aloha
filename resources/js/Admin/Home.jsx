@@ -20,16 +20,17 @@ const Home = ({
 
   const data = {
     labels: timeFrame === 'days' ? totalSalesLast30Days.map(item => moment(item.date).format('DD MMM')) :
-      timeFrame === 'months' ? ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'] :
-        Array.from({ length: 10 }, (_, i) => `${i + 2013}`),
+      timeFrame === 'months' ? totalSalesLast12Months.map(item => {
+        const date = new Date(item.year, item.month - 1);
+        return moment(date).format('MMM YYYY');
+      }) :
+        totalSalesLast10Years.map(item => item.year.toString()),
     datasets: [
       {
         label: 'Ventas',
-        data: timeFrame === 'days'
-          ? Array.from({ length: 30 }, () => Math.floor(Math.random() * 100))
-          : timeFrame === 'months'
-            ? Array.from({ length: 12 }, () => Math.floor(Math.random() * 500))
-            : Array.from({ length: 10 }, () => Math.floor(Math.random() * 1000)),
+        data: timeFrame === 'days' ? totalSalesLast30Days.map(item => item.count) :
+          timeFrame === 'months' ? totalSalesLast12Months.map(item => item.count) :
+            totalSalesLast10Years.map(item => item.count),
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
       },
     ],
@@ -45,7 +46,7 @@ const Home = ({
     <>
       <div className="row">
         {
-          newClients.reverse().map((item, index) => {
+          newClients.map((item, index) => {
             const date = new Date();
             date.setMonth(item.month - 1)
             date.setYear(item.year)
@@ -98,30 +99,32 @@ const Home = ({
       <div className="row">
         <div className="col-xl-4">
           <div className="card">
+            <div className="card-header">
+              <h4 className="header-title mb-0">Top 5 formulas mas vendidas</h4>
+              <small className='text-muted'>Últimos 30 días</small>
+            </div>
             <div className="card-body">
-              <h4 className="header-title mb-3">Top 5 formulas mas vendidas</h4>
               <div className="inbox-widget">
-
                 {
                   topFormulas.map((formula, index) => {
                     const percent = formula.count / totalSales * 100
                     return <div key={index} className="inbox-item d-flex justify-content-between align-items-center">
-                      <div>
-                        <h5 className="inbox-item-author mt-0 mb-1">
-                          #{index + 1} puesto
-                          {
-                            index == 0 && <i className='mdi mdi-crown ms-1 text-warning'></i>
-                          }
+                      <div className='d-flex gap-2 justify-content-center'>
+                        <h5 className="inbox-item-author mt-0 mb-1 text-center" style={{ width: '40px' }}>
+                          <span className={index > 2 ? 'fw-light' : ''}>#{index + 1}</span>
+                          {index == 0 && <i className='mdi mdi-crown ms-1 text-warning'></i>}
                         </h5>
-                        <div className="inbox-item-text">
-                          <div>
-                            <b>Tratamiento</b>: {formula.has_treatment.description.toTitleCase()}
-                          </div>
-                          <div>
-                            <b>Cuero cabelludo</b>: {formula.scalp_type.description.toTitleCase()}
-                          </div>
-                          <div>
-                            <b>Tipo de cabello</b>: {formula.hair_type.description.toTitleCase()}
+                        <div>
+                          <div className="inbox-item-text">
+                            <div>
+                              <b>Tratamiento</b>: {formula.has_treatment.description.toTitleCase()}
+                            </div>
+                            <div>
+                              <b>Cuero cabelludo</b>: {formula.scalp_type.description.toTitleCase()}
+                            </div>
+                            <div>
+                              <b>Tipo de cabello</b>: {formula.hair_type.description.toTitleCase()}
+                            </div>
                           </div>
                         </div>
                       </div>
