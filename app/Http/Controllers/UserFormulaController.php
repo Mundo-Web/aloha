@@ -47,6 +47,8 @@ class UserFormulaController extends BasicController
             $body['user_id'] = $userJpa->id;
         }
 
+        $body['created_formula'] = true;
+
         return $body;
     }
     public function afterSave(Request $request, object $jpa, bool $isNew)
