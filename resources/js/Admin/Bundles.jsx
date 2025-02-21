@@ -31,6 +31,9 @@ const Bundles = ({ }) => {
   const itemsQuantityRef = useRef()
   const comparatorRef = useRef()
 
+  const howMuchCosts = useRef()
+  const howMuchPays = useRef()
+
   const [isEditing, setIsEditing] = useState(false)
 
   const onModalOpen = (data) => {
@@ -42,6 +45,7 @@ const Bundles = ({ }) => {
     descriptionRef.current.value = data?.description ?? ''
     SetSelectValue(itemsRef.current, data?.items, 'id', 'name')
     percentageRef.current.value = (data?.percentage ?? 0) * 100
+    percentageRef.current.default = (data?.percentage ?? 0) * 100
     itemsQuantityRef.current.value = data?.items_quantity ?? ''
     $(comparatorRef.current).val(data?.comparator ?? '=').trigger('change')
 
@@ -81,6 +85,19 @@ const Bundles = ({ }) => {
     const result = await bundlesRest.delete(id)
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
+  }
+
+  const calculatePercent = () => {
+    const howMuchCostsValue = parseFloat(howMuchCosts.current.value) || 0
+    const howMuchPaysValue = parseFloat(howMuchPays.current.value) || 0
+
+    if (!howMuchCostsValue && !howMuchPaysValue) {
+      percentageRef.current.value = percentageRef.current.default
+      return
+    }
+
+    const percentage = howMuchCostsValue > 0 ? howMuchPaysValue / howMuchCostsValue : 0
+    percentageRef.current.value = (100 - (percentage * 100)).toFixed(2)
   }
 
   return (<>
@@ -138,7 +155,7 @@ const Bundles = ({ }) => {
         {
           dataField: 'items_quantity',
           caption: 'Items',
-          cellTemplate: (container, {data}) => {
+          cellTemplate: (container, { data }) => {
             container.text(`${data.comparator} ${data.items_quantity}`)
           }
         },
@@ -179,7 +196,10 @@ const Bundles = ({ }) => {
         <input ref={idRef} type='hidden' />
         <InputFormGroup eRef={nameRef} label='Nombre' required />
         <TextareaFormGroup eRef={descriptionRef} label='Descripción' rows={2} required />
-        <InputFormGroup eRef={percentageRef} label='Descuento' type='number' step={0.01} col='col-md-4' required />
+        <InputFormGroup eRef={percentageRef} label='Descuento' type='number' step={0.01} col='col-md-4' required specification={<div class="input-group py-1">
+          <input ref={howMuchCosts} type="number" class="form-control" placeholder="Cuanto cuesta" aria-label="Lo que debe pagar el usuario" onChange={calculatePercent} />
+          <input ref={howMuchPays} type="number" class="form-control" placeholder="Cuanto paga" aria-label="Lo que termina pagando realmente" onChange={calculatePercent} />
+        </div>} />
         <SelectFormGroup eRef={comparatorRef} label='Comparador' col='col-md-4 col-sm-6' dropdownParent='#principal-container' required>
           <option value="<">Menor que</option>
           <option value="=">Igual que</option>
