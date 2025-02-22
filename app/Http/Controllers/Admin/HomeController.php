@@ -7,6 +7,8 @@ use App\Models\Sale;
 use App\Models\User;
 use App\Models\UserFormula;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use SoDe\Extend\Response;
 
 class HomeController extends BasicController
 {
@@ -15,8 +17,10 @@ class HomeController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $newClients = User::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
-            ->where('created_at', '>=', now()->subMonths(2))
+        $newClients = Sale::selectRaw('YEAR(sales.created_at) as year, MONTH(sales.created_at) as month, COUNT(DISTINCT email) as count')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subMonths(2))
             ->groupBy('year', 'month')
             ->limit(2)
             ->get();
@@ -40,41 +44,79 @@ class HomeController extends BasicController
             ->where('sales.created_at', '>=', now()->subDays(30))
             ->count();
 
-        // Obtener el total de ventas con is_ok en true agrupadas por día para los últimos 30 días
-        $totalSalesLast30Days = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
-            ->where('statuses.is_ok', true)
+        // Calcular tasa de recompra
+        $customerPurchases = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('sales.created_at', '>=', now()->subDays(30))
-            ->selectRaw('DATE(sales.created_at) as date, COUNT(*) as count')
-            ->groupBy('date')
-            ->orderBy('date', 'desc')
+            ->where('statuses.is_ok', true)
+            ->selectRaw('
+                email,
+                COUNT(*) as purchase_count,
+                COUNT(DISTINCT DATE(sales.created_at)) as purchase_days
+            ')
+            ->groupBy('email')
             ->get();
 
-        // Obtener el total de ventas con is_ok en true agrupadas por mes para los últimos 12 meses
-        $totalSalesLast12Months = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
-            ->where('statuses.is_ok', true)
-            ->where('sales.created_at', '>=', now()->subMonths(12))
-            ->selectRaw('MONTH(sales.created_at) as month, YEAR(sales.created_at) as year, COUNT(*) as count')
-            ->groupBy('month', 'year')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->get();
-
-        // Obtener el total de ventas con is_ok en true agrupadas por año para los últimos 10 años
-        $totalSalesLast10Years = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
-            ->where('statuses.is_ok', true)
-            ->where('sales.created_at', '>=', now()->subYears(10))
-            ->selectRaw('YEAR(sales.created_at) as year, COUNT(*) as count')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
-            ->get();
+        $repurchaseRate = (object)[
+            'total_customers' => $customerPurchases->count(),
+            'returning_customers' => $customerPurchases->where('purchase_count', '>', 1)->count(),
+            'repurchase_rate' => $customerPurchases->count() > 0
+                ? ($customerPurchases->where('purchase_count', '>', 1)->count() * 100.0 / $customerPurchases->count())
+                : 0
+        ];
 
         return [
             'newClients' => $newClients,
             'topFormulas' => $topFormulas,
             'totalSales' => $totalSales,
-            'totalSalesLast30Days' => array_reverse($totalSalesLast30Days->toArray()),
-            'totalSalesLast12Months' => array_reverse($totalSalesLast12Months->toArray()),
-            'totalSalesLast10Years' => array_reverse($totalSalesLast10Years->toArray()),
+            'repurchaseRate' => $repurchaseRate,
         ];
+    }
+
+    public function getSales(Request $request, string $param)
+    {
+        $response = Response::simpleTryCatch(function () use ($param) {
+            switch ($param) {
+                case 'years':
+                    $data = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
+                        ->where('sales.created_at', '>=', now()->subYears(10))
+                        ->selectRaw('
+                            YEAR(sales.created_at) as year, 
+                            COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
+                        ')
+                        ->groupBy('year')
+                        ->orderBy('year', 'desc')
+                        ->get();
+                    break;
+                case 'months':
+                    $data = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
+                        ->where('sales.created_at', '>=', now()->subMonths(12))
+                        ->selectRaw('
+                            MONTH(sales.created_at) as month, 
+                            YEAR(sales.created_at) as year, 
+                            COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
+                        ')
+                        ->groupBy('month', 'year')
+                        ->orderBy('year', 'desc')
+                        ->orderBy('month', 'desc')
+                        ->get();
+                    break;
+                default:
+                    $data = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
+                        ->where('sales.created_at', '>=', now()->subDays(30))
+                        ->selectRaw('
+                            DATE(sales.created_at) as date, 
+                            COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
+                        ')
+                        ->groupBy('date')
+                        ->orderBy('date', 'desc')
+                        ->get();
+                    break;
+            }
+            return $data;
+        });
+        return response($response->toArray(), $response->status);
     }
 }

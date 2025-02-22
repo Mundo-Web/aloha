@@ -2,37 +2,50 @@
 import Tippy from '@tippyjs/react';
 import { Chart, registerables } from 'chart.js';
 // import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { createRoot } from 'react-dom/client';
 import BaseAdminto from '../Components/Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
+import HomeRest from '../Actions/Admin/HomeRest';
 
 Chart.register(...registerables);
 
+const homeRest =  new HomeRest()
+
 const Home = ({
   newClients, topFormulas, totalSales,
-  totalSalesLast30Days,
-  totalSalesLast12Months,
-  totalSalesLast10Years,
+  repurchaseRate
 }) => {
   const [timeFrame, setTimeFrame] = useState('days');
+  const [sales, setSales] = useState([]);
 
   const data = {
-    labels: timeFrame === 'days' ? totalSalesLast30Days.map(item => moment(item.date).format('DD MMM')) :
-      timeFrame === 'months' ? totalSalesLast12Months.map(item => {
+    labels: timeFrame === 'days' ? sales.map(item => moment(item.date).format('DD MMM')) :
+      timeFrame === 'months' ? sales.map(item => {
         const date = new Date(item.year, item.month - 1);
         return moment(date).format('MMM YYYY');
       }) :
-        totalSalesLast10Years.map(item => item.year.toString()),
+        sales.map(item => item.year.toString()),
     datasets: [
       {
-        label: 'Ventas',
-        data: timeFrame === 'days' ? totalSalesLast30Days.map(item => item.count) :
-          timeFrame === 'months' ? totalSalesLast12Months.map(item => item.count) :
-            totalSalesLast10Years.map(item => item.count),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        label: 'Total de ventas',
+        data: timeFrame === 'days' ? sales.map(item => item.total_count) :
+          timeFrame === 'months' ? sales.map(item => item.total_count) :
+            sales.map(item => item.total_count),
+        backgroundColor: 'rgba(160, 160, 160, 0.2)',
+        borderColor: 'rgba(160, 160, 160, 0.8)',
+        fill: true,
       },
+      {
+        label: 'Ventas efectivas',
+        data: timeFrame === 'days' ? sales.map(item => item.count) :
+          timeFrame === 'months' ? sales.map(item => item.count) :
+            sales.map(item => item.count),
+        backgroundColor: 'rgba(16, 196, 105, 0.5)',
+        borderColor: 'rgba(16, 196, 105, 0.75)',
+        fill: true,
+      }
     ],
   };
 
@@ -41,6 +54,13 @@ const Home = ({
     months: 'Últimos 12 meses',
     years: 'Últimos 10 años'
   }
+
+  useEffect(() => {
+    homeRest.getSales(timeFrame)
+      .then((data) => {
+        setSales(data)
+      })
+  }, [timeFrame])
 
   return (
     <>
