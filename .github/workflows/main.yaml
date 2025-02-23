@@ -1,0 +1,30 @@
+name: Deploy Vua to Contabo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Execute Docker Commands on Server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+            cd /var/docker/vua
+            git pull
+            docker compose build
+            docker compose up -d
+            docker images -f "dangling=true" -q | xargs docker rmi
+            CONTAINER_ID=$(docker ps -qf "ancestor=streaming/laravel-app" -q)
+            docker exec -i $CONTAINER_ID bash -c "cd /var/www && php artisan migrate --force && curl https://wajs.factusode.xyz/api/github/Vua"
+          EOF

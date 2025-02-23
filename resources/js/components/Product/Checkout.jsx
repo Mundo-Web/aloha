@@ -226,6 +226,8 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
   //   })
   // }, [null])
 
+  console.log('Hola mundo')
+
   return (
     <>
       <section className='px-[5%] md:px-[7.5%] lg:px-[10%] pb-[5%] mt-[7.5%] md:mt-[5%] lg:mt-[2.5%] text-[#404040]'>
@@ -516,7 +518,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                 </button> */}
               </div>
               <div className='lg:col-span-2 relative'>
-                <div className='block sticky top-4'>
+                <div className='block mb-6'>
                   <h2 className="mb-4 text-xl font-semibold">Tu pedido</h2>
                   <div className="rounded-lg border border-gray-200 p-4">
                     <div className="mb-4 flex justify-between border-b pb-2 font-bold">
@@ -621,6 +623,44 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                       </button>
                     </div>
                   }
+                  {/* <button type='submit' className="mt-6 w-full rounded-md bg-[#C5B8D4] py-3 text-white disabled:cursor-not-allowed" disabled={loading}>
+                    <i className='mdi mdi-lock me-1'></i>
+                    Pagar Ahora
+                    <small className='ms-1'>(S/ {Number2Currency(totalPrice - bundleDiscount - planDiscount - couponDiscount)})</small>
+                  </button> */}
+                </div>
+                <div className='block sticky top-4'>
+                  <h2 className="mb-4 text-xl font-semibold">Datos de facturacion</h2>
+
+                  <div className='mb-3'>
+                    <p className="mb-1 block text-sm font-medium " htmlFor="billing_type">
+                      Tipo de comprobante <b className='text-red-500'>*</b>
+                    </p>
+                    <div className='grid grid-cols-2 gap-2'>
+                      <label htmlFor="billing_type_boleta" className='flex gap-1 items-center'>
+                        <input type="radio" name="billing_type" value='boleta' id="billing_type_boleta" defaultChecked/>
+                        <span>Boleta</span>
+                      </label>
+                      <label htmlFor="billing_type_factura" className='flex gap-1 items-center'>
+                        <input type="radio" name="billing_type" value='factura' id="billing_type_factura" />
+                        <span>Factura</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-1 block text-sm font-medium " htmlFor="billing_type">
+                      Documento <b className='text-red-500'>*</b>
+                    </p>
+                    <input
+                      type="text"
+                      id="apartment"
+                      className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
+                      value={sale.reference}
+                      onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+                    />
+                  </div>
+
                   <button type='submit' className="mt-6 w-full rounded-md bg-[#C5B8D4] py-3 text-white disabled:cursor-not-allowed" disabled={loading}>
                     <i className='mdi mdi-lock me-1'></i>
                     Pagar Ahora
