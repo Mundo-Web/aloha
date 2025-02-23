@@ -1449,7 +1449,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-uOWZuDyS.js",
+    "file": "assets/CheckboxFormGroup-ClxeGkIS.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -1489,7 +1489,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/QuillFormGroup.jsx": {
-    "file": "assets/QuillFormGroup-uOWZuDyS.js",
+    "file": "assets/QuillFormGroup-ClxeGkIS.js",
     "name": "QuillFormGroup",
     "src": "resources/js/Components/Adminto/form/QuillFormGroup.jsx",
     "isEntry": true,
@@ -1738,7 +1738,7 @@
     ]
   },
   "resources/js/Components/DataGrid.jsx": {
-    "file": "assets/DataGrid-ClxeGkIS.js",
+    "file": "assets/DataGrid-uOWZuDyS.js",
     "name": "DataGrid",
     "src": "resources/js/Components/DataGrid.jsx",
     "isEntry": true,
@@ -2031,7 +2031,7 @@
     ]
   },
   "resources/js/Components/Tailwind/DataGrid.jsx": {
-    "file": "assets/DataGrid-uOWZuDyS.js",
+    "file": "assets/DataGrid-ClxeGkIS.js",
     "name": "DataGrid",
     "src": "resources/js/Components/Tailwind/DataGrid.jsx",
     "isEntry": true,
@@ -2108,10 +2108,10 @@
     ]
   },
   "resources/js/Components/Test/HairType.jsx": {
-    "file": "assets/HairType-CpPx52vs.js",
+    "file": "assets/HairType-D4XKIVGc.js",
     "name": "HairType",
     "src": "resources/js/Components/Test/HairType.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2242,7 +2242,7 @@
     "isEntry": true
   },
   "resources/js/Components/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-ClxeGkIS.js",
+    "file": "assets/CheckboxFormGroup-uOWZuDyS.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -2272,7 +2272,7 @@
     ]
   },
   "resources/js/Components/form/QuillFormGroup.jsx": {
-    "file": "assets/QuillFormGroup-ClxeGkIS.js",
+    "file": "assets/QuillFormGroup-uOWZuDyS.js",
     "name": "QuillFormGroup",
     "src": "resources/js/Components/form/QuillFormGroup.jsx",
     "isEntry": true,
@@ -2444,7 +2444,7 @@
     ]
   },
   "resources/js/Formula.jsx": {
-    "file": "assets/Formula-Bl8m3fO6.js",
+    "file": "assets/Formula-DAmywZTC.js",
     "name": "Formula",
     "src": "resources/js/Formula.jsx",
     "isEntry": true,
