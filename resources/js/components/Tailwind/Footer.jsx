@@ -13,7 +13,7 @@ const Footer = ({ socials, terms, footerLinks = [] }) => {
 
   const links = {}
   footerLinks.forEach(fl => {
-    links[fl.correlative] = fl.description
+    links[fl.correlative] = fl?.description ?? ''
   })
 
   return (
