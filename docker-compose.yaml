@@ -1,0 +1,76 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vua/laravel-app
+    container_name: vua-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_URL=${APP_URL}
+      - LOG_CHANNEL=${LOG_CHANNEL}
+      - LOG_DEPRECATIONS_CHANNEL=${LOG_DEPRECATIONS_CHANNEL}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - BROADCAST_DRIVER=${BROADCAST_DRIVER}
+      - CACHE_DRIVER=${CACHE_DRIVER}
+      - FILESYSTEM_DISK=${FILESYSTEM_DISK}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
+      - SESSION_DRIVER=${SESSION_DRIVER}
+      - SESSION_LIFETIME=${SESSION_LIFETIME}
+      - MEMCACHED_HOST=${MEMCACHED_HOST}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - MAIL_MAILER=${MAIL_MAILER}
+      - MAIL_HOST=${MAIL_HOST}
+    working_dir: /var/www/vua
+    volumes:
+      - .:/var/www/
+      - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network-vua
+
+  db:
+    image: mysql:8.0
+    container_name: vua-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # Establece la contraseña para el usuario root
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network-vua
+
+  nginx:
+    image: nginx:latest
+    container_name: vua-nginx
+    ports:
+      - "8010:80"  # Mapea el puerto 80 del contenedor al puerto 8080 del host
+    volumes:
+      - ./docker-compose/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - .:/var/www
+      # - ./romulio.factusode.xyz:/etc/letsencrypt/live/romulio.factusode.xyz  # Monta los certificados SSL
+    networks:
+      - app-network-vua
+
+networks:
+  app-network-vua:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
