@@ -649,15 +649,15 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                   </div>
 
                   <div>
-                    <p className="mb-1 block text-sm font-medium " htmlFor="billing_type">
+                    <p className="mb-1 block text-sm font-medium " htmlFor="billing_number">
                       Documento <b className='text-red-500'>*</b>
                     </p>
                     <input
                       type="text"
-                      id="apartment"
+                      id="billing_number"
                       className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
-                      value={sale.reference}
-                      onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+                      value={sale.billing_number}
+                      onChange={(e) => setSale(old => ({ ...old, billing_number: e.target.value }))}
                     />
                   </div>
 

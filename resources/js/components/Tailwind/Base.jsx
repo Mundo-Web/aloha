@@ -1,8 +1,16 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Header from "./Header";
 import Footer from "./Footer";
 
 const Base = ({ children, footerLinks, session, socials, terms, showSlogan = true, showFooter = true, gradientStart = '#c4b8d3', gradientEnd = '#f1d7c1', menuGradientEnd = '#dbc8c9' }) => {
+  
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return <section style={{
     backgroundImage: `linear-gradient(to right bottom, ${gradientStart}, ${gradientEnd})`
   }}>
