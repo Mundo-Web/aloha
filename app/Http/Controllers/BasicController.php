@@ -87,9 +87,6 @@ class BasicController extends Controller
 
   public function reactView(Request $request)
   {
-
-    dump('APP_URL: ' . env('APP_URL'));
-
     $socials = Social::where('visible', true)->where('status', true)->get();
     $terms = General::select(['description'])->where('correlative', 'terms_conditions')->first();
     if ($this->reactRootView == 'public') {
