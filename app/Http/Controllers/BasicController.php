@@ -241,7 +241,7 @@ class BasicController extends Controller
         if ($image->width() > 1000 || $image->height() > 1000) {
           $image->resize(1000, null, function ($constraint) {
             $constraint->aspectRatio();
-            $constraint->upsize(); // No permite aumentar el tamaño
+            $constraint->upsize();
           });
         }
         $image->save($path); // Guarda la imagen redimensionada
