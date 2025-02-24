@@ -6,6 +6,12 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
   return <section style={{
     backgroundImage: `linear-gradient(to right bottom, ${gradientStart}, ${gradientEnd})`
   }}>
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/70 z-50 flex items-center justify-center min-h-screen w-full">
+      <div className="text-center">
+        <h2 className="text-4xl font-bold mb-4 text-white">En Mantenimiento</h2>
+        <p className="text-gray-200 text-xl">Estamos realizando actualizaciones en el sistema. Por favor, vuelva más tarde.</p>
+      </div>
+    </div>
     <Header showSlogan={showSlogan} gradientStart={gradientStart} menuGradientEnd={menuGradientEnd} session={session} />
     <main className="overflow-hidden min-h-[360px] relative">
       {children}
