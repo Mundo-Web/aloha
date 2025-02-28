@@ -50,7 +50,7 @@ class WhatsAppController extends Controller
                         'body' => [
                             'from' => env('APP_CORRELATIVE'),
                             'to' => ['51' . Text::keep($sale->phone, '0123456789')],
-                            'content' => "Hola *{$onlyName}*! nos llegó tu pedido por la web 🥰\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Comprobante*: {$doc} - `{$type_document}` {$sale->billing_number}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}",
+                            'content' => "Hola *{$onlyName}*! nos llegó tu pedido por la web 🥰\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}",
                             'html' => $content
                         ]
                     ]);
