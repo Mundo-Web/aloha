@@ -73,9 +73,11 @@ class HomeController extends BasicController
             ->selectRaw('
                 department,
                 COALESCE(province, district) as city,
-                COUNT(*) as count
+                COUNT(*) as count,
+                SUM(total_amount) as amount
             ')
             ->groupBy('department', 'city')
+            ->orderBy('amount', 'DESC')
             ->orderBy('count', 'DESC')
             ->limit(10)
             ->get();

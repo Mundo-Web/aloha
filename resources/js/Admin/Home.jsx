@@ -8,6 +8,7 @@ import { createRoot } from 'react-dom/client';
 import BaseAdminto from '../Components/Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
 import HomeRest from '../Actions/Admin/HomeRest';
+import Number2Currency from '../Utils/Number2Currency';
 
 Chart.register(...registerables);
 
@@ -232,7 +233,8 @@ const Home = ({
                       <th>#</th>
                       <th>Departamento</th>
                       <th>Ciudad</th>
-                      <th>Ventas</th>
+                      <th className='text-end'>Ventas</th>
+                      <th className='text-end'>Ingresos</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -241,7 +243,8 @@ const Home = ({
                         <td>{index + 1}</td>
                         <td>{city.department}</td>
                         <td>{city.city}</td>
-                        <td>{city.count} pedidos</td>
+                        <td className='text-end'>{city.count} ventas</td>
+                        <th className='text-nowrap text-end'>S/. {Number2Currency(city.amount)}</th>
                       </tr>
                     ))}
                   </tbody>
