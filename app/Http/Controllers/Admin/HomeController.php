@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
+use App\Models\Color;
 use App\Models\Sale;
+use App\Models\SaleDetail;
 use App\Models\User;
 use App\Models\UserFormula;
 use Illuminate\Http\Request;
@@ -64,11 +66,62 @@ class HomeController extends BasicController
                 : 0
         ];
 
+        // Get location statistics
+        $topCities = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->selectRaw('
+                department,
+                COALESCE(province, district) as city,
+                COUNT(*) as count
+            ')
+            ->groupBy('department', 'city')
+            ->orderBy('count', 'DESC')
+            ->limit(10)
+            ->get();
+
+
+
+        // Get most popular colors
+        $topColors = SaleDetail::join('sales', 'sales.id', '=', 'sale_details.sale_id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->selectRaw("
+                JSON_UNQUOTE(JSON_EXTRACT(colors, '$[*].hex')) as hex,
+                COUNT(*) as quantity
+            ")
+            ->groupBy('hex')
+            ->orderBy('quantity', 'DESC')
+            ->limit(5)
+            ->get();
+
+        $colors = Color::select(['name', 'hex'])
+            ->distinct('name')
+            ->whereIn(
+                'hex',
+                array_map(
+                    fn($x) => \str_replace(['[', ']', '"', '\\'], '', $x['hex']),
+                    $topColors->toArray()
+                )
+            )
+            ->get()
+            ->map(function ($color) use ($topColors) {
+                $found = $topColors->first(fn($x) => str_contains(strtolower($x['hex']), strtolower($color->hex)));
+                return (object)[
+                    'name' => $color->name,
+                    'hex' => $color->hex,
+                    'quantity' => $found ? $found->quantity : 0
+                ];
+            });
+
         return [
             'newClients' => $newClients,
             'topFormulas' => $topFormulas,
             'totalSales' => $totalSales,
             'repurchaseRate' => $repurchaseRate,
+            'topCities' => $topCities,
+            'topColors' => $colors
         ];
     }
 

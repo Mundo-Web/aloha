@@ -11,12 +11,15 @@ import HomeRest from '../Actions/Admin/HomeRest';
 
 Chart.register(...registerables);
 
-const homeRest =  new HomeRest()
+const homeRest = new HomeRest()
 
 const Home = ({
   newClients, topFormulas, totalSales,
-  repurchaseRate
+  repurchaseRate, topCities, topColors
 }) => {
+
+  console.log(topColors)
+
   const [timeFrame, setTimeFrame] = useState('days');
   const [sales, setSales] = useState([]);
 
@@ -88,6 +91,38 @@ const Home = ({
             </div>
           })
         }
+        <div className="col-xl-3 col-md-6">
+          <div className="card">
+            <div className="card-body widget-user">
+              <div className="text-center">
+                <h2 className="fw-normal text-success" data-plugin="counterup">
+                  {repurchaseRate.repurchase_rate.toFixed(2)}%
+                  <i className='mdi mdi-backup-restore ms-1'></i>
+                </h2>
+                <h5>
+                  <small className='d-block text-muted mb-1'>{repurchaseRate.returning_customers} personas volvieron a comprar</small>
+                  en los ultimos 30 dias
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-3 col-md-6">
+          <div className="card">
+            <div className="card-body widget-user">
+              <div className="text-center">
+                <h2 className="fw-normal text-success" data-plugin="counterup">
+                  {repurchaseRate.total_customers}
+                  <i className='mdi mdi-cart-plus ms-1'></i>
+                </h2>
+                <h5>
+                  <small className='d-block text-muted mb-1'>ventas se concretaron</small>
+                  en los ultimos 30 dias
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="row">
         <div className="col-xl-12">
@@ -118,6 +153,21 @@ const Home = ({
       </div>
       <div className="row">
         <div className="col-xl-4">
+          <div className="card card-body">
+            <div className='d-flex justify-content-between gap-2'>
+              {
+                topColors
+                  .sort((a, b) => b.quantity - a.quantity)
+                  .map((color, index) => {
+                    return <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
+                      <i className='mdi mdi-circle mdi-24px d-block' style={{ color: color.hex }}></i>
+                      <small className='text-muted d-block' >{color.quantity} ventas</small>
+                      <span>{color.name}</span>
+                    </div>
+                  })
+              }
+            </div>
+          </div>
           <div className="card">
             <div className="card-header">
               <h4 className="header-title mb-0">Top 5 formulas mas vendidas</h4>
@@ -162,7 +212,38 @@ const Home = ({
               </div>
             </div>
           </div>
-
+        </div>
+        <div className="col-xl-8">
+          <div className="card">
+            <div className="card-header">
+              <h4 className="header-title mb-0">Top 10 ciudades con más ventas</h4>
+              <small className='text-muted'>Últimos 30 días</small>
+            </div>
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Departamento</th>
+                      <th>Ciudad</th>
+                      <th>Ventas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topCities.map((city, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{city.department}</td>
+                        <td>{city.city}</td>
+                        <td>{city.count} pedidos</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {/* <main className='d-flex align-items-center justify-content-center' style={{ height: 'calc(100vh - 160px)' }}>
