@@ -240,6 +240,19 @@ const Sales = ({ statuses }) => {
                       <td>{saleLoaded?.comment}</td>
                     </tr>
                   }
+                  {
+                    (saleLoaded?.billing_type && saleLoaded?.billing_number) &&
+                    <tr>
+                      <th>Comprobante:</th>
+                      <td>
+                        <b className='d-block'>{saleLoaded.billing_type.toTitleCase()}</b>
+                        <small>
+                          <code className='me-1'>{saleLoaded.billing_type == 'boleta' ? 'DNI' : 'RUC'}</code>
+                          <span>{saleLoaded?.billing_number}</span>
+                        </small>
+                      </td>
+                    </tr>
+                  }
                 </tbody>
               </table>
               <button className='btn btn-xs btn-dark' type='button' copy={`Nombres: ${saleLoaded?.fullname}\nEmail: ${saleLoaded?.email}\nTeléfono: ${saleLoaded?.phone}\nDirección: ${saleLoaded?.address} ${saleLoaded?.number}\n_${saleLoaded?.province ?? saleLoaded?.district}, ${saleLoaded?.department}, ${saleLoaded?.country} ${saleLoaded?.zip_code ? `- ${saleLoaded?.zip_code}` : ''}_`}>

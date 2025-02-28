@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use function PHPSTORM_META\map;
+
 class Sale extends Model
 {
     use HasFactory, HasUuids;
@@ -42,6 +44,8 @@ class Sale extends Model
         'coupon_discount',
         'coupon_id',
         'total_amount',
+        'billing_type',
+        'billing_number',
         'status_id',
     ];
 

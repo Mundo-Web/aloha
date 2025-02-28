@@ -109,6 +109,8 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
     number: session?.address_number || null,
     reference: session?.address_reference || null,
     comment: null,
+    billing_type: 'boleta',
+    billing_number: '',
   });
   const [loading, isLoading] = useState(false);
   const [coupon, setCoupon] = useState(null)
@@ -225,8 +227,6 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
   //     else setCoupon(null)
   //   })
   // }, [null])
-
-  console.log('Hola mundo')
 
   return (
     <>
@@ -637,14 +637,20 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                       Tipo de comprobante <b className='text-red-500'>*</b>
                     </p>
                     <div className='grid grid-cols-2 gap-2'>
-                      <label htmlFor="billing_type_boleta" className='flex gap-1 items-center'>
-                        <input type="radio" name="billing_type" value='boleta' id="billing_type_boleta" defaultChecked/>
-                        <span>Boleta</span>
-                      </label>
-                      <label htmlFor="billing_type_factura" className='flex gap-1 items-center'>
-                        <input type="radio" name="billing_type" value='factura' id="billing_type_factura" />
-                        <span>Factura</span>
-                      </label>
+                      <div className='relative'>
+                        <input type="radio" name="billing_type" value='boleta' id="billing_type_boleta" defaultChecked className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'boleta'} required/>
+                        <label htmlFor="billing_type_boleta" className='flex gap-1.5 items-center justify-center px-2 py-1 border rounded-md cursor-pointer peer-checked:bg-[#C5B8D4] peer-checked:text-white transition-colors'>
+                          <i className='mdi mdi-account text-lg'></i>
+                          <span>Boleta</span>
+                        </label>
+                      </div>
+                      <div className='relative'>
+                        <input type="radio" name="billing_type" value='factura' id="billing_type_factura" className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'factura'} required/>
+                        <label htmlFor="billing_type_factura" className='flex gap-1.5 items-center justify-center px-2 py-1 border rounded-md cursor-pointer peer-checked:bg-[#C5B8D4] peer-checked:text-white transition-colors'>
+                          <i className='mdi mdi-office-building text-lg'></i>
+                          <span>Factura</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
 
@@ -657,6 +663,9 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                       id="billing_number"
                       className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
                       value={sale.billing_number}
+                      maxLength={sale.billing_type == 'boleta' ? 8 : 11}
+                      minLength={sale.billing_type == 'boleta'? 8 : 11}
+                      required
                       onChange={(e) => setSale(old => ({ ...old, billing_number: e.target.value }))}
                     />
                   </div>

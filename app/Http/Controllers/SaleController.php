@@ -43,6 +43,8 @@ class SaleController extends Controller
             $saleJpa->email = $sale['email'];
             $saleJpa->phone = $sale['phone'];
             $saleJpa->status_id = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b';
+            $saleJpa->billing_type = $sale['billing_type'];
+            $saleJpa->billing_number = $sale['billing_number'];
 
             // Address info
             $saleJpa->country = $sale['country'];
