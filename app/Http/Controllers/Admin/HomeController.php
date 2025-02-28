@@ -37,7 +37,7 @@ class HomeController extends BasicController
             ->whereIn('user_formulas.id', Sale::select('user_formula_id'))
             ->groupBy('user_formulas.has_treatment', 'user_formulas.scalp_type', 'user_formulas.hair_type')
             ->orderBy('count', 'DESC')
-            ->limit(5)
+            ->limit(4)
             ->get();
 
         // Obtener el total de ventas con is_ok en true

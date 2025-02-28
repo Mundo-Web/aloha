@@ -153,19 +153,24 @@ const Home = ({
       </div>
       <div className="row">
         <div className="col-xl-4">
-          <div className="card card-body">
-            <div className='d-flex justify-content-between gap-2'>
-              {
-                topColors
-                  .sort((a, b) => b.quantity - a.quantity)
-                  .map((color, index) => {
-                    return <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
-                      <i className='mdi mdi-circle mdi-24px d-block' style={{ color: color.hex }}></i>
-                      <small className='text-muted d-block' >{color.quantity} ventas</small>
-                      <span>{color.name}</span>
-                    </div>
-                  })
-              }
+          <div className="card">
+            <div className="card-header">
+              <h4 className="header-title my-0">Colores que mas prefieren</h4>
+            </div>
+            <div className="card-body">
+              <div className='d-flex justify-content-between align-items-center gap-2'>
+                {
+                  topColors
+                    .sort((a, b) => b.quantity - a.quantity)
+                    .map((color, index) => {
+                      return <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
+                        <i className='mdi mdi-circle mdi-24px d-block' style={{ color: color.hex }}></i>
+                        <small className='text-muted d-block' >{color.quantity} items</small>
+                        <span>{color.name}</span>
+                      </div>
+                    })
+                }
+              </div>
             </div>
           </div>
           <div className="card">
@@ -181,7 +186,7 @@ const Home = ({
                     return <div key={index} className="inbox-item d-flex justify-content-between align-items-center">
                       <div className='d-flex gap-2 justify-content-center'>
                         <h5 className="inbox-item-author mt-0 mb-1 text-center" style={{ width: '40px' }}>
-                          <span className={index > 2 ? 'fw-light' : ''}>#{index + 1}</span>
+                          <span className={index > 1 ? 'fw-light' : ''}>#{index + 1}</span>
                           {index == 0 && <i className='mdi mdi-crown ms-1 text-warning'></i>}
                         </h5>
                         <div>

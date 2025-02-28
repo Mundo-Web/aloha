@@ -44,7 +44,7 @@ const CreateReactScript = (render) => {
       }
       render(el, { ...properties, can, hasRole })
 
-      document.getElementById('app').removeAttribute('data-page')
+      // document.getElementById('app').removeAttribute('data-page')
     },
   });
 }
