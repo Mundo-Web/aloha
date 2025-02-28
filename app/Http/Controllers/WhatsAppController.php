@@ -38,10 +38,12 @@ class WhatsAppController extends Controller
 
             $onlyName = \explode(' ', $sale->name)[0];
             $address = ($sale->province ?? $sale->district) . ", {$sale->department}, {$sale->country}" . ($sale->zip_code ? ' - ' . $sale->zip_code : '');
+
+            $doc = Text::toTitleCase($sale->billing_type);
+            $type_document = $sale->billing_type == 'boleta' ? 'DNI' : 'RUC';
+
             try {
                 if ($send2client) {
-                    $doc = Text::toTitleCase($sale->billing_type);
-                    $type_document = $sale->billing_type == 'boleta' ? 'DNI' : 'RUC';
                     new Fetch(env('WA_URL') . '/api/send', [
                         'method' => 'POST',
                         'headers' => [
@@ -80,7 +82,7 @@ class WhatsAppController extends Controller
                         'body' => [
                             'from' => env('APP_CORRELATIVE'),
                             'to' => [env('WAGROUP_VENTAS_ID')],
-                            'content' => "Pedido `{$sale->code}`\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}\n\n> " . $sale->created_at->format('Y-m-d H:i:s'),
+                            'content' => "Pedido `{$sale->code}`\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}\n\n> " . $sale->created_at->format('Y-m-d H:i:s'),
                             'html' => $content
                         ]
                     ]);
