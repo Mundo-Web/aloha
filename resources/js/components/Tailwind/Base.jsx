@@ -26,9 +26,9 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
       {children}
 
       <div class="flex justify-end relative">
-        <div class="fixed bottom-[36px] z-[10] right-[128px] md:right-[25px] fixedWhastapp">
-          {console.log(numWhatsApp)}
-          <a href={`https://api.whatsapp.com/send?phone=${numWhatsApp.description}&text=${waMessage.description}`}
+        <div class="fixed bottom-[36px] z-[10] right-[18px] md:right-[25px] fixedWhastapp">
+
+          <a href={`https://api.whatsapp.com/send?phone=${numWhatsApp?.description ?? ''}&text=${waMessage?.description ?? ''}`}
             target="_blank" class="">
             <img src='images/img/WhatsApp.png' alt="whatsapp" class="w-20" />
           </a>
