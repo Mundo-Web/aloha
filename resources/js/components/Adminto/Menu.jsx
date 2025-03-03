@@ -95,8 +95,13 @@ const Menu = ({ session, hasRole, salesCount }) => {
                 <MenuItem href="/admin/bundles" icon='mdi mdi-package-variant'>Paquetes</MenuItem>
                 <MenuItem href="/admin/coupons" icon='mdi mdi-ticket-percent'>Cupones</MenuItem>
               </MenuItemContainer>
-              <li className="menu-title">Landing Page</li>
+              <li className="menu-title">Mailing y subscripciones</li>
+              <MenuItemContainer title='Mailing' icon='mdi mdi-email-send'>
+                <MenuItem href="/admin/mailing/templates" icon='mdi mdi-calendar-month'>Plantillas</MenuItem>
+                <MenuItem href="/admin/mailing/history" icon='mdi mdi-package-variant'>Historial</MenuItem>
+              </MenuItemContainer>
               <MenuItem href="/admin/subscriptions" icon='mdi mdi-email-multiple'>Subscripciones</MenuItem>
+              <li className="menu-title">Landing Page</li>
               <MenuItem href="/admin/ads" icon='mdi mdi-google-ads'>Pop-ups</MenuItem>
               <MenuItem href="/admin/sliders" icon='mdi mdi-page-layout-body'>Sliders</MenuItem>
               <MenuItem href="/admin/about" icon='mdi mdi-briefcase'>Nosotros</MenuItem>

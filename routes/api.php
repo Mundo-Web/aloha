@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\FormulaController as AdminFormulaController;
 use App\Http\Controllers\Admin\FragranceController as AdminFragranceController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ItemController as AdminItemController;
+use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
 use App\Http\Controllers\Admin\RenewalController as AdminRenewalController;
 use App\Http\Controllers\Admin\SaleController as AdminSaleController;
 use App\Http\Controllers\Admin\SaleStatusController as AdminSaleStatusController;
@@ -46,6 +47,7 @@ use App\Http\Controllers\FragranceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MailingController;
+use App\Http\Controllers\MailingTemplateController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaleController;
@@ -182,6 +184,12 @@ Route::middleware('auth')->group(function () {
             Route::patch('/messages/status', [AdminMessageController::class, 'status']);
             Route::patch('/messages/{field}', [AdminMessageController::class, 'boolean']);
             Route::delete('/messages/{id}', [AdminMessageController::class, 'delete']);
+
+            Route::prefix('mailing')->group(function () {
+                Route::get('/templates/{id}', [AdminMailingTemplateController::class, 'get']);
+                Route::post('/templates', [AdminMailingTemplateController::class,'save']);
+                Route::post('/templates/paginate', [AdminMailingTemplateController::class, 'paginate']);
+            });
 
             Route::post('/subscriptions/paginate', [AdminSubscriptionController::class, 'paginate']);
             Route::patch('/subscriptions/status', [AdminSubscriptionController::class, 'status']);

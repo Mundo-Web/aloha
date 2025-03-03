@@ -34,12 +34,14 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\LoginVuaController;
+use App\Http\Controllers\MailingTemplateController;
 use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PopupController;
@@ -102,6 +104,12 @@ Route::middleware(['can:Admin', 'auth'])->prefix('admin')->group(function () {
     Route::get('/bundles', [AdminBundleController::class, 'reactView'])->name('Admin/Bundles.jsx');
     Route::get('/coupons', [AdminCouponController::class, 'reactView'])->name('Admin/Coupons.jsx');
     Route::get('/messages', [AdminSubscriptionController::class, 'reactView'])->name('Admin/Messages.jsx');
+
+    Route::prefix('mailing')->group(function () {
+        Route::get('/templates', [AdminMailingTemplateController::class, 'reactView'])->name('Admin/MailingTemplates.jsx');
+        Route::get('/history', [AdminMailingTemplateController::class, 'reactView'])->name('Admin/MailingHistory.jsx');
+    });
+
     Route::get('/subscriptions', [AdminSubscriptionController::class, 'reactView'])->name('Admin/Subscriptions.jsx');
     Route::get('/about', [AdminAboutusController::class, 'reactView'])->name('Admin/About.jsx');
     Route::get('/indicators', [AdminIndicatorController::class, 'reactView'])->name('Admin/Indicators.jsx');

@@ -34,6 +34,12 @@
   <link href="/lte/assets/libs/dxdatagrid/css/dx.dark.compact.css?v=06d3ebc8-645c-4d80-a600-c9652743c425"
     rel="stylesheet" type="text/css" id="dg-dark-stylesheet" disabled="disabled" />
 
+  @if ($route == 'Admin/MailingTemplates.jsx')
+    <link rel="stylesheet" href="/lte/assets/libs/codemirror/codemirror.min.css">
+    <link rel="stylesheet" href="/lte/assets/libs/codemirror/themes/sode.css">
+    <script rel="stylesheet" href="/lte/assets/libs/js-beautify/beautify-html.min.js"></script>
+  @endif
+
   {{-- Bootstrap Styles --}}
   <link href="/lte/assets/css/config/default/bootstrap.min.css" rel="stylesheet" type="text/css"
     id="bs-default-stylesheet" />
@@ -76,9 +82,16 @@
   <!-- Vendor js -->
   <script src="/lte/assets/js/vendor.min.js"></script>
 
-  @if ($route == 'home')
-    <script src="/lte/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+  @if ($route == 'Admin/MailingTemplates.jsx')
+    <script src="/lte/assets/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/codemirror.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/beautify-html.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/mode/xml/xml.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/mode/javascript/javascript.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/mode/css/css.min.js"></script>
+    <script src="/lte/assets/libs/codemirror/mode/htmlmixed/htmlmixed.min.js"></script>
   @endif
+
   <script src="/lte/assets/libs/quill/quill.min.js"></script>
   <script src="/lte/assets/libs/mohithg-switchery/switchery.min.js"></script>
   <script src="/lte/assets/libs/select2/js/select2.full.min.js"></script>
