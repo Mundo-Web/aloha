@@ -18,4 +18,17 @@ class MailingTemplateController extends BasicController
             'TINYMCE_KEY' => \env('TINYMCE_KEY')
         ];
     }
+
+    public function setPaginationInstance(string $model)
+    {
+        return $model::select([
+            'name',
+            'description',
+            'model',
+            'type',
+            'filters',
+            'auto_send',
+            'status',
+        ]);
+    }
 }

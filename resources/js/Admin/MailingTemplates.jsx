@@ -210,6 +210,16 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
           caption: 'Tabla',
           cellTemplate: (container, { data }) => {
             container.text(data.model || 'Externo')
+          },
+          lookup: {
+            dataSource: [
+              { value: '', text: 'Externo' },
+              { value: 'User', text: 'Usuarios' },
+              { value: 'Sale', text: 'Ventas' },
+              { value: 'Subscription', text: 'Subscripciones' }
+            ],
+            valueExpr: 'value',
+            displayExpr: 'text'
           }
         },
         {
