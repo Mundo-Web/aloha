@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SliderSeeder::class,
             IndicatorSeeder::class,
             AboutusSeeder::class,
+            AboutusSeederMesage::class,
             TestimonySeeder::class,
             CategorySeeder::class,
             StrengthSeeder::class,

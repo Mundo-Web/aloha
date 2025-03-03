@@ -2,8 +2,9 @@ import React, { useEffect } from "react"
 import Header from "./Header";
 import Footer from "./Footer";
 
-const Base = ({ children, footerLinks, session, socials, terms, showSlogan = true, showFooter = true, gradientStart = '#c4b8d3', gradientEnd = '#f1d7c1', menuGradientEnd = '#dbc8c9' }) => {
-  
+const Base = ({ children, footerLinks, session, socials, terms, showSlogan = true, showFooter = true, gradientStart = '#c4b8d3',
+  gradientEnd = '#f1d7c1', menuGradientEnd = '#dbc8c9', numWhatsApp, waMessage }) => {
+
   // useEffect(() => {
   //   document.body.style.overflow = 'hidden';
   //   return () => {
@@ -23,6 +24,16 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
     <Header showSlogan={showSlogan} gradientStart={gradientStart} menuGradientEnd={menuGradientEnd} session={session} />
     <main className="overflow-hidden min-h-[360px] relative">
       {children}
+
+      <div class="flex justify-end relative">
+        <div class="fixed bottom-[36px] z-[10] right-[128px] md:right-[25px] fixedWhastapp">
+          {console.log(numWhatsApp)}
+          <a href={`https://api.whatsapp.com/send?phone=${numWhatsApp.description}&text=${waMessage.description}`}
+            target="_blank" class="">
+            <img src='images/img/WhatsApp.png' alt="whatsapp" class="w-20" />
+          </a>
+        </div>
+      </div>
     </main>
     {
       showFooter &&

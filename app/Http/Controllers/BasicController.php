@@ -100,6 +100,8 @@ class BasicController extends Controller
     if (Auth::check() && Auth::user()->hasRole('Admin')) {
       $salesCount = Sale::where('status_id', '312f9a91-d3f2-4672-a6bf-678967616cac')->count();
     }
+    $numWhatsApp = Aboutus::select(['name', 'description'])->where('correlative', 'whatsapp')->first();
+    $waMessage = Aboutus::select(['name', 'description'])->where('correlative', 'wa-message')->first();
 
     $properties = [
       'session' => Auth::user(),
@@ -107,6 +109,8 @@ class BasicController extends Controller
       'terms' => $terms,
       'footerLinks' => $footerLinks,
       'salesCount' => $salesCount,
+      'numWhatsApp' => $numWhatsApp,
+      'waMessage' => $waMessage,
       'global' => [
         'PUBLIC_RSA_KEY' => Controller::$PUBLIC_RSA_KEY,
         'APP_NAME' => env('APP_NAME', 'Trasciende'),
