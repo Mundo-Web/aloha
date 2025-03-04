@@ -37,7 +37,6 @@
   @if ($route == 'Admin/MailingTemplates.jsx')
     <link rel="stylesheet" href="/lte/assets/libs/codemirror/codemirror.min.css">
     <link rel="stylesheet" href="/lte/assets/libs/codemirror/themes/sode.css">
-    <script rel="stylesheet" href="/lte/assets/libs/js-beautify/beautify-html.min.js"></script>
   @endif
 
   {{-- Bootstrap Styles --}}
@@ -90,6 +89,7 @@
     <script src="/lte/assets/libs/codemirror/mode/javascript/javascript.min.js"></script>
     <script src="/lte/assets/libs/codemirror/mode/css/css.min.js"></script>
     <script src="/lte/assets/libs/codemirror/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script href="/lte/assets/libs/js-beautify/beautify-html.min.js"></script>
   @endif
 
   <script src="/lte/assets/libs/quill/quill.min.js"></script>
