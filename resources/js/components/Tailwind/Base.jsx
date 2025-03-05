@@ -30,7 +30,7 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
 
           <a href={`https://api.whatsapp.com/send?phone=${numWhatsApp?.description ?? ''}&text=${waMessage?.description ?? ''}`}
             target="_blank" class="">
-            <img src='images/img/WhatsApp.png' alt="whatsapp" class="w-20" />
+            <img src='/images/img/WhatsApp.png' alt="whatsapp" class="w-20" />
           </a>
         </div>
       </div>
