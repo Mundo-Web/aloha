@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client'
 import CreateReactScript from '../Utils/CreateReactScript.jsx'
 import ReactAppend from '../Utils/ReactAppend.jsx'
 import Modal from '../components/Adminto/Modal.jsx'
-import Table from '../components/Adminto/Table.jsx'
 import InputFormGroup from '../components/Adminto/form/InputFormGroup.jsx'
 import TextareaFormGroup from '../components/Adminto/form/TextareaFormGroup.jsx'
 import TippyButton from '../components/Adminto/form/TippyButton.jsx'
@@ -18,6 +17,7 @@ import EditorFormGroup from '../Components/Adminto/form/EditorFormGroup.jsx'
 import { Clipboard } from 'sode-extend-react'
 import SwitchFormGroup from '../Components/Adminto/form/SwitchFormGroup.jsx'
 import { renderToString } from 'react-dom/server'
+import Table from '../Components/Adminto/Table.jsx'
 
 const mailingTemplatesRest = new MailingTemplatesRest()
 
@@ -60,6 +60,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   }
 
   const onEditorModalOpen = async (data) => {
+    console.log(data)
     const result = await mailingTemplatesRest.get(data.id)
     setTemplateActive(result);
     setTypeEdition('wysiwyg')

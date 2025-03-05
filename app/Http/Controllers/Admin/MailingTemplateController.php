@@ -22,6 +22,7 @@ class MailingTemplateController extends BasicController
     public function setPaginationInstance(string $model)
     {
         return $model::select([
+            'id',
             'name',
             'description',
             'model',

@@ -128,7 +128,9 @@
             </td>
           </tr>
 
-          <!-- Ingredients Section -->
+         <div style="padding: 40px">
+          <a href="{{env('APP_URL')}}/test/result/{formula}"></a>
+         </div>
           <tr>
             <td style="padding: 40px;">
               <h2 style="color: #404040; margin: 0 0 20px; font-size: 24px; text-align: center;">Estos serán tus

@@ -60,7 +60,7 @@ const SelectPlan = ({ goToNextPage, goToPrevPage, setSelectedPlan, bundles = [],
             <button href='/login' className="block rounded-full px-3 py-2 bg-[#A191B8] text-white text-sm uppercase">Iniciar sesion</button>
           </div>
           : planes.sort((a, b) => b.percentage - a.percentage).map((plan, index) => {
-            const price = finalPrice - (totalPrice * plan.percentage)
+            const price = finalPrice - (finalPrice * plan.percentage)
             return <div key={index}
               className={`cursor-pointer p-6 bg-white transition-all rounded-2xl grid grid-cols-2 items-center justify-between gap-4 shadow-md h-full hover:bg-[#EFBEC1] hover:text-white peer-checked:bg-[#EFBEC1] peer-checked:text-white group`}
               onClick={() => onSelectPlan(plan.id)}
