@@ -129,7 +129,7 @@
           </tr>
 
          <div style="padding: 40px">
-          <a href="{{env('APP_URL')}}/test/result/{formula}"></a>
+          <a href="{{env('APP_URL')}}/test/result/{{$formula->id}}" style="padding: .57rem 4rem; background-color: #C5B8D4; color: #fff">COMPRAR</a>
          </div>
           <tr>
             <td style="padding: 40px;">
