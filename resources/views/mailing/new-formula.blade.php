@@ -128,9 +128,10 @@
             </td>
           </tr>
 
-         <div style="padding: 40px">
-          <a href="{{env('APP_URL')}}/formula/{{$formula->id}}" style="padding: .57rem 4rem; background-color: #C5B8D4; color: #fff; text-decoration: none; display:block; margin: auto">COMPRAR</a>
-         </div>
+          <div style="padding: 40px">
+            <a href="{{ env('APP_URL') }}/formula/{{ $formula->id }}"
+              style="padding: .57rem 4rem; background-color: #C5B8D4; color: #fff; text-decoration: none; display:block; margin: auto; width: max-content">COMPRAR</a>
+          </div>
           <tr>
             <td style="padding: 40px;">
               <h2 style="color: #404040; margin: 0 0 20px; font-size: 24px; text-align: center;">Estos serán tus
@@ -164,6 +165,10 @@
         </table>
       </td>
     </tr>
+    <div style="padding: 40px">
+      <a href="{{ env('APP_URL') }}/formula/{{ $formula->id }}"
+        style="padding: .57rem 4rem; background-color: #C5B8D4; color: #fff; text-decoration: none; display:block; margin: auto; width: max-content">COMPRAR</a>
+    </div>
     <tr>
       <td align="center" style="padding: 20px 0px; background-color: #C5B8D4; border-radius: 0 0 8px 8px">
         <div style="padding: 2.5%; margin: auto; width: max-content">
