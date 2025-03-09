@@ -27,25 +27,6 @@ class HomeController extends BasicController
             ->limit(2)
             ->get();
 
-        // Consulta a la tabla user_formulas
-        $topFormulas = UserFormula::with(['hasTreatment', 'scalpType', 'hairType'])
-            ->selectRaw('user_formulas.has_treatment, user_formulas.scalp_type, user_formulas.hair_type, COUNT(*) as count')
-            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
-            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
-            ->where('statuses.is_ok', true)
-            ->where('sales.created_at', '>=', now()->subDays(30))
-            ->whereIn('user_formulas.id', Sale::select('user_formula_id'))
-            ->groupBy('user_formulas.has_treatment', 'user_formulas.scalp_type', 'user_formulas.hair_type')
-            ->orderBy('count', 'DESC')
-            ->limit(4)
-            ->get();
-
-        // Obtener el total de ventas con is_ok en true
-        $totalSales = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
-            ->where('statuses.is_ok', true)
-            ->where('sales.created_at', '>=', now()->subDays(30))
-            ->count();
-
         // Calcular tasa de recompra
         $customerPurchases = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('sales.created_at', '>=', now()->subDays(30))
@@ -117,13 +98,56 @@ class HomeController extends BasicController
                 ];
             });
 
+        $treatmentStats = UserFormula::with(['hasTreatment'])
+            ->selectRaw('has_treatment, COUNT(*) as count')
+            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->groupBy('has_treatment')
+            ->orderBy('count', 'DESC')
+            ->get();
+
+        $scalpTypeStats = UserFormula::with(['scalpType'])
+            ->selectRaw('scalp_type, COUNT(*) as count')
+            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->groupBy('scalp_type')
+            ->orderBy('count', 'DESC')
+            ->get();
+
+        $hairTypeStats = UserFormula::with(['hairType'])
+            ->selectRaw('hair_type, COUNT(*) as count')
+            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->groupBy('hair_type')
+            ->orderBy('count', 'DESC')
+            ->get();
+
+        $fragranceStats = UserFormula::with(['fragrance'])
+            ->selectRaw('fragrance_id, COUNT(*) as count')
+            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->groupBy('fragrance_id')
+            ->with('fragrance')
+            ->orderBy('count', 'DESC')
+            ->get();
+
         return [
             'newClients' => $newClients,
-            'topFormulas' => $topFormulas,
-            'totalSales' => $totalSales,
             'repurchaseRate' => $repurchaseRate,
             'topCities' => $topCities,
-            'topColors' => $colors
+            'topColors' => $colors,
+            'treatmentStats' => $treatmentStats,
+            'scalpTypeStats' => $scalpTypeStats,
+            'hairTypeStats' => $hairTypeStats,
+            'fragranceStats' => $fragranceStats,
         ];
     }
 

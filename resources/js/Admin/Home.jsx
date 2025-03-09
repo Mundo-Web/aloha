@@ -3,7 +3,7 @@ import Tippy from '@tippyjs/react';
 import { Chart, registerables } from 'chart.js';
 // import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 import { createRoot } from 'react-dom/client';
 import BaseAdminto from '../Components/Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
@@ -15,8 +15,9 @@ Chart.register(...registerables);
 const homeRest = new HomeRest()
 
 const Home = ({
-  newClients, topFormulas, totalSales,
-  repurchaseRate, topCities, topColors
+  newClients,
+  repurchaseRate, topCities, topColors, fragranceStats,
+  treatmentStats, scalpTypeStats, hairTypeStats
 }) => {
 
   console.log(topColors)
@@ -65,6 +66,8 @@ const Home = ({
         setSales(data)
       })
   }, [timeFrame])
+
+  console.log(fragranceStats)
 
   return (
     <>
@@ -156,10 +159,100 @@ const Home = ({
         <div className="col-xl-4">
           <div className="card">
             <div className="card-header">
-              <h4 className="header-title my-0">Colores que mas prefieren</h4>
+              <h4 className="header-title my-0">Preferencias de formulas</h4>
+              <small className='text-muted'>Últimos 30 días</small>
             </div>
             <div className="card-body">
-              <div className='d-flex justify-content-between align-items-center gap-2'>
+              <div className="row">
+                <div className="col-md-4">
+                  <h5 className="text-center">Tratamiento</h5>
+                  <Pie
+                    data={{
+                      labels: treatmentStats.map(item => item.has_treatment.description == 'Si'
+                        ? 'Con tratamiento'
+                        : 'Sin tratamiento'
+                      ),
+                      datasets: [{
+                        data: treatmentStats.map(item => item.count),
+                        backgroundColor: ['#10c469', '#ff5b5b'],
+                        borderWidth: 0
+                      }]
+                    }}
+                    options={{
+                      plugins: {
+                        legend: {
+                          position: 'bottom'
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <h5 className="text-center">Cuero cabelludo</h5>
+                  <Pie
+                    data={{
+                      labels: scalpTypeStats.map(item => item.scalp_type.description),
+                      datasets: [{
+                        data: scalpTypeStats.map(item => item.count),
+                        backgroundColor: ['#35b8e0', '#5b69bc', '#ffbd4a', '#10c469'],
+                        borderWidth: 0
+                      }]
+                    }}
+                    options={{
+                      plugins: {
+                        legend: {
+                          position: 'bottom'
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <h5 className="text-center">Tipo de cabello</h5>
+                  <Pie
+                    data={{
+                      labels: hairTypeStats.map(item => item.hair_type.description.toTitleCase()),
+                      datasets: [{
+                        data: hairTypeStats.map(item => item.count),
+                        backgroundColor: ['#ff8acc', '#98a6ad', '#f7b84b', '#4a81d4'],
+                        borderWidth: 0
+                      }]
+                    }}
+                    options={{
+                      plugins: {
+                        legend: {
+                          position: 'bottom'
+                        }
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+              <hr className='my-2' />
+              <h5 className="mt-0">Fragancias</h5>
+              <div className='d-flex flex-wrap justify-content-around align-items-center gap-2'>
+                {
+                  fragranceStats
+                    .sort((a, b) => b.quantity - a.quantity)
+                    .map((fragrance, index) => {
+                      return <Tippy content={fragrance.fragrance.name}>
+                        <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
+                          <img className='mb-1' src={`/api/fragrances/media/${fragrance.fragrance.image}`} alt="" style={{
+                            width: '40px',
+                            aspectRatio: 5 / 3,
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            borderRadius: '4px'
+                          }} />
+                          <small className='text-muted d-block mb-0' >{fragrance.count} ventas</small>
+                        </div>
+                      </Tippy>
+                    })
+                }
+              </div>
+              <hr className='my-2' />
+              <h5 >Colores</h5>
+              <div className='d-flex flex-wrap justify-content-around align-items-center gap-2'>
                 {
                   topColors
                     .sort((a, b) => b.quantity - a.quantity)
@@ -170,50 +263,6 @@ const Home = ({
                         <span>{color.name}</span>
                       </div>
                     })
-                }
-              </div>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-header">
-              <h4 className="header-title mb-0">Top 5 formulas mas vendidas</h4>
-              <small className='text-muted'>Últimos 30 días</small>
-            </div>
-            <div className="card-body">
-              <div className="inbox-widget">
-                {
-                  topFormulas.map((formula, index) => {
-                    const percent = formula.count / totalSales * 100
-                    return <div key={index} className="inbox-item d-flex justify-content-between align-items-center">
-                      <div className='d-flex gap-2 justify-content-center'>
-                        <h5 className="inbox-item-author mt-0 mb-1 text-center" style={{ width: '40px' }}>
-                          <span className={index > 1 ? 'fw-light' : ''}>#{index + 1}</span>
-                          {index == 0 && <i className='mdi mdi-crown ms-1 text-warning'></i>}
-                        </h5>
-                        <div>
-                          <div className="inbox-item-text">
-                            <div>
-                              <b>Tratamiento</b>: {formula.has_treatment.description.toTitleCase()}
-                            </div>
-                            <div>
-                              <b>Cuero cabelludo</b>: {formula.scalp_type.description.toTitleCase()}
-                            </div>
-                            <div>
-                              <b>Tipo de cabello</b>: {formula.hair_type.description.toTitleCase()}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <h5 className='text-end'>
-                        {formula.count} pedidos
-                        <Tippy content={`Se uso esta formula en el ${percent.toFixed(2)}% de las ventas`}>
-                          <small className='text-muted d-block'>
-                            {Math.round(percent)}%
-                          </small>
-                        </Tippy>
-                      </h5>
-                    </div>
-                  })
                 }
               </div>
             </div>
