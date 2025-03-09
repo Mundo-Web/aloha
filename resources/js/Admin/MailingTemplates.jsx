@@ -18,14 +18,19 @@ import { Clipboard } from 'sode-extend-react'
 import SwitchFormGroup from '../Components/Adminto/form/SwitchFormGroup.jsx'
 import { renderToString } from 'react-dom/server'
 import Table from '../Components/Adminto/Table.jsx'
+import SendingModal from '../Reutilizables/Templates/SendingModal.jsx'
+import RepositoryRest from '../actions/Admin/RepositoryRest.js'
+import Global from '../Utils/Global.js'
 
 const mailingTemplatesRest = new MailingTemplatesRest()
+const repositoryRest = new RepositoryRest()
 
 const MailingTemplates = ({ TINYMCE_KEY }) => {
   const gridRef = useRef()
   const modalRef = useRef()
   const designModalRef = useRef()
   const ddRef = useRef()
+  const sendingModalRef = useRef()
 
   const codeEditorRef = useRef()
 
@@ -35,6 +40,8 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   const nameRef = useRef()
   const descriptionRef = useRef()
   const modelRef = useRef()
+
+  const [dataLoaded, setDataLoaded] = useState(null)
 
   const [isEditing, setIsEditing] = useState(false)
   const [templateActive, setTemplateActive] = useState({})
@@ -60,7 +67,6 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   }
 
   const onEditorModalOpen = async (data) => {
-    console.log(data)
     const result = await mailingTemplatesRest.get(data.id)
     setTemplateActive(result);
     setTypeEdition('wysiwyg')
@@ -90,9 +96,12 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   const onDesignModalSubmit = async (e) => {
     e.preventDefault()
 
+    const content = typeEdition == 'wysiwyg' ? wysiwygContent : typeEdition == 'code' ? codeContent : dropzoneContent
+
     const request = {
       id: templateActive.id,
-      content: typeEdition == 'wysiwyg' ? wysiwygContent : typeEdition == 'code' ? codeContent : dropzoneContent
+      content,
+      vars: content.match(/{{([^}]+)}}/g)?.map(match => match.slice(2, -2)) || [],
     }
 
     const result = await mailingTemplatesRest.save(request)
@@ -167,6 +176,11 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
     })
   }
 
+  const onSendingModalClicked = async (data) => {
+    const result = await mailingTemplatesRest.get(data.id)
+    setDataLoaded(result)
+  }
+
   useEffect(() => {
     Clipboard.paste(ddRef.current, (files) => {
       if (!files || files?.length == 0) return
@@ -175,6 +189,40 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
       onDropzoneChange(files[0])
     })
   }, [null])
+
+  const processWywiwygContent = async (newContent) => {
+    console.log('Hola mndo')
+    const body = $(`<div>${newContent}</div>`)
+    const imgs = body.find('img[src^="data:"]')
+
+    if (imgs.length > 0) {
+      for (const img of imgs) {
+        const src = img.getAttribute('src');
+
+        const base64Data = src.split(',')[1];
+        const mimeType = src.split(',')[0].split(':')[1].split(';')[0];
+
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteArrays.push(byteCharacters.charCodeAt(i));
+        }
+
+        const byteArray = new Uint8Array(byteArrays);
+        const file = new File([byteArray], `${crypto.randomUUID()}.${mimeType.split('/')[1]}`, { type: mimeType });
+
+        const formData = new FormData()
+        formData.append('file', file)
+        const result = await repositoryRest.save(formData);
+        const newSrc = result.url
+        img.setAttribute('src', `${Global.APP_PROTOCOL}://repository.${Global.APP_DOMAIN}/${newSrc}`)
+      }
+      setWysiwygContent(body.html())
+    } else {
+      setWysiwygContent(newContent)
+    }
+  }
 
   return (<>
     <Table gridRef={gridRef} title='Plantillas' rest={mailingTemplatesRest}
@@ -209,9 +257,9 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         {
           dataField: 'model',
           caption: 'Tabla',
-          cellTemplate: (container, { data }) => {
-            container.text(data.model || 'Externo')
-          },
+          // cellTemplate: (container, { data }) => {
+          //   container.text(data.model || 'Externo')
+          // },
           lookup: {
             dataSource: [
               { value: '', text: 'Externo' },
@@ -255,15 +303,19 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
             container.attr('style', 'display: flex; gap: 4px; overflow: unset')
 
             ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-primary' title='Editar' onClick={() => onModalOpen(data)}>
-              <i className='fa fa-pen'></i>
+              <i className='mdi mdi-pencil'></i>
             </TippyButton>)
 
             ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Diseñar plantilla' onClick={() => onEditorModalOpen(data)} data-loading-text='<i className="fa fa-spinner fa-spin"></i>'>
-              <i className='far fa-edit'></i>
+              <i className='mdi mdi-circle-edit-outline'></i>
+            </TippyButton>)
+
+            ReactAppend(container, <TippyButton className='btn btn-xs btn-white' title='Enviar mensajes masivos' onClick={() => onSendingModalClicked(data)}>
+              <i className='mdi mdi-email-send'></i>
             </TippyButton>)
 
             ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-danger' title='Eliminar' onClick={() => onDeleteClicked(data.id)}>
-              <i className='fa fa-trash-alt'></i>
+              <i className='mdi mdi-delete'></i>
             </TippyButton>)
           },
           allowFiltering: false,
@@ -290,15 +342,15 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
           <label className='form-label'>Tipo de envio</label>
           <div className='row col-12'>
             <div className="col-sm-6">
-              <div class="form-check">
-                <input type="radio" id="auto_send_false" name="auto_send" class="form-check-input" value={0} defaultChecked />
-                <label class="form-check-label" for="auto_send_false"  >Manual</label>
+              <div className="form-check">
+                <input type="radio" id="auto_send_false" name="auto_send" className="form-check-input" value={0} defaultChecked />
+                <label className="form-check-label" for="auto_send_false"  >Manual</label>
               </div>
             </div>
             <div className="col-sm-6">
-              <div class="form-check">
-                <input type="radio" id="auto_send_true" name="auto_send" class="form-check-input" value={1} />
-                <label class="form-check-label" for="auto_send_true" >Automatico</label>
+              <div className="form-check">
+                <input type="radio" id="auto_send_true" name="auto_send" className="form-check-input" value={1} />
+                <label className="form-check-label" for="auto_send_true" >Automatico</label>
               </div>
             </div>
           </div>
@@ -351,7 +403,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
               height: '600px',
             }}
             value={wysiwygContent}
-            onEditorChange={(newValue) => setWysiwygContent(newValue)}
+            onEditorChange={(newValue) => processWywiwygContent(newValue)}
           />
           <div className='mb-2'></div>
         </div>
@@ -405,6 +457,8 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         </div>
       </div>
     </Modal>
+
+    <SendingModal modalRef={sendingModalRef} dataLoaded={dataLoaded} setDataLoaded={setDataLoaded} />
   </>
   )
 }

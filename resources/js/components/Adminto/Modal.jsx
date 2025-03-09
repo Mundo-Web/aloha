@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const Modal = ({ modalRef, title = 'Modal', isStatic = false, size = 'md', children, bodyClass = '', btnCancelText, btnSubmitText, hideFooter, hideButtonSubmit, onSubmit = (e) => { e.preventDefault(); $(modalRef.current).modal('hide') } }) => {
+const Modal = ({ modalRef, title = 'Modal', isStatic = false, size = 'md', children, bodyClass = '', btnCancelText, btnSubmitText, hideFooter, hideButtonSubmit, onSubmit = (e) => { e.preventDefault(); $(modalRef.current).modal('hide') }, onClose = () => { } }) => {
   const staticProp = isStatic ? { 'data-bs-backdrop': 'static' } : {}
-  return (<form className='modal fade' ref={modalRef} tabIndex='-1' aria-hidden='true' {...staticProp} onSubmit={onSubmit} autoComplete='off'>
+
+  const modalId = crypto.randomUUID();
+
+  useEffect(() => {
+    $(modalRef.current).on('hidden.bs.modal', function (e) {
+      onClose(this);
+    })
+  }, [])
+
+  return (<form id={`modal-${modalId}`} className='modal fade' ref={modalRef} tabIndex='-1' aria-hidden='true' {...staticProp} onSubmit={onSubmit} autoComplete='off'>
     <div className={`modal-dialog modal-dialog-centered modal-${size ?? 'md'}`}>
       <div className='modal-content ' style={{ boxShadow: '0 0 10px rgba(0,0,0,0.25)' }}>
         <div className='modal-header'>

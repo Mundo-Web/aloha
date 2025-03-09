@@ -35,6 +35,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
+use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
@@ -45,6 +46,7 @@ use App\Http\Controllers\MailingTemplateController;
 use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PopupController;
+use App\Http\Controllers\SendingHistoryController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestResultController;
@@ -107,7 +109,7 @@ Route::middleware(['can:Admin', 'auth'])->prefix('admin')->group(function () {
 
     Route::prefix('mailing')->group(function () {
         Route::get('/templates', [AdminMailingTemplateController::class, 'reactView'])->name('Admin/MailingTemplates.jsx');
-        Route::get('/history', [AdminMailingTemplateController::class, 'reactView'])->name('Admin/MailingHistory.jsx');
+        Route::get('/history', [AdminSendingHistoryController::class, 'reactView'])->name('Admin/SendingHistory.jsx');
     });
 
     Route::get('/subscriptions', [AdminSubscriptionController::class, 'reactView'])->name('Admin/Subscriptions.jsx');

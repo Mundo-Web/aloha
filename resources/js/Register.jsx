@@ -139,13 +139,13 @@ const Register = ({ PUBLIC_RSA_KEY, RECAPTCHA_SITE_KEY }) => {
                     <input ref={lastnameRef} className="form-control" type="text" id="lastname" placeholder="Ingrese sus apellidos"
                       required />
                   </div>
-                  <div class="mb-2">
-                    <label for="password" class="form-label">Cumpleaños <b className="text-danger">*</b></label>
-                    <div class="input-group input-group-merge">
-                      <div class="input-group-text" data-password="false">
-                        <span class="mdi mdi-cake-variant"></span>
+                  <div className="mb-2">
+                    <label for="password" className="form-label">Cumpleaños <b className="text-danger">*</b></label>
+                    <div className="input-group input-group-merge">
+                      <div className="input-group-text" data-password="false">
+                        <span className="mdi mdi-cake-variant"></span>
                       </div>
-                      <select ref={monthRef} id='birth-month' class="form-select" onChange={(e) => setMonth(e.target.value)} defaultValue={month} value={month}>
+                      <select ref={monthRef} id='birth-month' className="form-select" onChange={(e) => setMonth(e.target.value)} defaultValue={month} value={month}>
                         <option value="01" data-days={31}>Enero</option>
                         <option value="02" data-days={29}>Febrero</option>
                         <option value="03" data-days={31}>Marzo</option>
@@ -184,12 +184,12 @@ const Register = ({ PUBLIC_RSA_KEY, RECAPTCHA_SITE_KEY }) => {
                       placeholder="Confirme su contraseña" />
                   </div>
                   <div className="col-12 mb-3">
-                    <div class="form-check mx-auto text-center">
-                      <label class="form-check-label mb-0" style={{
+                    <div className="form-check mx-auto text-center">
+                      <label className="form-check-label mb-0" style={{
                         userSelect: 'none',
                         cursor: 'pointer'
                       }}>
-                        <input ref={notifyMeRef} type="checkbox" class="form-check-input" style={{
+                        <input ref={notifyMeRef} type="checkbox" className="form-check-input" style={{
                           cursor: 'pointer'
                         }} />
                         Quiero recibir ofertas exclusivas y novedades de vuá

@@ -103,25 +103,25 @@ const Information = ({ session }) => {
       className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-white p-10 rounded-2xl shadow-lg w-[95%] max-w-lg max-h-[95vh] overflow-y-auto'
       overlayClassName={'fixed inset-0 bg-black bg-opacity-50 z-50'}>
       <form onSubmit={onModalSubmit}>
-        <div class="grid gap-6 mb-6 md:grid-cols-6">
+        <div className="grid gap-6 mb-6 md:grid-cols-6">
           <div className='md:col-span-3'>
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">Nombres</label>
-            <input ref={nameRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
+            <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900">Nombres</label>
+            <input ref={nameRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
               defaultValue={session.name} />
           </div>
           <div className='md:col-span-3'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Apellidos
             </label>
-            <input ref={lastnameRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
+            <input ref={lastnameRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
               defaultValue={session.lastname} />
           </div>
           <div className='md:col-span-6'>
-            <label for="birthday" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="birthday" className="block mb-2 text-sm font-medium text-gray-900">
               Día de cumpleaños
             </label>
             <div className='grid gap-6 grid-cols-2'>
-              <select ref={birthMonthRef} id='birth-month' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
+              <select ref={birthMonthRef} id='birth-month' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
                 onChange={(e) => setMonth(e.target.value)} defaultValue={month} value={month} >
                 <option value="01" data-days={31}>Enero</option>
                 <option value="02" data-days={29}>Febrero</option>
@@ -146,66 +146,66 @@ const Information = ({ session }) => {
             </div>
           </div>
           <div className='col-span-6'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Correo
             </label>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
+            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
               defaultValue={session.email} disabled />
           </div>
           <div className='md:col-span-3'>
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900">
               Pais
             </label>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
+            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
               defaultValue='Perú' disabled />
           </div>
           <div className='md:col-span-3'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Teléfono
             </label>
-            <input ref={phoneRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
+            <input ref={phoneRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none" required
               defaultValue={session.phone} />
           </div>
           <div className='md:col-span-2'>
-            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="first_name" className="block mb-2 text-sm font-medium text-gray-900">
               Departamento
             </label>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
+            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
               defaultValue={session.department} disabled />
           </div>
           <div className='md:col-span-2'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Provincia
             </label>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
+            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
               defaultValue={session.province} disabled />
           </div>
           <div className='md:col-span-2'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Distrito
             </label>
-            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
+            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed disabled:bg-gray-100" required
               defaultValue={session.district} disabled />
           </div>
           <div className='md:col-span-4'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Dirección
             </label>
-            <input ref={addressRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
+            <input ref={addressRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
               defaultValue={session.address} />
           </div>
           <div className='md:col-span-2'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Número
             </label>
-            <input ref={addressNumberRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
+            <input ref={addressNumberRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
               defaultValue={session.address_number} />
           </div>
           <div className='col-span-6'>
-            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">
+            <label for="last_name" className="block mb-2 text-sm font-medium text-gray-900">
               Referencia
             </label>
-            <input ref={addressReferenceRef} type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
+            <input ref={addressReferenceRef} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#F7C2C6] focus:border-[#F7C2C6] block w-full p-2.5 outline-none disabled:cursor-not-allowed" required
               defaultValue={session.address_reference} />
           </div>
         </div>

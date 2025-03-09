@@ -17,6 +17,7 @@ services:
       - APP_DOMAIN=${APP_DOMAIN}
       - APP_URL=${APP_URL}
       - WA_URL=${WA_URL}
+      - REPOSITORY_URL=${REPOSITORY_URL}
       - WAGROUP_VENTAS_ID=${WAGROUP_VENTAS_ID}
       - LOG_CHANNEL=${LOG_CHANNEL}
       - LOG_DEPRECATIONS_CHANNEL=${LOG_DEPRECATIONS_CHANNEL}
@@ -51,6 +52,7 @@ services:
       - CULQI_PUBLIC_KEY=${CULQI_PUBLIC_KEY}
       - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
       - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+      - TINYMCE_KEY=${TINYMCE_KEY}
     working_dir: /var/www/vua
     volumes:
       - .:/var/www/

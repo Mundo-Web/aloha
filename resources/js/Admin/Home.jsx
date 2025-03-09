@@ -251,7 +251,7 @@ const Home = ({
                 }
               </div>
               <hr className='my-2' />
-              <h5 >Colores</h5>
+              <h5 className='mt-0'>Colores</h5>
               <div className='d-flex flex-wrap justify-content-around align-items-center gap-2'>
                 {
                   topColors

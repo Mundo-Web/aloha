@@ -27,8 +27,10 @@ use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ItemController as AdminItemController;
 use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
 use App\Http\Controllers\Admin\RenewalController as AdminRenewalController;
+use App\Http\Controllers\Admin\RepositoryController as AdminRepositoryController;
 use App\Http\Controllers\Admin\SaleController as AdminSaleController;
 use App\Http\Controllers\Admin\SaleStatusController as AdminSaleStatusController;
+use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
 use App\Http\Controllers\Admin\SupplyController as AdminSupplyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
@@ -44,10 +46,8 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CoverController;
 use App\Http\Controllers\CulqiController;
 use App\Http\Controllers\FragranceController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MailingController;
-use App\Http\Controllers\MailingTemplateController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaleController;
@@ -106,7 +106,7 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 
     Route::middleware('can:Admin')->group(function () {
-        
+
         Route::get('/graph/sales/{param}', [AdminHomeController::class, 'getSales']);
 
         Route::prefix('admin')->group(function () {
@@ -185,10 +185,19 @@ Route::middleware('auth')->group(function () {
             Route::patch('/messages/{field}', [AdminMessageController::class, 'boolean']);
             Route::delete('/messages/{id}', [AdminMessageController::class, 'delete']);
 
+            Route::get('/repository/{id}', [AdminRepositoryController::class, 'get']);
+            Route::get('/repository/resend/{id}', [AdminRepositoryController::class, 'reSend']);
+            Route::post('/repository', [AdminRepositoryController::class, 'save']);
+            Route::post('/repository/paginate', [AdminRepositoryController::class, 'paginate']);
+            Route::patch('/repository/status', [AdminRepositoryController::class, 'status']);
+            Route::delete('/repository/{id}', [AdminRepositoryController::class, 'delete']);
+
             Route::prefix('mailing')->group(function () {
                 Route::get('/templates/{id}', [AdminMailingTemplateController::class, 'get']);
-                Route::post('/templates', [AdminMailingTemplateController::class,'save']);
+                Route::post('/templates', [AdminMailingTemplateController::class, 'save']);
                 Route::post('/templates/paginate', [AdminMailingTemplateController::class, 'paginate']);
+
+                Route::post('/history/paginate', [AdminSendingHistoryController::class, 'paginate']);
             });
 
             Route::post('/subscriptions/paginate', [AdminSubscriptionController::class, 'paginate']);

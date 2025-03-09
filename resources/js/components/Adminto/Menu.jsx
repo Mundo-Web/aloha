@@ -98,7 +98,7 @@ const Menu = ({ session, hasRole, salesCount }) => {
               <li className="menu-title">Mailing y subscripciones</li>
               <MenuItemContainer title='Mailing' icon='mdi mdi-email-send'>
                 <MenuItem href="/admin/mailing/templates" icon='mdi mdi-calendar-month'>Plantillas</MenuItem>
-                <MenuItem href="/admin/mailing/history" icon='mdi mdi-package-variant'>Historial</MenuItem>
+                <MenuItem href="/admin/mailing/history" icon='mdi mdi-history'>Historial</MenuItem>
               </MenuItemContainer>
               <MenuItem href="/admin/subscriptions" icon='mdi mdi-email-multiple'>Subscripciones</MenuItem>
               <li className="menu-title">Landing Page</li>

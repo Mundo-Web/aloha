@@ -4,17 +4,15 @@ import BaseAdminto from '@Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
 import Table from '../Components/Table';
 import Modal from '../Components/Modal';
-import InputFormGroup from '../Components/Adminto/form/InputFormGroup';
 import ReactAppend from '../Utils/ReactAppend';
 import DxButton from '../Components/dx/DxButton';
 import TextareaFormGroup from '@Adminto/form/TextareaFormGroup';
-import SwitchFormGroup from '@Adminto/form/SwitchFormGroup';
-import ImageFormGroup from '../Components/Adminto/form/ImageFormGroup';
 import Swal from 'sweetalert2';
 import BundlesRest from '../Actions/Admin/BundlesRest';
 import SelectAPIFormGroup from '../Components/Adminto/form/SelectAPIFormGroup';
 import SetSelectValue from '../Utils/SetSelectValue';
-import SelectFormGroup from '../Components/Adminto/form/SelectFormGroup';
+import InputFormGroup from '../components/Adminto/form/InputFormGroup';
+import SelectFormGroup from '../components/Adminto/form/SelectFormGroup';
 
 const bundlesRest = new BundlesRest()
 
@@ -196,9 +194,9 @@ const Bundles = ({ }) => {
         <input ref={idRef} type='hidden' />
         <InputFormGroup eRef={nameRef} label='Nombre' required />
         <TextareaFormGroup eRef={descriptionRef} label='Descripción' rows={2} required />
-        <InputFormGroup eRef={percentageRef} label='Descuento' type='number' step={0.01} col='col-md-4' required specification={<div class="input-group py-1">
-          <input ref={howMuchCosts} type="number" class="form-control" placeholder="Cuanto cuesta" aria-label="Lo que debe pagar el usuario" onChange={calculatePercent} />
-          <input ref={howMuchPays} type="number" class="form-control" placeholder="Cuanto paga" aria-label="Lo que termina pagando realmente" onChange={calculatePercent} />
+        <InputFormGroup eRef={percentageRef} label='Descuento' type='number' step={0.01} col='col-md-4' required specification={<div className="input-group py-1">
+          <input ref={howMuchCosts} type="number" className="form-control" placeholder="Cuanto cuesta" aria-label="Lo que debe pagar el usuario" onChange={calculatePercent} />
+          <input ref={howMuchPays} type="number" className="form-control" placeholder="Cuanto paga" aria-label="Lo que termina pagando realmente" onChange={calculatePercent} />
         </div>} />
         <SelectFormGroup eRef={comparatorRef} label='Comparador' col='col-md-4 col-sm-6' dropdownParent='#principal-container' required>
           <option value="<">Menor que</option>
