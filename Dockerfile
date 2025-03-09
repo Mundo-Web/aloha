@@ -27,6 +27,7 @@ COPY . .
 # Instalar dependencias de Composer
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 RUN php artisan key:generate 
+RUN chmod -R 777 public/repository
 RUN chmod -R 777 storage
 RUN chmod -R 777 bootstrap/cache
 RUN php artisan storage:link
@@ -34,7 +35,7 @@ RUN php artisan storage:link
 
 
 # Configurar permisos
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chown -R www-data:www-data public/repository storage bootstrap/cache
 
 # Exponer puerto 9001
 EXPOSE 9000
