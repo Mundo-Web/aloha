@@ -9,6 +9,7 @@ use App\Models\MailingTemplate;
 use App\Models\SendingHistory;
 use Illuminate\Http\Request;
 use SoDe\Extend\JSON;
+use SoDe\Extend\Response;
 use SoDe\Extend\Trace;
 
 class SendingHistoryController extends BasicController
@@ -16,6 +17,24 @@ class SendingHistoryController extends BasicController
     public $model = SendingHistory::class;
     public $reactView = 'Admin/SendingHistory';
     public $ignoreStatusFilter = true;
+
+    public function execute(Request $request)
+    {
+        $response = Response::simpleTryCatch(function () use ($request) {
+            $templates = MailingTemplate::select('id')
+                ->where('auto_send', true)
+                ->where('status', true)
+                ->get();
+            foreach ($templates as $value) {
+                $request = new Request();
+                $request->merge([
+                    'template_id' => $value->id,
+                ]);
+                $this->save($request);
+            }
+        });
+        return response($response->toArray(), $response->status);
+    }
 
     public function beforeSave(Request $request)
     {

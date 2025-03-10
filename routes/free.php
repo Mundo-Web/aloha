@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\RemainingHistoryController;
+use App\Http\Controllers\Admin\SendingHistoryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/remainings-history', [RemainingHistoryController::class, 'set']);
-// Route::post('/clients', [ClientController::class, 'save']);
+Route::get('/mailing/execute', [SendingHistoryController::class, 'execute']);
