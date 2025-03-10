@@ -317,7 +317,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         },
         {
           caption: 'Acciones',
-          width: '150px',
+          width: '160px',
           cellTemplate: (container, { data }) => {
             container.attr('style', 'display: flex; gap: 4px; overflow: unset')
 
