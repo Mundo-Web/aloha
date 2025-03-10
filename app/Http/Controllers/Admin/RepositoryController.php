@@ -17,9 +17,8 @@ class RepositoryController extends BasicController
 
     public function afterSave(Request $request, object $jpa, bool $isNew)
     {
-        dump($jpa);
         return [
-            'url' => $jpa->url,
+            'url' => 'repository/' . $jpa->file,
         ];
     }
 }
