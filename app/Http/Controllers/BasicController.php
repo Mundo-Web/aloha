@@ -22,7 +22,6 @@ use SoDe\Extend\Response;
 use SoDe\Extend\Text;
 use Illuminate\Support\Facades\Schema;
 use Intervention\Image\Facades\Image;
-use SoDe\Extend\File;
 
 class BasicController extends Controller
 {
@@ -241,7 +240,12 @@ class BasicController extends Controller
         $full = $request->file($field);
         $uuid = Crypto::randomUUID();
         $ext = $full->getClientOriginalExtension();
-        $path = storage_path("app/images/{$snake_case}/{$uuid}.{$ext}");
+        $path = storage_path("app/images/{$snake_case}");
+        $filename = "{$uuid}.{$ext}";
+
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
 
         $image = Image::make($full);
         if ($image->width() > 1000 || $image->height() > 1000) {
@@ -250,7 +254,7 @@ class BasicController extends Controller
             $constraint->upsize();
           });
         }
-        $image->save($path); // Guarda la imagen redimensionada
+        $image->save("{$path}/{$filename}"); // Guarda la imagen redimensionada
 
         $body[$field] = "{$uuid}.{$ext}";
       }

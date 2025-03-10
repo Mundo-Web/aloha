@@ -197,6 +197,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/templates', [AdminMailingTemplateController::class, 'save']);
                 Route::post('/templates/paginate', [AdminMailingTemplateController::class, 'paginate']);
 
+                Route::post('/history', [AdminSendingHistoryController::class, 'save']);
                 Route::post('/history/paginate', [AdminSendingHistoryController::class, 'paginate']);
             });
 
