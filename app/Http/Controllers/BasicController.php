@@ -22,6 +22,7 @@ use SoDe\Extend\Response;
 use SoDe\Extend\Text;
 use Illuminate\Support\Facades\Schema;
 use Intervention\Image\Facades\Image;
+use SoDe\Extend\File;
 
 class BasicController extends Controller
 {
@@ -35,6 +36,7 @@ class BasicController extends Controller
   public $ignorePrefix = [];
   public $with4get = [];
   public $ignoreStatusFilter = false;
+  public $useIntervention = true;
 
   public function get(Request $request, string $id)
   {
@@ -247,14 +249,19 @@ class BasicController extends Controller
           mkdir($path, 0777, true);
         }
 
-        $image = Image::make($full);
-        if ($image->width() > 1000 || $image->height() > 1000) {
-          $image->resize(1000, null, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-          });
+        if ($this->useIntervention) {
+          $image = Image::make($full);
+          if ($image->width() > 1000 || $image->height() > 1000) {
+            $image->resize(1000, null, function ($constraint) {
+              $constraint->aspectRatio();
+              $constraint->upsize();
+            });
+          }
+          $image->save("{$path}/{$filename}"); // Guarda la imagen redimensionada
+        } else {
+          File::save("{$path}/{$filename}", file_get_contents($full));
         }
-        $image->save("{$path}/{$filename}"); // Guarda la imagen redimensionada
+
 
         $body[$field] = "{$uuid}.{$ext}";
       }

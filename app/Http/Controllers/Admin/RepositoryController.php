@@ -9,6 +9,7 @@ class RepositoryController extends BasicController
 {
     public $model = 'Repository';
     public $imageFields = ['file'];
+    public $useIntervention = false;
 
     public function afterSave(Request $request, object $jpa, bool $isNew)
     {
