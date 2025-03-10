@@ -265,8 +265,9 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         {
           dataField: 'name',
           caption: 'Nombre',
+          width: '300px',
           cellTemplate: (container, { data }) => {
-            container.html(renderToString(<b>{data.name}</b>))
+            ReactAppend(container, <b>{data.name}</b>)
           }
         },
         {
