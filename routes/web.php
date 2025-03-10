@@ -35,6 +35,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
+use App\Http\Controllers\Admin\RepositoryController;
 use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BlogController;
@@ -131,3 +132,4 @@ Route::middleware(['can:Admin', 'auth'])->prefix('admin')->group(function () {
 
 
 Route::get('/mailing/new-formula', fn() => view('mailing.new-formula'));
+Route::get('/repository/{uuid}', [RepositoryController::class, 'media'])->withoutMiddleware('throttle');

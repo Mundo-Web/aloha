@@ -10,27 +10,31 @@ use Illuminate\Routing\ResponseFactory;
 use SoDe\Extend\Crypto;
 use SoDe\Extend\File;
 use SoDe\Extend\Response;
+use Intervention\Image\Facades\Image;
 
 class RepositoryController extends BasicController
 {
+    public $model = 'repository';
     public function save(Request $request): HttpResponse|ResponseFactory
     {
         $response = Response::simpleTryCatch(function () use ($request) {
             $full = $request->file('file');
             $uuid = Crypto::randomUUID();
             $ext = $full->getClientOriginalExtension();
-            $path = public_path("repository/mailing");
-
-            if (!file_exists($path)) {
-                mkdir($path, 0777, true);
-            }
-
             $filename = "{$uuid}.{$ext}";
+            $path = \storage_path("app/images/repository/{$filename}");
 
-            File::save("{$path}/{$filename}", file_get_contents($full));
+            $image = Image::make($full);
+            if ($image->width() > 1000 || $image->height() > 1000) {
+                $image->resize(1000, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            }
+            $image->save($path);
 
             return [
-                'url' =>  'repository/mailing/' . $filename
+                'url' =>  'repository/' . $filename
             ];
         });
         return response($response->toArray(), $response->status);
