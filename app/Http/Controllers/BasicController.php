@@ -36,7 +36,6 @@ class BasicController extends Controller
   public $ignorePrefix = [];
   public $with4get = [];
   public $ignoreStatusFilter = false;
-  public $useIntervention = true;
 
   public function get(Request $request, string $id)
   {
@@ -244,18 +243,14 @@ class BasicController extends Controller
         $ext = $full->getClientOriginalExtension();
         $path = storage_path("app/images/{$snake_case}/{$uuid}.{$ext}");
 
-        if ($this->useIntervention) {
-          $image = Image::make($full);
-          if ($image->width() > 1000 || $image->height() > 1000) {
-            $image->resize(1000, null, function ($constraint) {
-              $constraint->aspectRatio();
-              $constraint->upsize();
-            });
-          }
-          $image->save($path); // Guarda la imagen redimensionada
-        } else {
-          File::save($path, file_get_contents($full));
+        $image = Image::make($full);
+        if ($image->width() > 1000 || $image->height() > 1000) {
+          $image->resize(1000, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+          });
         }
+        $image->save($path); // Guarda la imagen redimensionada
 
         $body[$field] = "{$uuid}.{$ext}";
       }
