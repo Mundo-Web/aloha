@@ -8,6 +8,7 @@ use App\Models\dxDataGrid;
 use App\Models\General;
 use App\Models\Sale;
 use App\Models\Social;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -99,7 +100,7 @@ class BasicController extends Controller
     $footerLinks = Aboutus::whereIn('correlative', ['phone', 'email', 'whatsapp', 'customer-complaints'])->get();
 
     $salesCount = null;
-    if (Auth::check() && Auth::user()->hasRole('Admin')) {
+    if (Auth::check() && User::find(Auth::user()->id)->hasRole('Admin')) {
       $salesCount = Sale::where('status_id', '312f9a91-d3f2-4672-a6bf-678967616cac')->count();
     }
     $numWhatsApp = Aboutus::select(['name', 'description'])->where('correlative', 'whatsapp')->first();
