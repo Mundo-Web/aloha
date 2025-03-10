@@ -198,6 +198,8 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
       for (const img of imgs) {
         const src = img.getAttribute('src');
 
+        img.setAttribute('src', null)
+
         const base64Data = src.split(',')[1];
         const mimeType = src.split(',')[0].split(':')[1].split(';')[0];
 
@@ -213,7 +215,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
 
         const formData = new FormData()
         formData.append('file', file)
-        const {data} = await repositoryRest.save(formData);
+        const { data } = await repositoryRest.save(formData);
         const newSrc = data.url
         img.setAttribute('src', `${Global.APP_URL}/${newSrc}`)
       }

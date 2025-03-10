@@ -234,6 +234,7 @@ class BasicController extends Controller
       $body = $this->beforeSave($request);
 
       $snake_case = Text::camelToSnakeCase(str_replace('App\\Models\\', '', $this->model));
+
       foreach ($this->imageFields as $field) {
         if (!$request->hasFile($field)) continue;
         $full = $request->file($field);
@@ -253,14 +254,18 @@ class BasicController extends Controller
         $body[$field] = "{$uuid}.{$ext}";
       }
 
-      $jpa = $this->model::find(isset($body['id']) ? $body['id'] : null);
+      $isNew = false;
+      if (Text::startsWith($this->model, 'App\\Models\\')) {
+        $jpa = $this->model::find(isset($body['id']) ? $body['id'] : null);
 
-      if (!$jpa) {
-        $jpa = $this->model::create($body);
-        $isNew = true;
+        if (!$jpa) {
+          $jpa = $this->model::create($body);
+          $isNew = true;
+        } else {
+          $jpa->update($body);
+        }
       } else {
-        $jpa->update($body);
-        $isNew = false;
+        $jpa = (object) $body;
       }
 
       $data = $this->afterSave($request, $jpa, $isNew);

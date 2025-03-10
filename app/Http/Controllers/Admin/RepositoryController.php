@@ -13,30 +13,13 @@ use Intervention\Image\Facades\Image;
 class RepositoryController extends BasicController
 {
     public $model = 'Repository';
-    public function save(Request $request): HttpResponse|ResponseFactory
+    public $imageFields = ['file'];
+
+    public function afterSave(Request $request, object $jpa, bool $isNew)
     {
-        $response = Response::simpleTryCatch(function () use ($request) {
-            $full = $request->file('file');
-            $uuid = Crypto::randomUUID();
-            $ext = $full->getClientOriginalExtension();
-            $filename = "{$uuid}.{$ext}";
-            $path = \storage_path("app/images/repository/{$filename}");
-
-            $image = Image::make($full);
-            if ($image->width() > 1000 || $image->height() > 1000) {
-                $image->resize(1000, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
-            }
-            $image->save($path);
-
-            return [
-                'url' =>  'repository/' . $filename
-            ];
-        }, function($response, $th) {
-            dump($th);
-        });
-        return response($response->toArray(), $response->status);
+        dump($jpa);
+        return [
+            'url' => $jpa->url,
+        ];
     }
 }
