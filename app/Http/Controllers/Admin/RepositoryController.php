@@ -3,18 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Routing\ResponseFactory;
 use SoDe\Extend\Crypto;
-use SoDe\Extend\File;
 use SoDe\Extend\Response;
 use Intervention\Image\Facades\Image;
 
 class RepositoryController extends BasicController
 {
-    public $model = 'repository';
+    public $model = 'Repository';
     public function save(Request $request): HttpResponse|ResponseFactory
     {
         $response = Response::simpleTryCatch(function () use ($request) {
@@ -36,6 +34,8 @@ class RepositoryController extends BasicController
             return [
                 'url' =>  'repository/' . $filename
             ];
+        }, function($response, $th) {
+            dump($th);
         });
         return response($response->toArray(), $response->status);
     }

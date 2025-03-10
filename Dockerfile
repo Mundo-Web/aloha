@@ -6,14 +6,15 @@ RUN apt-get update && apt-get install -y \
   libjpeg62-turbo-dev \
   libfreetype6-dev \
   libzip-dev \
+  libwebp-dev \
+  zlib1g-dev \
   zip \
   unzip \
   nano
 
-
 # Configurar y instalar extensiones PHP
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo pdo_mysql zip gd bcmath
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
+RUN docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip bcmath
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
