@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RepositoryController extends BasicController
 {
-    public $model = 'Repository';
+    public $model = 'MailingRepository';
     public $imageFields = ['file'];
 
     public function afterSave(Request $request, object $jpa, bool $isNew)

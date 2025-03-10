@@ -244,12 +244,12 @@ class BasicController extends Controller
         $path = storage_path("app/images/{$snake_case}/{$uuid}.{$ext}");
 
         $image = Image::make($full);
-        // if ($image->width() > 1000 || $image->height() > 1000) {
-        //   $image->resize(1000, null, function ($constraint) {
-        //     $constraint->aspectRatio();
-        //     $constraint->upsize();
-        //   });
-        // }
+        if ($image->width() > 1000 || $image->height() > 1000) {
+          $image->resize(1000, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+          });
+        }
         $image->save($path); // Guarda la imagen redimensionada
 
         $body[$field] = "{$uuid}.{$ext}";
