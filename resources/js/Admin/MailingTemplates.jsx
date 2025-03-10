@@ -191,7 +191,6 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   }, [null])
 
   const processWywiwygContent = async (newContent) => {
-    console.log('Hola mndo')
     const body = $(`<div>${newContent}</div>`)
     const imgs = body.find('img[src^="data:"]')
 
@@ -214,9 +213,9 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
 
         const formData = new FormData()
         formData.append('file', file)
-        const result = await repositoryRest.save(formData);
-        const newSrc = result.url
-        img.setAttribute('src', `${Global.APP_PROTOCOL}://repository.${Global.APP_DOMAIN}/${newSrc}`)
+        const {data} = await repositoryRest.save(formData);
+        const newSrc = data.url
+        img.setAttribute('src', `${Global.APP_URL}/${newSrc}`)
       }
       setWysiwygContent(body.html())
     } else {
@@ -344,13 +343,13 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
             <div className="col-sm-6">
               <div className="form-check">
                 <input type="radio" id="auto_send_false" name="auto_send" className="form-check-input" value={0} defaultChecked />
-                <label className="form-check-label" for="auto_send_false"  >Manual</label>
+                <label className="form-check-label" htmlFor="auto_send_false"  >Manual</label>
               </div>
             </div>
             <div className="col-sm-6">
               <div className="form-check">
                 <input type="radio" id="auto_send_true" name="auto_send" className="form-check-input" value={1} />
-                <label className="form-check-label" for="auto_send_true" >Automatico</label>
+                <label className="form-check-label" htmlFor="auto_send_true" >Automatico</label>
               </div>
             </div>
           </div>
@@ -401,7 +400,12 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
               ],
               ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
               height: '600px',
+              relative_urls: false,
+              remove_script_host: false,
+              convert_urls: false,
+              document_base_url: Global.APP_URL,
             }}
+
             value={wysiwygContent}
             onEditorChange={(newValue) => processWywiwygContent(newValue)}
           />

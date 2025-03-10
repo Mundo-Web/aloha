@@ -30,7 +30,7 @@ class RepositoryController extends BasicController
             File::save("{$path}/{$filename}", file_get_contents($full));
 
             return [
-                'url' =>  'mailing/' . $filename
+                'url' =>  'repository/mailing/' . $filename
             ];
         });
         return response($response->toArray(), $response->status);

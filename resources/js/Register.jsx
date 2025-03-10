@@ -140,7 +140,7 @@ const Register = ({ PUBLIC_RSA_KEY, RECAPTCHA_SITE_KEY }) => {
                       required />
                   </div>
                   <div className="mb-2">
-                    <label for="password" className="form-label">Cumpleaños <b className="text-danger">*</b></label>
+                    <label htmlFor="password" className="form-label">Cumpleaños <b className="text-danger">*</b></label>
                     <div className="input-group input-group-merge">
                       <div className="input-group-text" data-password="false">
                         <span className="mdi mdi-cake-variant"></span>
