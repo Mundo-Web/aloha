@@ -38,12 +38,12 @@ class SendingHistoryController extends BasicController
             $data = JSON::parse(file_get_contents($request->file('data')));
         }
 
-        $tracing = Trace::getDate('mysql');
+        $traceId = Trace::getDate('mysql');
         $modelName = $templateJpa->model ?? 'Externo';
 
         return [
             'mailing_template_id' => $templateJpa->id,
-            'name' =>  "[{$modelName}] {$templateJpa->name}-{$tracing}",
+            'name' =>  "[{$modelName}] {$templateJpa->name} > {$traceId}",
             'type' => $templateJpa->type,
             'mapping' => $mapping,
             'total' => count($data),
