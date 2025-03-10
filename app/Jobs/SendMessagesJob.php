@@ -87,8 +87,8 @@ class SendMessagesJob implements ShouldQueue
 
         $html = Text::replaceData($templateJpa->content, $data);
 
-        $mail->addAddress($email);
-        // $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
+        if (env('APP_ENV') == 'production') $mail->addAddress($email);
+        else $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
         $mail->Subject = $templateJpa->name;
         $mail->Body = $html;
         $mail->isHTML(true);
