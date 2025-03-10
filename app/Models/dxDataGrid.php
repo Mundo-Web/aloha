@@ -25,17 +25,26 @@ class dxDataGrid
                     return $x == 'and';
                 });
                 $dxFilter = \array_filter($dxFilter, function ($x) {
-                    return \gettype($x) == 'array';
+                    return \gettype($x) == 'array' || (is_string($x) && str_starts_with($x, 'raw:'));
                 });
                 foreach ($dxFilter as $filtering) {
-                    if ($isAnd) {
-                        $builder->where(function ($query) use ($filtering, $flat, $prefix4undotted, $ignorePrefix) {
-                            dxDataGrid::filter($query, $filtering, $flat, $prefix4undotted, $ignorePrefix);
-                        });
+                    if (is_string($filtering) && str_starts_with($filtering, 'raw:')) {
+                        $rawSql = trim(substr($filtering, 4)); // Remove 'raw:' prefix
+                        if ($isAnd) {
+                            $builder->whereRaw($rawSql);
+                        } else {
+                            $builder->orWhereRaw($rawSql);
+                        }
                     } else {
-                        $builder->orWhere(function ($query) use ($filtering, $flat, $prefix4undotted, $ignorePrefix) {
-                            dxDataGrid::filter($query, $filtering, $flat, $prefix4undotted, $ignorePrefix);
-                        });
+                        if ($isAnd) {
+                            $builder->where(function ($query) use ($filtering, $flat, $prefix4undotted, $ignorePrefix) {
+                                dxDataGrid::filter($query, $filtering, $flat, $prefix4undotted, $ignorePrefix);
+                            });
+                        } else {
+                            $builder->orWhere(function ($query) use ($filtering, $flat, $prefix4undotted, $ignorePrefix) {
+                                dxDataGrid::filter($query, $filtering, $flat, $prefix4undotted, $ignorePrefix);
+                            });
+                        }
                     }
                 }
             }

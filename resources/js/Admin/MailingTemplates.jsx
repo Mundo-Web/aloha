@@ -21,9 +21,11 @@ import Table from '../Components/Adminto/Table.jsx'
 import SendingModal from '../Reutilizables/Templates/SendingModal.jsx'
 import RepositoryRest from '../actions/Admin/RepositoryRest.js'
 import Global from '../Utils/Global.js'
+import SendingHistoryRest from '../actions/Admin/SendingHistoryRest.js'
 
 const mailingTemplatesRest = new MailingTemplatesRest()
 const repositoryRest = new RepositoryRest()
+const sendingHistoryRest = new SendingHistoryRest();
 
 const MailingTemplates = ({ TINYMCE_KEY }) => {
   const gridRef = useRef()
@@ -177,8 +179,24 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
   }
 
   const onSendingModalClicked = async (data) => {
-    const result = await mailingTemplatesRest.get(data.id)
-    setDataLoaded(result)
+    if (data.auto_send) {
+      const { isConfirmed } = await Swal.fire({
+        title: 'Enviar mensajes masivos',
+        text: `¿Estás seguro de enviar los mensajes masivos`,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Si, enviar',
+        cancelButtonText: 'Cancelar'
+      })
+      if (!isConfirmed) return
+      const formData = new FormData()
+      formData.append('template_id', data.id)
+      const result = await sendingHistoryRest.save(formData)
+      console.log(result)
+    } else {
+      const result = await mailingTemplatesRest.get(data.id)
+      setDataLoaded(result)
+    }
   }
 
   useEffect(() => {
@@ -311,7 +329,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
               <i className='mdi mdi-circle-edit-outline'></i>
             </TippyButton>)
 
-            ReactAppend(container, <TippyButton className='btn btn-xs btn-white' title='Enviar mensajes masivos' onClick={() => onSendingModalClicked(data)}>
+            ReactAppend(container, <TippyButton className='btn btn-xs btn-white' title={data.auto_send ? 'Enviar ahora' : 'Enviar mensajes masivos'} onClick={() => onSendingModalClicked(data)}>
               <i className='mdi mdi-email-send'></i>
             </TippyButton>)
 

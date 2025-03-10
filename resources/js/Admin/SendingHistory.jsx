@@ -185,9 +185,9 @@ const SendingHistory = () => {
               <i className='mdi mdi-reload'></i>
             </TippyButton>)
 
-            ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Ver detalles de envio' onClick={() => console.log('hola')}>
-              <i className='mdi mdi-format-list-bulleted-type'></i>
-            </TippyButton>)
+            if (data.status !== null) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Ver detalles de envio' onClick={() => console.log('hola')}>
+                <i className='mdi mdi-format-list-bulleted-type'></i>
+              </TippyButton>)
           },
           allowFiltering: false,
           allowExporting: false
