@@ -157,12 +157,12 @@ const SendingHistory = () => {
               <span>Terminado</span>
             </>)
             if (data.status === 0) ReactAppend(container, <>
-              <i className='mdi mdi-spin mdi-autorenew me-1'></i>
-              <span>En curso</span>
+              <i className='mdi mdi-alert me-1'></i>
+              <span>Fallido</span>
             </>)
             if (data.status === null) ReactAppend(container, <>
-              <i className='mdi mdi-clock me-1'></i>
-              <span>Pendiente</span>
+              <i className='mdi mdi-spin mdi-autorenew me-1'></i>
+              <span>En curso</span>
             </>)
           },
           lookup: {

@@ -103,15 +103,19 @@ class SendMessagesJob implements ShouldQueue
         $error = $th->getMessage();
         $historyJpa->failed++;
       } finally {
-        $mail->clearAddresses();
-        $historyJpa->save();
-        HistoryDetail::create([
-          'sending_history_id' => $historyJpa->id,
-          'sent_to' => $email,
-          'data' => $row,
-          'status' => $success,
-          'error' => $error,
-        ]);
+        try {
+          $mail->clearAddresses();
+          $historyJpa->save();
+          HistoryDetail::create([
+            'sending_history_id' => $historyJpa->id,
+            'sent_to' => $email,
+            'data' => $row,
+            'status' => $success,
+            'error' => $error,
+          ]);
+        } catch (\Throwable $th) {
+          dump($th->getMessage());
+        }
       }
     }
     $mail->smtpClose();

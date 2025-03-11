@@ -352,7 +352,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         </SelectFormGroup> */}
         <InputFormGroup eRef={nameRef} label='Nombre' required />
         <TextareaFormGroup eRef={descriptionRef} label='Descripcion' />
-        <SelectFormGroup eRef={modelRef} label='Origen de datos' dropdownParent='#template-container' required>
+        <SelectFormGroup eRef={modelRef} label='Origen de datos' dropdownParent='#template-container'>
           <option value="">Externo</option>
           <option value="User">Usuarios</option>
           <option value="Sale">Ventas</option>
