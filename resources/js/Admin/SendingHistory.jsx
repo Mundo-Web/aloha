@@ -95,7 +95,10 @@ const SendingHistory = () => {
           dataType: 'datetime',
           caption: 'Fecha',
           width: '160px',
-          sortOrder: 'desc'
+          sortOrder: 'desc',
+          cellTemplate: (container, { value }) => {
+            container.text(moment(data.created_at.replace('Z', '-05:00')).format('lll'))
+          }
         },
         {
           dataField: 'type',
