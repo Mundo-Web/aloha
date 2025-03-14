@@ -97,7 +97,7 @@ const SendingHistory = () => {
           width: '160px',
           sortOrder: 'desc',
           cellTemplate: (container, { value }) => {
-            container.text(moment(data.created_at.replace('Z', '-05:00')).format('lll'))
+            container.text(moment(value.replace('Z', '-05:00')).format('lll'))
           }
         },
         {
