@@ -89,6 +89,7 @@ const SendingHistory = () => {
           onClick: () => onOpenModal()
         }))
       }}
+      pageSize={25}
       columns={[
         {
           dataField: 'created_at',
@@ -96,8 +97,8 @@ const SendingHistory = () => {
           caption: 'Fecha',
           width: '160px',
           sortOrder: 'desc',
-          cellTemplate: (container, { value }) => {
-            container.text(moment(value.replace('Z', '-05:00')).format('lll'))
+          cellTemplate: (container, { data }) => {
+            container.text(moment(data.created_at?.replace('Z', '-05:00')).format('lll'))
           }
         },
         {
@@ -189,8 +190,8 @@ const SendingHistory = () => {
             </TippyButton>)
 
             if (data.status !== null) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Ver detalles de envio' onClick={() => console.log('hola')}>
-                <i className='mdi mdi-format-list-bulleted-type'></i>
-              </TippyButton>)
+              <i className='mdi mdi-format-list-bulleted-type'></i>
+            </TippyButton>)
           },
           allowFiltering: false,
           allowExporting: false
