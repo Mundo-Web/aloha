@@ -6,7 +6,7 @@ import CreateReactScript from '../Utils/CreateReactScript';
 import Base from '../Components/Adminto/Base';
 import TippyButton from '../components/Adminto/form/TippyButton';
 import ReactAppend from '../Utils/ReactAppend';
-import Table from '../Components/Table';
+import Table from '../Components/Adminto/Table';
 import SendingHistoryRest from '../actions/Admin/SendingHistoryRest';
 import DxPanelButton from '../Components/Adminto/Dx/DxPanelButton';
 

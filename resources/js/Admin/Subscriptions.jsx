@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 import Swal from 'sweetalert2';
-import Table from '../Components/Table';
+import Table from '../Components/Adminto/Table';
 import DxButton from '../Components/dx/DxButton';
 import CreateReactScript from '../Utils/CreateReactScript';
 import ReactAppend from '../Utils/ReactAppend';

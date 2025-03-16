@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
 import SalesRest from '../Actions/Admin/SalesRest';
 import Modal from '../Components/Modal';
-import Table from '../Components/Table';
+import Table from '../Components/Adminto/Table';
 import DxButton from '../Components/dx/DxButton';
 import CreateReactScript from '../Utils/CreateReactScript';
 import Global from '../Utils/Global';

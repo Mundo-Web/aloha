@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import AboutusRest from '../Actions/Admin/AboutusRest';
 import Modal from '../Components/Modal';
-import Table from '../Components/Table';
+import Table from '../Components/Adminto/Table';
 import DxButton from '../Components/dx/DxButton';
 import InputFormGroup from '../Components/form/InputFormGroup';
 import CreateReactScript from '../Utils/CreateReactScript';

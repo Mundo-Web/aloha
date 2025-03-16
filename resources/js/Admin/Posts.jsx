@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import BaseAdminto from '@Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
-import Table from '../Components/Table';
+import Table from '../Components/Adminto/Table';
 import Modal from '../Components/Modal';
 import InputFormGroup from '../Components/form/InputFormGroup';
 import ReactAppend from '../Utils/ReactAppend';
