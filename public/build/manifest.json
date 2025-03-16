@@ -156,8 +156,8 @@
       "_index-B80Lgev0.js"
     ]
   },
-  "_SendingHistoryRest-DFck5hpJ.js": {
-    "file": "assets/SendingHistoryRest-DFck5hpJ.js",
+  "_SendingHistoryRest-BxoJdhSP.js": {
+    "file": "assets/SendingHistoryRest-BxoJdhSP.js",
     "name": "SendingHistoryRest",
     "imports": [
       "resources/js/components/About/AboutHeader.jsx",
@@ -855,7 +855,7 @@
     ]
   },
   "resources/js/Admin/MailingTemplates.jsx": {
-    "file": "assets/MailingTemplates-Doa2655-.js",
+    "file": "assets/MailingTemplates-CYhYWhdR.js",
     "name": "MailingTemplates",
     "src": "resources/js/Admin/MailingTemplates.jsx",
     "isEntry": true,
@@ -868,7 +868,7 @@
       "_Modal-DMcn2VvW.js",
       "_InputFormGroup-d90I7Tt8.js",
       "_TextareaFormGroup-BkvHoRll.js",
-      "_SendingHistoryRest-DFck5hpJ.js",
+      "_SendingHistoryRest-BxoJdhSP.js",
       "_sweetalert2.all-Dh0rZL5X.js",
       "_SelectFormGroup-iHLz_kPb.js",
       "_index-CqrOtH36.js",
@@ -1041,7 +1041,7 @@
     ]
   },
   "resources/js/Admin/SendingHistory.jsx": {
-    "file": "assets/SendingHistory-DJfk4ZAO.js",
+    "file": "assets/SendingHistory-CD26NQBv.js",
     "name": "SendingHistory",
     "src": "resources/js/Admin/SendingHistory.jsx",
     "isEntry": true,
@@ -1052,7 +1052,7 @@
       "_server.browser-D3N0_gce.js",
       "_CreateReactScript-BTmFJSrT.js",
       "_Base-BEyz4_Va.js",
-      "_SendingHistoryRest-DFck5hpJ.js",
+      "_SendingHistoryRest-BxoJdhSP.js",
       "_ReactAppend-C-tNgxIf.js",
       "_index-DO3Aws4m.js",
       "_index.esm-Cu-mVv1q.js",
@@ -2213,7 +2213,7 @@
     ]
   },
   "resources/js/components/Adminto/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
+    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/components/Adminto/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2250,7 +2250,7 @@
     ]
   },
   "resources/js/components/Blog/Filter.jsx": {
-    "file": "assets/Filter-uOWZuDyS.js",
+    "file": "assets/Filter-ClxeGkIS.js",
     "name": "Filter",
     "src": "resources/js/components/Blog/Filter.jsx",
     "isEntry": true,
@@ -2330,7 +2330,7 @@
     ]
   },
   "resources/js/components/Courses/Filter.jsx": {
-    "file": "assets/Filter-ClxeGkIS.js",
+    "file": "assets/Filter-uOWZuDyS.js",
     "name": "Filter",
     "src": "resources/js/components/Courses/Filter.jsx",
     "isEntry": true,
@@ -2813,10 +2813,10 @@
     ]
   },
   "resources/js/components/Test/ScalpType.jsx": {
-    "file": "assets/ScalpType-CpPx52vs.js",
+    "file": "assets/ScalpType-CQfzk1X8.js",
     "name": "ScalpType",
     "src": "resources/js/components/Test/ScalpType.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2986,7 +2986,7 @@
     ]
   },
   "resources/js/components/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
+    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/components/form/TextareaFormGroup.jsx",
     "isEntry": true,

@@ -1,7 +1,7 @@
 import React from 'react'
 import DataGrid from './DataGrid'
 
-const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh}) => {
+const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, pageSize}) => {
   return (<div className="row">
     <div className="col-12">
       <div className="card">
@@ -19,7 +19,7 @@ const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterVal
               </h4>
               : ''
           }
-          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} masterDetail={masterDetail} filterValue={filterValue} onRefresh={onRefresh}/>
+          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} masterDetail={masterDetail} filterValue={filterValue} pageSize={pageSize} onRefresh={onRefresh}/>
         </div>
       </div>
     </div>
