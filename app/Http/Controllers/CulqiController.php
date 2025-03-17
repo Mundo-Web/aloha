@@ -382,6 +382,7 @@ class CulqiController extends Controller
         }
 
         $newSale = $sale->replicate();
+        $newSale->code = Trace::getId();
         $newSale->status_id = '312f9a91-d3f2-4672-a6bf-678967616cac';
         $newSale->coupon_id = null;
         $newSale->coupon_discount = 0;
