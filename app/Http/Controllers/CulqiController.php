@@ -14,6 +14,7 @@ use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use SoDe\Extend\Crypto;
 use SoDe\Extend\Fetch;
 use SoDe\Extend\JSON;
@@ -21,6 +22,7 @@ use SoDe\Extend\Math;
 use SoDe\Extend\Response;
 use Illuminate\Support\Str;
 use SoDe\Extend\Text;
+use SoDe\Extend\Trace;
 
 class CulqiController extends Controller
 {
@@ -344,52 +346,65 @@ class CulqiController extends Controller
     if (!$sale) throw new Exception('La venta asociada a la suscripción no existe.');
 
     if (!$culqiSubscription->already_paid) {
-      $sale->update(['status_id' => '312f9a91-d3f2-4672-a6bf-678967616cac']);
-      $culqiSubscription->update(['already_paid' => true]);
-
+      DB::beginTransaction();
       try {
+        $sale->update(['status_id' => '312f9a91-d3f2-4672-a6bf-678967616cac']);
+        $culqiSubscription->update(['already_paid' => true]);
+
         Subscription::updateOrCreate(['description' => $sale->email], ['made_order' => true]);
-      } catch (\Throwable $th) {
-      }
 
-      SendSaleWhatsApp::dispatchAfterResponse($sale);
-      SendSaleEmail::dispatchAfterResponse($sale);
+        DB::commit();
+
+        SendSaleWhatsApp::dispatchAfterResponse($sale);
+        SendSaleEmail::dispatchAfterResponse($sale);
+      } catch (\Throwable $th) {
+        DB::rollBack();
+        throw $th;
+      }
     } else {
-      $cChrData = $cChrRes->json();
-
-      $chargeJpa = new CulqiCharge();
-      $chargeJpa->culqi_id = $data['chargeId'];
-      $chargeJpa->amount = $cChrData['amount'] / 100;
-      $chargeJpa->culqi_subscription_id = $culqiSubscription->id;
-      $chargeJpa->save();
-
-      $chargesCount = CulqiCharge::where('culqi_subscription_id', $culqiSubscription->id)
-        ->whereNull('sale_id')
-        ->count();
-
-      if ($chargesCount < $culqiSubscription->total_payments) return;
-
-      $newSale = $sale->replicate();
-      $newSale->status_id = '312f9a91-d3f2-4672-a6bf-678967616cac';
-      $newSale->coupon_id = null;
-      $newSale->coupon_discount = 0;
-      $newSale->save();
-
-      CulqiCharge::where('culqi_subscription_id', $culqiSubscription->id)
-        ->whereNull('sale_id')
-        ->update(['sale_id' => $newSale->id]);
-
-      $sale->details->each(function ($detail) use ($newSale) {
-        $newSale->details()->create($detail->toArray());
-      });
-
+      DB::beginTransaction();
       try {
-        Subscription::updateOrCreate(['description' => $newSale->email], ['made_order' => true]);
-      } catch (\Throwable $th) {
-      }
+        $cChrData = $cChrRes->json();
 
-      SendSaleWhatsApp::dispatchAfterResponse($newSale);
-      SendSaleEmail::dispatchAfterResponse($newSale);
+        $chargeJpa = new CulqiCharge();
+        $chargeJpa->culqi_id = $data['chargeId'];
+        $chargeJpa->amount = $cChrData['amount'] / 100;
+        $chargeJpa->culqi_subscription_id = $culqiSubscription->id;
+        $chargeJpa->save();
+
+        $chargesCount = CulqiCharge::where('culqi_subscription_id', $culqiSubscription->id)
+          ->whereNull('sale_id')
+          ->count();
+
+        if ($chargesCount < $culqiSubscription->total_payments) {
+          DB::commit();
+          return;
+        }
+
+        $newSale = $sale->replicate();
+        $newSale->status_id = '312f9a91-d3f2-4672-a6bf-678967616cac';
+        $newSale->coupon_id = null;
+        $newSale->coupon_discount = 0;
+        $newSale->save();
+
+        CulqiCharge::where('culqi_subscription_id', $culqiSubscription->id)
+          ->whereNull('sale_id')
+          ->update(['sale_id' => $newSale->id]);
+
+        $sale->details->each(function ($detail) use ($newSale) {
+          $newSale->details()->create($detail->toArray());
+        });
+
+        Subscription::updateOrCreate(['description' => $newSale->email], ['made_order' => true]);
+
+        DB::commit();
+
+        SendSaleWhatsApp::dispatchAfterResponse($newSale);
+        SendSaleEmail::dispatchAfterResponse($newSale);
+      } catch (\Throwable $th) {
+        DB::rollBack();
+        throw $th;
+      }
     }
   }
 
