@@ -308,7 +308,7 @@ const Sales = ({ statuses }) => {
                         <td>
                           <span className='d-block'>{detail.name}</span>
                           {
-                            detail.user_formula_id != saleLoaded.user_formula_id &&
+                            (detail.user_formula_id && detail.user_formula_id != saleLoaded.user_formula_id) &&
                             <Tippy content={<UserFormulaInfo name={saleLoaded?.name} details={saleLoaded?.details} formula={detail.user_formula} />} allowHTML interactive>
                               <small className='text-muted'>
                                 <i className='mdi mdi-flask me-1'></i>
