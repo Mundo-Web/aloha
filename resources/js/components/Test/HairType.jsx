@@ -21,7 +21,7 @@ const HairType = ({ test, setTest, values }) => {
               return <button key={index} className="border border-1-[#9577B9] rounded-lg bg-white text-[#9577B9] hover:border-1-[#C5B8D4]  hover:bg-[#C5B8D4] hover:text-white font-bold w-32 min-w-32 transition-all"
                 onClick={() => onTypeClicked(value.id)}>
                 <img className="aspect-[4/3] rounded hover:scale-105 transition-all" src={`/assets/img/test/${value.correlative}.png`} alt="Crespo" />
-                <p className="p-2">{value.description}</p>
+                <p className="p-2 uppercase">{value.description}</p>
               </button>
             })
           }

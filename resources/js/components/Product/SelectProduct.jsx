@@ -168,7 +168,7 @@ const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage,
           <h2 className="text-xl mb-6">
             Productos para tu <b>{index + 2}<sup>a</sup> fórmula</b>
             <Tippy content="Eliminar esta fórmula">
-              <i className="mdi mdi-close-thick text-red-400 font-bold ms-2 cursor-pointer" onClick={() => onDeleteFormula(otherFormula.id)}></i>
+              <i className="mdi mdi-trash-can-outline text-red-400 font-bold ms-2 cursor-pointer" onClick={() => onDeleteFormula(otherFormula.id)}></i>
             </Tippy>
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-4">

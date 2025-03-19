@@ -15,7 +15,7 @@ const Treatment = ({ test, setTest, values }) => {
       <div className="flex justify-evenly text-sm gap-2">
         {
           values.map((value, index) => {
-            return <button key={index} className="w-28 py-2 rounded border border-1-[#9577B9] text-[#9577B9] hover:border-1-[#C5B8D4] hover:bg-[#C5B8D4] hover:text-white font-bold transition-all" onClick={() => onTreatmentConfirm(value.id)}>{value.description}</button>
+            return <button key={index} className="w-28 py-2 rounded border border-1-[#9577B9] text-[#9577B9] hover:border-1-[#C5B8D4] hover:bg-[#C5B8D4] hover:text-white font-bold transition-all uppercase" onClick={() => onTreatmentConfirm(value.id)}>{value.description}</button>
           })
           
         }
