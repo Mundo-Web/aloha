@@ -70,6 +70,7 @@ Route::get('/plans', [PlanController::class, 'reactView'])->name('Plans.jsx');
 Route::get('/supplies', [SupplyController::class, 'reactView'])->name('Supplies.jsx');
 Route::get('/faqs', [FaqController::class, 'reactView'])->name('FAQs.jsx');
 Route::get('/test', [TestController::class, 'reactView'])->name('Test.jsx');
+Route::get('/test/{formula?}', [TestController::class,'reactView'])->name('Test.jsx'); // /test/{formula
 Route::get('/test/result/{formula}', [TestResultController::class, 'reactView'])->name('TestResult.jsx');
 Route::get('/about', [AboutController::class, 'reactView'])->name('About.jsx');
 Route::get('/blog', [BlogController::class, 'reactView'])->name('Blog.jsx');

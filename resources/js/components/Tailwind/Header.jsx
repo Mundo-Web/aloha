@@ -1,5 +1,6 @@
 import Tippy from "@tippyjs/react";
 import React, { useState, useEffect, useRef } from "react"
+import { Local } from "sode-extend-react";
 
 const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -27,6 +28,9 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
   }, [])
+
+  const formula = Local.get('vua_formula')
+  const showCartIcon = formula && !location.pathname.startsWith('/test/result') && !location.pathname.startsWith('/formula/')
 
   return (
     <>
@@ -74,9 +78,14 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
                 <i className="text-xl fa fa-user"></i>
               </a>
             </Tippy>
-            {/* <button>
-              <i className="text-xl fas fa-shopping-cart"></i>
-            </button> */}
+            {
+              showCartIcon &&
+              <Tippy content={'Seguir comprando'}>
+                <a href={`/formula/${formula.id}`}>
+                  <i className="text-xl fas fa-shopping-cart scale-110 hover:scale-125 transition-transform duration-300"></i>
+                </a>
+              </Tippy>
+            }
           </div>
 
         </div>
@@ -101,7 +110,7 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
             </li>
           </ul>
         </div>
-      </header>
+      </header >
     </>
   )
 };

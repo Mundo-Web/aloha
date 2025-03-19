@@ -14,7 +14,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SoDe\Extend\Trace;
-use SoDe\Extend\Array2;
+use SoDe\Extend\Math;
 use SoDe\Extend\Response;
 
 class SaleController extends Controller
@@ -23,13 +23,18 @@ class SaleController extends Controller
     {
         try {
             $itemsJpa = Item::whereIn('id', array_map(fn($item) => $item['id'], $details))->get();
-            foreach ($itemsJpa as $itemJpa) {
-                $item = Array2::find($details, fn($item) => $item['id'] == $itemJpa->id);
+
+            $itemsJpa2Proccess = [];
+
+            foreach ($details as $detail) {
+                $itemJpa = clone $itemsJpa->firstWhere('id', $detail['id']);
                 $itemJpa->final_price = $itemJpa->discount != 0
                     ? $itemJpa->discount
                     : $itemJpa->price;
-                $itemJpa->quantity = $item['quantity'];
-                $itemJpa->colors = $item['colors'];
+                $itemJpa->quantity = $detail['quantity'];
+                $itemJpa->colors = $detail['colors'];
+                $itemJpa->user_formula_id = $detail['formula_id'];
+                $itemsJpa2Proccess[] = $itemJpa;
             }
 
             $saleJpa = new Sale();
@@ -74,10 +79,12 @@ class SaleController extends Controller
             // Sale Header
             $totalPrice = array_sum(array_map(
                 fn($item) => $item['final_price'] * $item['quantity'],
-                $itemsJpa->toArray()
+                // $itemsJpa->toArray()
+                $itemsJpa2Proccess
             ));
 
-            $totalItems = array_sum(array_map(fn($item) => $item['quantity'], $itemsJpa->toArray()));
+            // $totalItems = array_sum(array_map(fn($item) => $item['quantity'], $itemsJpa->toArray()));
+            $totalItems = array_sum(array_map(fn($item) => $item['quantity'], $itemsJpa2Proccess));
 
             $bundleJpa = Bundle::where('status', true)
                 ->whereRaw("
@@ -122,12 +129,12 @@ class SaleController extends Controller
                 }
             }
 
-            $saleJpa->amount = $totalPrice;
+            $saleJpa->amount = Math::round($totalPrice * 10) / 10;
             $saleJpa->delivery = 0; // Agregar lógica si es que se tiene precio por envío
             $saleJpa->save();
 
             $detailsJpa = array();
-            foreach ($itemsJpa as $itemJpa) {
+            foreach ($itemsJpa2Proccess as $itemJpa) {
                 $detailJpa = new SaleDetail();
                 $detailJpa->sale_id = $saleJpa->id;
                 $detailJpa->item_id = $itemJpa->id;
@@ -135,6 +142,7 @@ class SaleController extends Controller
                 $detailJpa->price = $itemJpa->final_price;
                 $detailJpa->quantity = $itemJpa->quantity;
                 $detailJpa->colors = $itemJpa->colors;
+                $detailJpa->user_formula_id = $itemJpa->user_formula_id;
                 $detailJpa->save();
 
                 $detailsJpa[] = $detailJpa->toArray();

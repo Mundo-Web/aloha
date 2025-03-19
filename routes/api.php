@@ -89,6 +89,7 @@ Route::get('/cover/{uuid}', [CoverController::class, 'full']);
 Route::get('/cover/thumbnail/{uuid}', [CoverController::class, 'thumbnail']);
 
 Route::post('/user-formulas', [UserFormulaController::class, 'save']);
+Route::delete('/user-formulas/{id}', [UserFormulaController::class, 'delete']);
 
 Route::post('/coupons', [CouponController::class, 'save']);
 Route::post('/coupons/is-first', [CouponController::class, 'isFirst']);

@@ -33,7 +33,8 @@ const Email = ({ test, setTest, session }) => {
     setSending(false)
 
     if (!result) return
-    Local.delete('test')
+    Local.delete('vua_test')
+    Local.delete('vua_cart')
     location.href = `/test/result/${result.data.id}`;
     setTest({})
   }

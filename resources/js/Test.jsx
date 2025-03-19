@@ -1,22 +1,21 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './Components/Tailwind/Base';
+import Base from './components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 import { Local } from 'sode-extend-react';
-// import Email from './Components/Test/Email';
-import ProgressBar from './Components/Test/components/ProgressBar';
+import ProgressBar from './components/Test/components/ProgressBar';
 
-const Main = React.lazy(() => import('./Components/Test/Main'));
-const Treatment = React.lazy(() => import('./Components/Test/Treatment'));
-const HairType = React.lazy(() => import('./Components/Test/HairType'));
-const Email = React.lazy(() => import('./Components/Test/Email'));
-const ScalpType = React.lazy(() => import('./Components/Test/ScalpType'));
-const HairGoals = React.lazy(() => import('./Components/Test/HairGoals'));
-const Fragrance = React.lazy(() => import('./Components/Test/Fragrance'));
+const Main = React.lazy(() => import('./components/Test/Main'));
+const Treatment = React.lazy(() => import('./components/Test/Treatment'));
+const HairType = React.lazy(() => import('./components/Test/HairType'));
+const Email = React.lazy(() => import('./components/Test/Email'));
+const ScalpType = React.lazy(() => import('./components/Test/ScalpType'));
+const HairGoals = React.lazy(() => import('./components/Test/HairGoals'));
+const Fragrance = React.lazy(() => import('./components/Test/Fragrance'));
 
-const Test = ({ session, hasTreatment, scalpType, hairType, hairGoals, fragrances, userFormulasCount = 0 }) => {
+const Test = ({ session, otherFormulasCount, hasTreatment, scalpType, hairType, hairGoals, fragrances, userFormulasCount = 0, formula }) => {
 
-  const vuaTest = Local.get('vua_test') ?? {}
+  const vuaTest = Local.get('vua_test') ?? { has_started: !!formula }
   if (!hasTreatment.find(x => x.id == vuaTest.has_treatment)) vuaTest.has_treatment = null
   if (!scalpType.find(x => x.id == vuaTest.scalp_type)) vuaTest.scalp_type = null
   if (!hairType.find(x => x.id == vuaTest.hair_type)) vuaTest.hair_type = null
@@ -24,7 +23,7 @@ const Test = ({ session, hasTreatment, scalpType, hairType, hairGoals, fragrance
   if (!fragrances.find(x => x.id == vuaTest.fragrance)) vuaTest.fragrance = null
 
   const [test, setTest] = useState(vuaTest);
-  const [firstTime, setFirstTime] = useState(true);
+  const [firstTime, setFirstTime] = useState(!formula);
 
   // Páginas
   const pages = {
@@ -33,7 +32,7 @@ const Test = ({ session, hasTreatment, scalpType, hairType, hairGoals, fragrance
     'scalp_type': <ScalpType test={test} setTest={setTest} values={scalpType} />,
     'hair_type': <HairType test={test} setTest={setTest} values={hairType} />,
     'hair_goals': <HairGoals test={test} setTest={setTest} values={hairGoals} />,
-    'fragrance': <Fragrance test={test} setTest={setTest} values={fragrances} />,
+    'fragrance': <Fragrance test={test} setTest={setTest} values={fragrances} formula={formula} />,
     'email': <Email test={test} setTest={setTest} session={session} />
   };
 
@@ -79,7 +78,7 @@ const Test = ({ session, hasTreatment, scalpType, hairType, hairGoals, fragrance
       {
         (getCurrentPageIndex() > 0 && getCurrentPageIndex() != pageOrder.length) &&
         <div className='bg-white px-[5%] md:px-[7.5%] lg:px-[10%] pt-[5%]'>
-          <ProgressBar width={`${percent}%`} />
+          <ProgressBar width={`${percent}%`} isSecondary={!!formula} formulaIndex={otherFormulasCount + 2} />
         </div>
       }
       <Suspense fallback={<div className='h-[50vh] flex items-center justify-center bg-white'>Cargando...</div>}>

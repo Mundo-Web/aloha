@@ -14,6 +14,7 @@ class UserFormula extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'parent_id',
         'name',
         'user_id',
         'email',
@@ -23,9 +24,6 @@ class UserFormula extends Model
         'hair_goals',
         'fragrance_id',
         'status',
-        'is_user',
-        'created_formula',
-        'made_order',
     ];
 
     protected $casts = [

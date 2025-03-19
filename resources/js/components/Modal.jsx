@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Modal = ({ modalRef, title = 'Modal', isStatic = false, size = 'md', children, bodyClass = '', bodyStyle, btnCancelText, btnSubmitText, hideFooter, hideButtonSubmit, onSubmit = (e) => { e.preventDefault(); $(modalRef.current).modal('hide') } }) => {
+const Modal = ({ modalRef, title = 'Modal', isStatic = false, size = 'md', children, bodyClass = '', bodyStyle, btnCancelText, btnSubmitText, hideFooter, hideButtonSubmit, zIndex, onSubmit = (e) => { e.preventDefault(); $(modalRef.current).modal('hide') } }) => {
   const staticProp = isStatic ? { 'data-bs-backdrop': 'static' } : {}
-  return (<form className='modal fade' ref={modalRef} tabIndex='-1' aria-hidden='true' {...staticProp} onSubmit={onSubmit} autoComplete='off'>
+  return (<form className='modal fade' ref={modalRef} tabIndex='-1' aria-hidden='true' {...staticProp} onSubmit={onSubmit} autoComplete='off' style={{ zIndex }}>
     <div className={`modal-dialog modal-dialog-centered modal-${size ?? 'md'}`}>
       <div className='modal-content ' style={{ boxShadow: '0 0 10px rgba(0,0,0,0.25)' }}>
         <div className='modal-header'>

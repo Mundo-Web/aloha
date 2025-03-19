@@ -43,7 +43,7 @@ class BasicController extends Controller
   {
     $response = Response::simpleTryCatch(function () use ($id) {
       $jpa  = $this->model::with($this->with4get)->find($id);
-      if (!$jpa) throw new Exception('El pedido que buscas no existe');
+      if (!$jpa) throw new Exception('El registro que buscas no existe');
       return $jpa;
     });
     return \response($response->toArray(), $response->status);

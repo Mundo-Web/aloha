@@ -6,13 +6,14 @@ import { renderToString } from 'react-dom/server';
 import Swal from 'sweetalert2';
 import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
 import SalesRest from '../Actions/Admin/SalesRest';
-import Modal from '../Components/Modal';
-import Table from '../Components/Adminto/Table';
-import DxButton from '../Components/dx/DxButton';
+import Modal from '../components/Modal';
+import Table from '../components/Adminto/Table';
+import DxButton from '../components/dx/DxButton';
 import CreateReactScript from '../Utils/CreateReactScript';
 import Global from '../Utils/Global';
 import Number2Currency from '../Utils/Number2Currency';
 import ReactAppend from '../Utils/ReactAppend';
+import UserFormulaInfo from '../components/Adminto/UserFormulas/UserFormulaInfo';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
@@ -85,6 +86,10 @@ const Sales = ({ statuses }) => {
     - Number(saleLoaded?.bundle_discount)
     - Number(saleLoaded?.renewal_discount)
     - Number(saleLoaded?.coupon_discount)
+
+  const saleLoadedPhone = saleLoaded?.phone.clean('0-9').startsWith('51')
+    ? saleLoaded?.phone.clean('0-9')
+    : `51${saleLoaded?.phone.clean('0-9')}`
 
   return (<>
     <Table gridRef={gridRef} title='Pedidos' rest={salesRest}
@@ -164,16 +169,17 @@ const Sales = ({ statuses }) => {
           }
         },
         {
-          dataField: 'amount',
+          dataField: 'total_cmount',
           caption: 'Total',
           dataType: 'number',
           cellTemplate: (container, { data }) => {
-            const amount = Number(data.amount) || 0
-            const delivery = Number(data.delivery) || 0
-            const bundle_discount = Number(data.bundle_discount) || 0
-            const renewal_discount = Number(data.renewal_discount) || 0
-            const coupon_discount = Number(data.coupon_discount) || 0
-            container.text(`S/. ${Number2Currency(amount + delivery - bundle_discount - renewal_discount - coupon_discount)}`);
+            // const amount = Number(data.total_cmount) || 0
+            // const delivery = Number(data.delivery) || 0
+            // const bundle_discount = Number(data.bundle_discount) || 0
+            // const renewal_discount = Number(data.renewal_discount) || 0
+            // const coupon_discount = Number(data.coupon_discount) || 0
+            // container.text(`S/. ${Number2Currency(amount + delivery - bundle_discount - renewal_discount - coupon_discount)}`);
+            container.text(`S/. ${Number2Currency(data.total_amount)}`);
           }
         },
         {
@@ -196,7 +202,7 @@ const Sales = ({ statuses }) => {
           allowExporting: false
         }
       ]} />
-    <Modal modalRef={modalRef} title={`Detalles del pedido #${Global.APP_CORRELATIVE}-${saleLoaded?.code}`} size='lg' bodyStyle={{
+    <Modal modalRef={modalRef} title={`Detalles del pedido #${Global.APP_CORRELATIVE}-${saleLoaded?.code}`} size='xl' bodyStyle={{
       backgroundColor: '#ebeff2'
     }} hideButtonSubmit >
       <div className="row">
@@ -218,7 +224,23 @@ const Sales = ({ statuses }) => {
                   </tr>
                   <tr>
                     <th>Teléfono:</th>
-                    <td>{saleLoaded?.phone}</td>
+                    <td>
+                      <div className="d-flex gap-1 align-items-center">
+                        <img className='avatar-sm rounded-circle'
+                          src={`${Global.WA_URL}/api/profile/${Global.APP_CORRELATIVE}/${saleLoadedPhone}`}
+                          onError={(e) => {
+                            e.target.onerror = null
+                            e.target.src = `/api/admin/profile/thumbnail/undefined`;
+                          }}
+                          alt={saleLoaded?.name + ' ' + saleLoaded?.lastname} />
+                        <div>
+                          <span className='d-block'>{saleLoaded?.phone}</span>
+                          <a href={`//wa.me/${saleLoadedPhone}`} target='_blank'>
+                            <small>Abrir WhatsApp <i className='mdi mdi-arrow-top-right'></i></small>
+                          </a>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                   <tr>
                     <th>Dirección:</th>
@@ -283,7 +305,18 @@ const Sales = ({ statuses }) => {
                       const quantity = (detail.quantity * 100) / 100
                       const totalPrice = detail.price * detail.quantity
                       return <tr key={index}>
-                        <td>{detail.name}</td>
+                        <td>
+                          <span className='d-block'>{detail.name}</span>
+                          {
+                            detail.user_formula_id != saleLoaded.user_formula_id &&
+                            <Tippy content={<UserFormulaInfo name={saleLoaded?.name} details={saleLoaded?.details} formula={detail.user_formula} />} allowHTML interactive>
+                              <small className='text-muted'>
+                                <i className='mdi mdi-flask me-1'></i>
+                                Fórmula secundaria
+                              </small>
+                            </Tippy>
+                          }
+                        </td>
                         <td>
                           {
                             detail?.colors?.map((color, index) => {
@@ -367,49 +400,10 @@ const Sales = ({ statuses }) => {
         <div className="col-md-4">
           <div className="card">
             <div className="card-header p-2">
-              <h5 className="card-title mb-0">Formula</h5>
+              <h5 className="card-title mb-0">Formula principal</h5>
             </div>
             <div className="card-body p-2">
-              <div>
-                <b>🧐 Tratamiento</b>:{' '}
-                {saleLoaded?.formula?.has_treatment?.description}
-              </div>
-              <div>
-                <b>👀 Cuero cabelludo</b>: {' '}
-                {saleLoaded?.formula?.scalp_type?.description}
-              </div>
-              <div>
-                <b>✅ Tipo de cabello</b>:{' '}
-                {saleLoaded?.formula?.hair_type?.description}
-              </div>
-              <div>
-                <b>💡 Objetivos</b>:{' '}
-                <ul className='mb-0'>
-                  {
-                    saleLoaded?.formula?.hair_goals_list?.map(x => <li key={x.id}>{x.description}</li>)
-                  }
-                </ul>
-              </div>
-              <div>
-                <b>🫙 Fragancia</b>:{' '}
-                {saleLoaded?.formula?.fragrance?.name}
-              </div>
-              <div>
-                <b>🎨 Colores:</b>
-                <ul>
-                  {
-                    saleLoaded?.details?.map((detail, index) => <li key={index}>
-                      {detail.name}: {
-                        detail?.colors?.map(color => color.name).join(', ')
-                      }
-                    </li>)
-                  }
-                </ul>
-              </div>
-              <button className='btn btn-xs btn-dark' type='button' copy={`*Formula ${saleLoaded?.name}*\n\n🧐 Tratamiento: ${saleLoaded?.formula.has_treatment?.description}\n👀 Cuero cabelludo: ${saleLoaded?.formula?.scalp_type?.description}\n✅ Tipo de cabello: ${saleLoaded?.formula?.hair_type?.description}\n💡 Objetivos:\n${saleLoaded?.formula?.hair_goals_list?.map(x => `- ${x.description}`).join('\n')}\n🫙 Fragancia: ${saleLoaded?.formula?.fragrance?.name}\n🎨 Colores:\n${saleLoaded?.details?.map(detail => `- ${detail.name}: ${detail?.colors?.map(color => color.name).join(', ')}`).join('\n')}`}>
-                <i className='mdi mdi-content-copy me-1'></i>
-                Copiar
-              </button>
+              <UserFormulaInfo name={saleLoaded?.name} details={saleLoaded?.details} formula={saleLoaded?.formula} />
             </div>
           </div>
           <div className="card">

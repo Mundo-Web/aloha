@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
-import SupplieCard from './Components/Supplies/components/SupplieCard';
-import ProgressBar from './Components/Test/components/ProgressBar';
+import SupplieCard from './components/Supplies/components/SupplieCard';
+import ProgressBar from './components/Test/components/ProgressBar';
 import { Local } from 'sode-extend-react';
+import Base from './components/Tailwind/Base';
+import NewFormulaButton from './components/Product/components/NewFormulaButton';
 
 const TestResult = ({ user_formula, hair_goals, supplies }) => {
 
@@ -30,6 +31,7 @@ const TestResult = ({ user_formula, hair_goals, supplies }) => {
   }
 
   useEffect(() => {
+    Local.set('vua_formula', user_formula)
     Local.delete('vua_test')
     Local.delete('vua_cart')
   }, [null])
@@ -73,7 +75,11 @@ const TestResult = ({ user_formula, hair_goals, supplies }) => {
           </div>
         </div>
         <div className='text-center'>
-          <button href={`/formula/${user_formula.id}`} className='bg-[#C5B8D4] text-white text-sm px-16 py-3 rounded mt-4 tracking-widest'>COMPRAR</button>
+          <button href={`/formula/${user_formula.id}`} className='bg-[#C5B8D4] text-white text-sm px-16 py-3 rounded mt-4 tracking-widest'>
+            <i className='mdi mdi-cart me-1'></i>
+            COMPRAR
+          </button>
+          <NewFormulaButton formula={user_formula} />
         </div>
         <div className='p-[5%] py-[15%] md:py-[10%] lg:py-[5%] text-start '>
           <div className="max-w-3xl mx-auto">
@@ -87,7 +93,11 @@ const TestResult = ({ user_formula, hair_goals, supplies }) => {
               }
             </div>
             <div className='text-center'>
-              <button href={`/formula/${user_formula.id}`} className='bg-[#C5B8D4] text-white text-sm px-16 py-3 rounded mt-4 tracking-widest'>COMPRAR</button>
+              <button href={`/formula/${user_formula.id}`} className='bg-[#C5B8D4] text-white text-sm px-16 py-3 rounded mt-4 tracking-widest'>
+                <i className='mdi mdi-cart me-1'></i>
+                COMPRAR
+              </button>
+              <NewFormulaButton formula={user_formula} />
             </div>
           </div>
         </div>

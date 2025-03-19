@@ -37,8 +37,14 @@ class FormulaController extends BasicController
             ->get();
         // }
 
+        $other_formulas = UserFormula::where('parent_id', $userFormulaJpa->id)
+            ->where('status', true)
+            ->where('id', '<>', $userFormulaJpa->id)
+            ->get();
+
         return [
             'user_formula' => $userFormulaJpa,
+            'other_formulas' => $other_formulas,
             'items' => $itemsJpa,
             'bundles' => $bundlesJpa,
             'planes' => $planesJpa,

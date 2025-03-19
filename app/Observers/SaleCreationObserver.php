@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Sale;
+use SoDe\Extend\Math;
 
 class SaleCreationObserver
 {
@@ -17,7 +18,7 @@ class SaleCreationObserver
         Sale::where('id', $sale->id)
             ->update([
                 'fullname' => $sale->name . ' ' . $sale->lastname,
-                'total_amount' => $total_amount
+                'total_amount' => Math::round($total_amount, 1)
             ]);
     }
 }

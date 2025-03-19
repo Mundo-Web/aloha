@@ -52,6 +52,8 @@ class CulqiController extends Controller
       if (isset($sale['renewal_discount'])) $amount -= $sale['renewal_discount'];
       if (isset($sale['coupon_discount'])) $amount -= $sale['coupon_discount'];
 
+      $amount = Math::round($amount * 10) / 10;
+
       $config = [
         "amount" => Math::ceil(($amount * 100)),
         "currency_code" => 'PEN',
@@ -76,7 +78,7 @@ class CulqiController extends Controller
         throw new Exception($res['user_message']);
       }
       return \array_merge((array) $order, [
-        'amount' => Math::ceil($amount, 2),
+        'amount' => $amount,
         'delivery' => $sale['delivery'],
       ]);
     });
@@ -134,6 +136,8 @@ class CulqiController extends Controller
     if (isset($sale->bundle_discount)) $amount -= $sale->bundle_discount;
     if (isset($sale->renewal_discount)) $amount -= $sale->renewal_discount;
     if (isset($sale->coupon_discount)) $amount -= $sale->coupon_discount;
+
+    $amount = Math::round($amount * 10) / 10;
 
     $config = [
       "amount" => Math::ceil(($amount * 100)),

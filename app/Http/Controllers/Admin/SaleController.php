@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
-use App\Http\Controllers\Controller;
 use App\Models\Formula;
 use App\Models\Sale;
 use App\Models\Status;
@@ -24,6 +23,11 @@ class SaleController extends BasicController
         'formula.fragrance',
         'status',
         'details',
+        'details.userFormula',
+        'details.userFormula.hasTreatment',
+        'details.userFormula.scalpType',
+        'details.userFormula.hairType',
+        'details.userFormula.fragrance',
         'renewal',
         'bundle',
         'coupon'
@@ -36,7 +40,19 @@ class SaleController extends BasicController
             if (!$jpa) throw new Exception('El pedido que buscas no existe');
             $hairGoals = Formula::whereIn('id', $jpa->formula->hair_goals)->get();
             $jpa->formula->hair_goals_list = $hairGoals;
-            return $jpa;
+            $details = [];
+            foreach ($jpa->details as $key => $detailJpa) {
+                $userFormula = $detailJpa->userFormula;
+                $detail = $detailJpa->toArray();
+                if (isset($detail['user_formula'])) {
+                    $detail['user_formula']['hair_goals_list'] = Formula::whereIn('id', $userFormula->hair_goals)->get();
+                }
+                $details[] = $detail;
+            }
+            return array_merge(
+                $jpa->toArray(),
+                ['details' => $details]
+            );
         });
         return \response($response->toArray(), $response->status);
     }

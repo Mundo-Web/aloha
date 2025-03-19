@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Facebook, MessageCircle } from 'lucide-react';
 import CreateReactScript from './Utils/CreateReactScript';
 import { createRoot } from 'react-dom/client';
-import Base from './Components/Tailwind/Base';
+import Base from './components/Tailwind/Base';
 import HtmlContent from './Utils/HtmlContent';
 import Tippy from '@tippyjs/react';
 

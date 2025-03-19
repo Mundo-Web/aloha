@@ -1,39 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './Components/Tailwind/Base';
+import Base from './components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 
-import Checkout from './Components/Product/Checkout';
-import SelectColor from './Components/Product/SelectColor';
-import SelectPlan from './Components/Product/SelectPlan';
-import SelectProduct from './Components/Product/SelectProduct';
+import SelectColor from './components/Product/SelectColor';
+import SelectPlan from './components/Product/SelectPlan';
+import SelectProduct from './components/Product/SelectProduct';
+import Checkout from './components/Product/Checkout';
+import { Local } from 'sode-extend-react';
 
 
-const Formula = ({ user_formula, items, colors, publicKey, session, bundles, planes }) => {
+const Formula = ({ user_formula, other_formulas, items, publicKey, session, bundles, planes }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState(null)
+  const [otherFormulas, setOtherFormulas] = useState(other_formulas.sort((a, b) => a.created_at < b.created_at ? 1 : -1))
 
-  const goToNextPage = () => {
+  const goToNextPage = (length = 1) => {
     if (currentPageIndex < pages.length - 1) {
-      setCurrentPageIndex(currentPageIndex + 1);
+      setCurrentPageIndex(currentPageIndex + length);
     }
   };
 
-  const goToPrevPage = () => {
+  const goToPrevPage = (length = 1) => {
     if (currentPageIndex > 0) {
-      setCurrentPageIndex(currentPageIndex - 1);
+      setCurrentPageIndex(currentPageIndex - length);
     }
   };
 
   // Páginas
   const pages = [
-    { component: <SelectProduct items={items} goToNextPage={goToNextPage} bundles={bundles} />, name: 'Select Product' },
-    { component: <SelectColor items={items} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} />, name: 'Select Color' },
-    { component: <SelectPlan goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} setSelectedPlan={setSelectedPlan} session={session} bundles={bundles} planes={planes} />, name: 'Select Plan' },
-    { component: <Checkout formula={user_formula} publicKey={publicKey} selectedPlan={selectedPlan} goToNextPage={goToNextPage} bundles={bundles} planes={planes} session={session} />, name: 'Checkout' }
+    {
+      name: 'Select Product',
+      component: <SelectProduct formula={user_formula} otherFormulas={otherFormulas} setOtherFormulas={setOtherFormulas} items={items} goToNextPage={goToNextPage} bundles={bundles} />,
+    },
+    {
+      name: 'Select Color',
+      component: <SelectColor formula={user_formula} otherFormulas={otherFormulas} items={items} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} setSelectedPlan={setSelectedPlan} />,
+    },
+    {
+      name: 'Select Plan',
+      component: <SelectPlan formula={user_formula} otherFormulas={otherFormulas} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} setSelectedPlan={setSelectedPlan} session={session} bundles={bundles} planes={planes} />,
+    },
+    {
+      name: 'Checkout',
+      component: <Checkout formula={user_formula} otherFormulas={otherFormulas} goToPrevPage={goToPrevPage} publicKey={publicKey} selectedPlan={selectedPlan} goToNextPage={goToNextPage} bundles={bundles} planes={planes} session={session} />,
+    }
   ];
 
   const CurrentPageComponent = pages[currentPageIndex].component;
+
+  useEffect(() => {
+    Local.set('vua_formula', user_formula)
+  }, [null])
 
   return CurrentPageComponent
 };

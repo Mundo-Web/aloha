@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import CreateReactScript from '../Utils/CreateReactScript.jsx'
 import ReactAppend from '../Utils/ReactAppend.jsx'
 import Modal from '../components/Adminto/Modal.jsx'
-import InputFormGroup from '../components/Adminto/form/InputFormGroup.jsx'
+// import InputFormGroup from '../components/Adminto/form/InputFormGroup.jsx'
 import TextareaFormGroup from '../components/Adminto/form/TextareaFormGroup.jsx'
 import TippyButton from '../components/Adminto/form/TippyButton.jsx'
 import Swal from 'sweetalert2'
@@ -22,6 +22,7 @@ import SendingModal from '../Reutilizables/Templates/SendingModal.jsx'
 import RepositoryRest from '../actions/Admin/RepositoryRest.js'
 import Global from '../Utils/Global.js'
 import SendingHistoryRest from '../actions/Admin/SendingHistoryRest.js'
+import InputFormGroup from '../Components/Adminto/form/InputFormGroup.jsx'
 
 const mailingTemplatesRest = new MailingTemplatesRest()
 const repositoryRest = new RepositoryRest()
@@ -192,7 +193,6 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
       const formData = new FormData()
       formData.append('template_id', data.id)
       const result = await sendingHistoryRest.save(formData)
-      console.log(result)
     } else {
       const result = await mailingTemplatesRest.get(data.id)
       setDataLoaded(result)

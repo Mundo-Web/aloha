@@ -20,8 +20,6 @@ const Home = ({
   treatmentStats, scalpTypeStats, hairTypeStats
 }) => {
 
-  console.log(topColors)
-
   const [timeFrame, setTimeFrame] = useState('days');
   const [sales, setSales] = useState([]);
 
@@ -66,8 +64,6 @@ const Home = ({
         setSales(data)
       })
   }, [timeFrame])
-
-  console.log(fragranceStats)
 
   return (
     <>

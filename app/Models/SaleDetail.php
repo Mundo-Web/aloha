@@ -20,6 +20,7 @@ class SaleDetail extends Model
         'colors',
         'price',
         'quantity',
+        'user_formula_id',
     ];
 
     protected $casts = [
@@ -34,5 +35,10 @@ class SaleDetail extends Model
     public function item()
     {
         return $this->hasOne(Item::class, 'id', 'item_id');
+    }
+
+    public function userFormula()
+    {
+        return $this->hasOne(UserFormula::class, 'id', 'user_formula_id');
     }
 }

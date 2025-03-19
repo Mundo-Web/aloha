@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import Tippy from "@tippyjs/react";
 import { Notify } from "sode-extend-react";
 import Global from "../../Utils/Global";
+import LaravelSession from "../../Utils/LaravelSession";
 
 const WhatsAppModal = ({ status: whatsappStatus, setStatus }) => {
   const qrRef = useRef()
@@ -85,7 +86,7 @@ const WhatsAppModal = ({ status: whatsappStatus, setStatus }) => {
       method: 'DELETE'
     })
     Notify.add({
-      icon: '/assets/img/logo-login.svg',
+      icon: '/assets/img/favicon.png',
       title: 'Operacion correcta',
       body: `Se cerro la sesion de ${sessionInfo?.pushname || 'WhatsApp'}`
     })
@@ -110,13 +111,13 @@ const WhatsAppModal = ({ status: whatsappStatus, setStatus }) => {
       if (!res.ok) throw new Error('No se pudo enviar el ping');
 
       Notify.add({
-        icon: '/assets/img/logo-login.svg',
+        icon: '/assets/img/favicon.png',
         title: 'Operacion correcta',
         body: `Se envio el ping a ${phoneRef.current.value}`
       })
     } catch (error) {
       Notify.add({
-        icon: '/assets/img/logo-login.svg',
+        icon: '/assets/img/favicon.png',
         title: 'Error',
         body: error.message,
         type: 'danger'
@@ -136,6 +137,13 @@ const WhatsAppModal = ({ status: whatsappStatus, setStatus }) => {
             </div>
             {
               whatsappStatus == 'ready' && <div className="d-block py-2">
+                <img className="d-block mb-2 avatar-md rounded-circle mx-auto"
+                  src={`${Global.WA_URL}/api/profile/${Global.APP_CORRELATIVE}/${sessionInfo?.me?.user}`}
+                  onError={(e) => {
+                    e.target.onerror = null
+                    e.target.src = `/api/admin/profile/thumbnail/undefined`;
+                  }}
+                  alt={sessionInfo?.pushname} />
                 <b>{sessionInfo?.pushname}</b>
                 <br />
                 <span className="text-muted">{sessionInfo?.me?.user}@{sessionInfo?.me?.server}</span>

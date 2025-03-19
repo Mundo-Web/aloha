@@ -1,5 +1,5 @@
 import { CreditCard, HeadphonesIcon, ShieldCheck } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Local } from 'sode-extend-react';
 import CulqiRest from '../../Actions/CulqiRest';
 import Global from '../../Utils/Global';
@@ -72,11 +72,11 @@ const places = {
 
 const couponRest = new CouponsRest()
 
-const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }) => {
+const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPlan, bundles, planes, session }) => {
 
   const couponRef = useRef(null)
 
-  Culqi.publicKey = publicKey
+  Culqi.publicKey = publicKey ?? ''
   Culqi.options({
     paymentMethods: {
       tarjeta: true,
@@ -95,14 +95,17 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
 
   const cart = Local.get('vua_cart')
 
+  const department = Object.keys(places).find(x => places[x].name == session?.department)
+
   const [sale, setSale] = useState({
     name: session?.name || null,
     lastname: session?.lastname || null,
     email: formula.email,
     phone: session?.phone || null,
     country: 'Perú',
-    department: Object.keys(places).find(x => places[x].name == session?.department) || null,
-    province: session?.province || null,
+    department: department ? (department || 'provincias') : null,
+    // department: Object.keys(places).find(x => places[x].name == session?.department) || null,
+    province: session?.province || session?.department || null,
     district: session?.district || null,
     zip_code: session?.zip_code || null,
     address: session?.address || null,
@@ -112,6 +115,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
     billing_type: 'boleta',
     billing_number: '',
   });
+
   const [loading, isLoading] = useState(false);
   const [coupon, setCoupon] = useState(null)
 
@@ -179,7 +183,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
     Culqi.settings({
       title: `${Global.APP_NAME} ${selectedPlan ? '(Suscripción)' : ''}`.trim(),
       currency: 'PEN',
-      amount: Math.ceil((totalPrice - bundleDiscount - planDiscount - couponDiscount) * 100),
+      amount: Math.round(Math.ceil((totalPrice - bundleDiscount - planDiscount - couponDiscount) * 100) / 10) * 10,
       order: order_number
     })
     Culqi.open();
@@ -249,6 +253,10 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
           <form className="w-full rounded-lg bg-white p-8 shadow-lg" onSubmit={onCulqiOpen} disabled={loading}>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5 relative">
               <div className='lg:col-span-3'>
+                <button onClick={() => goToPrevPage(otherFormulas.length > 0 ? 2 : 1)} className='bg-[#C5B8D4] text-white text-sm px-4 py-2 rounded mb-4'>
+                  <i className="mdi mdi-arrow-left me-1"></i>
+                  VOLVER
+                </button>
                 <h2 className="mb-4 text-xl font-semibold">Información del cliente</h2>
                 <div className="mb-4">
                   <label className="mb-1 block text-sm font-medium " htmlFor="email">
@@ -315,7 +323,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                     <select
                       id="department"
                       className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
-                      value={sale.department}
+                      value={sale.department || ''}
                       onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
                       required
                     >
@@ -375,7 +383,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                               type="text"
                               id="postalCode"
                               className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
-                              value={sale.province}
+                              value={sale.province ?? session.department}
                               onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
                               required
                             />
@@ -479,7 +487,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                     className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
                     rows={3}
                     placeholder="Notas sobre tu pedido, por ejemplo, notas especiales para la entrega."
-                    value={sale.comment}
+                    value={sale.comment || ''}
                     onChange={(e) => setSale(old => ({ ...old, comment: e.target.value }))}
                     style={{
                       minHeight: 81,
@@ -540,8 +548,8 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                                     × {item.quantity}
                                   </span>
                                   <div className='inline-flex flex-wrap gap-1'>
-                                    {item.colors.map((color, jndex) => {
-                                      return <i className='mdi mdi-circle' style={{ color: color?.hex ?? '#000', WebkitTextStroke: '1px #808080' }}></i>
+                                    {item.colors.map((color, index) => {
+                                      return <i key={index} className='mdi mdi-circle' style={{ color: color?.hex ?? '#000', WebkitTextStroke: '1px #808080' }}></i>
                                     })}
                                   </div>
                                 </small>
@@ -554,7 +562,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                     </div>
                     <div className="mb-2 mt-4 flex justify-between border-b pb-2 text-sm font-bold">
                       <span>Subtotal</span>
-                      <span>S/ {Number2Currency(totalPrice)}</span>
+                      <span>S/ {Number2Currency(Math.round(totalPrice * 10) / 10)}</span>
                     </div>
                     {
                       bundle &&
@@ -563,7 +571,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                           Descuento x paquete
                           <small className='block text-xs font-light'>Elegiste {bundle.name} (-{Math.round(bundle.percentage * 10000) / 100}%)</small>
                         </span>
-                        <span>S/ -{Number2Currency(bundleDiscount)}</span>
+                        <span>S/ -{Number2Currency(Math.round(bundleDiscount * 10) / 10)}</span>
                       </div>
                     }
                     {
@@ -573,7 +581,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                           Subscripción
                           <small className='block text-xs font-light'>{plan.name} (-{Math.round(plan.percentage * 10000) / 100}%)</small>
                         </span>
-                        <span>S/ -{Number2Currency(planDiscount)}</span>
+                        <span>S/ -{Number2Currency(Math.round(planDiscount * 10) / 10)}</span>
                       </div>
                     }
                     {
@@ -603,7 +611,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                     }
                     <div className="flex justify-between text-lg font-semibold">
                       <span>Total</span>
-                      <span>S/ {Number2Currency(totalPrice - bundleDiscount - planDiscount - couponDiscount)}</span>
+                      <span>S/ {Number2Currency(Math.round((totalPrice - bundleDiscount - planDiscount - couponDiscount) * 10) / 10)}</span>
                     </div>
                   </div>
                   {
@@ -638,14 +646,14 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                     </p>
                     <div className='grid grid-cols-2 gap-2'>
                       <div className='relative'>
-                        <input type="radio" name="billing_type" value='boleta' id="billing_type_boleta" defaultChecked className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'boleta'} required/>
+                        <input type="radio" name="billing_type" value='boleta' id="billing_type_boleta" defaultChecked={sale.billing_type == 'boleta'} className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'boleta'} required />
                         <label htmlFor="billing_type_boleta" className='flex gap-1.5 items-center justify-center px-2 py-1 border rounded-md cursor-pointer peer-checked:bg-[#C5B8D4] peer-checked:text-white transition-colors'>
                           <i className='mdi mdi-account text-lg'></i>
                           <span>Boleta</span>
                         </label>
                       </div>
                       <div className='relative'>
-                        <input type="radio" name="billing_type" value='factura' id="billing_type_factura" className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'factura'} required/>
+                        <input type="radio" name="billing_type" value='factura' id="billing_type_factura" defaultChecked={sale.billing_type == 'factura'} className='hidden peer' onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))} checked={sale.billing_type == 'factura'} required />
                         <label htmlFor="billing_type_factura" className='flex gap-1.5 items-center justify-center px-2 py-1 border rounded-md cursor-pointer peer-checked:bg-[#C5B8D4] peer-checked:text-white transition-colors'>
                           <i className='mdi mdi-office-building text-lg'></i>
                           <span>Factura</span>
@@ -664,7 +672,7 @@ const Checkout = ({ formula, publicKey, selectedPlan, bundles, planes, session }
                       className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
                       value={sale.billing_number}
                       maxLength={sale.billing_type == 'boleta' ? 8 : 11}
-                      minLength={sale.billing_type == 'boleta'? 8 : 11}
+                      minLength={sale.billing_type == 'boleta' ? 8 : 11}
                       required
                       onChange={(e) => setSale(old => ({ ...old, billing_number: e.target.value }))}
                     />
