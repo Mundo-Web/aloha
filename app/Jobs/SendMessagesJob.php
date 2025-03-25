@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Helpers\EmailConfig;
+use App\Http\Controllers\MailingController;
 use App\Models\HistoryDetail;
 use App\Models\MailingTemplate;
 use Illuminate\Bus\Queueable;
@@ -59,8 +60,8 @@ class SendMessagesJob implements ShouldQueue
     $historyJpa = $this->historyJpa;
 
     // INICIO: SMTP Config
-    $mail = EmailConfig::config();
-    if (!$mail->smtpConnect()) throw new Exception('No se pudo conectar a SMTP');
+    // $mail = EmailConfig::config();
+    // if (!$mail->smtpConnect()) throw new Exception('No se pudo conectar a SMTP');
     // FIN: SMTP Config
 
     foreach ($this->rows as $row) {
@@ -87,15 +88,23 @@ class SendMessagesJob implements ShouldQueue
 
         $html = Text::replaceData($templateJpa->content, $data);
 
-        if (env('APP_ENV') == 'production') $mail->addAddress($email);
-        else $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
-        $mail->Subject = $templateJpa->name;
-        $mail->Body = $html;
-        $mail->isHTML(true);
-        $mail->send();
+        // if (env('APP_ENV') == 'production') $mail->addAddress($email);
+        // else $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
+        // $mail->Subject = $templateJpa->name;
+        // $mail->Body = $html;
+        // $mail->isHTML(true);
+        // $mail->send();
 
-        $success = true;
-        $error = null;
+        // $success = true;
+        // $error = null;
+
+        if (env('APP_ENV') == 'production') {
+          [$success, $error] = MailingController::send($email, $templateJpa->name, $html);
+        } else {
+          [$success, $error] = MailingController::send('gamboapalominocarlosmanuel@gmail.com', $templateJpa->name, $html);
+        }
+
+        if (!$success) throw new Exception($error);
 
         $historyJpa->completed++;
       } catch (\Throwable $th) {
@@ -104,7 +113,7 @@ class SendMessagesJob implements ShouldQueue
         $historyJpa->failed++;
       } finally {
         try {
-          $mail->clearAddresses();
+          // $mail->clearAddresses();
           $historyJpa->save();
           HistoryDetail::create([
             'sending_history_id' => $historyJpa->id,
@@ -118,7 +127,7 @@ class SendMessagesJob implements ShouldQueue
         }
       }
     }
-    $mail->smtpClose();
+    // $mail->smtpClose();
   }
 
   public function sendWhatsApp($templateJpa)

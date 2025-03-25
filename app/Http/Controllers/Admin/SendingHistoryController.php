@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
+use App\Jobs\ExecuteMassiveSending;
 use App\Jobs\SendMessagesJob;
 use App\Models\dxDataGrid;
 use App\Models\MailingTemplate;
@@ -25,14 +26,9 @@ class SendingHistoryController extends BasicController
                 ->where('auto_send', true)
                 ->where('status', true)
                 ->get();
-            foreach ($templates as $value) {
-                $request = new Request();
-                $request->merge([
-                    'template_id' => $value->id,
-                ]);
-                $this->save($request);
-            }
+            ExecuteMassiveSending::dispatchSync($templates);
         });
+
         return response($response->toArray(), $response->status);
     }
 

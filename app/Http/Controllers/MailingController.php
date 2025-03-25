@@ -15,6 +15,23 @@ use Illuminate\Support\Facades\View;
 class MailingController extends BasicController
 {
     public $model = 'Mailing';
+
+    static function send($email, $subject, $content)
+    {
+        try {
+            $mail = EmailConfig::config();
+            $mail->Subject = $subject;
+            $mail->isHTML(true);
+            $mail->Body = $content;
+            $mail->addAddress($email);
+            $mail->send();
+
+            return [true, null];
+        } catch (\Throwable $th) {
+            return [false, $th->getMessage()];
+        }
+    }
+
     static function notifyContact(Message $messageJpa)
     {
         try {
