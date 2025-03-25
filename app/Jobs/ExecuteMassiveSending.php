@@ -2,11 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\Admin\SendingHistoryController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Http\Request;
 
 class ExecuteMassiveSending implements ShouldQueue
 {
@@ -21,9 +23,17 @@ class ExecuteMassiveSending implements ShouldQueue
 
     public function handle()
     {
-        dump('Empezando...');
-        sleep(65);
-        dump($this->templates);
-        return true;
+        foreach ($this->templates as $tmp) {
+            try {
+                $controller = new SendingHistoryController();
+                $request = new Request();
+                $request->merge([
+                    'template_id' => $tmp->id,
+                ]);
+                $controller->save($request);
+            } catch (\Throwable $th) {
+                dump($th->getMessage()); 
+            }
+        }
     }
 }

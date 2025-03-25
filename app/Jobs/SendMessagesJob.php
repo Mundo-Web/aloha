@@ -70,7 +70,6 @@ class SendMessagesJob implements ShouldQueue
 
       $emailField = $historyJpa->mapping['waves_send_to'] ?? 'email';
       $email = $row[$emailField];
-
       try {
 
         $dominio = substr(strrchr($email, "@"), 1);
