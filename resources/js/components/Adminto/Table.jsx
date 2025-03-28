@@ -1,7 +1,12 @@
 import React from 'react'
 import DataGrid from './DataGrid'
+import { renderToString } from 'react-dom/server'
 
-const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, pageSize}) => {
+const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, exportable, pageSize}) => {
+  
+  const html = renderToString(<div>{title}</div>)
+  const text = $(html).text().trim().clean('-')
+  
   return (<div className="row">
     <div className="col-12">
       <div className="card">
@@ -19,7 +24,7 @@ const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterVal
               </h4>
               : ''
           }
-          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} masterDetail={masterDetail} filterValue={filterValue} pageSize={pageSize} onRefresh={onRefresh}/>
+          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} exportable={exportable} exportableName={text.toLowerCase()} masterDetail={masterDetail} filterValue={filterValue} pageSize={pageSize} onRefresh={onRefresh}/>
         </div>
       </div>
     </div>

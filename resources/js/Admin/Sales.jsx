@@ -103,6 +103,7 @@ const Sales = ({ statuses }) => {
           }
         });
       }}
+      exportable
       pageSize={25}
       columns={[
         {
@@ -116,7 +117,7 @@ const Sales = ({ statuses }) => {
           visible: false
         },
         {
-          dataField: 'name',
+          dataField: 'fullname',
           caption: 'Orden',
           width: '250px',
           cellTemplate: (container, { data }) => {
@@ -125,7 +126,7 @@ const Sales = ({ statuses }) => {
               onModalOpen(data.id)
             })
             ReactAppend(container, <p className='mb-0' style={{ width: '100%' }}>
-              <b className='d-block'>
+              <b className='d-block w-100 text-truncate'>
                 {
                   data.renewal && <Tippy content={`Plan: ${data.renewal.name}`}>
                     <i className='fa fas fa-spa text-pink me-1'></i>
@@ -144,10 +145,34 @@ const Sales = ({ statuses }) => {
           }
         },
         {
+          dataField: 'phone',
+          caption: 'Teléfono',
+          width: '120px',
+          cellTemplate: (container, { data }) => {
+            container.text(data.phone.keep('0-9'))
+          }
+        },
+        {
+          dataField: 'email',
+          caption: 'Email'
+        },
+        {
+          dataField: 'department',
+          caption: 'Departamento',
+        },
+        {
+          dataField: 'province',
+          caption: 'Ciudad',
+          cellTemplate: (container, { data }) => {
+            container.text(data.province || data.district);
+          }
+        },
+        {
           dataField: 'created_at',
           caption: 'Fecha',
           dataType: 'date',
           sortOrder: 'desc',
+          width: '150px',
           cellTemplate: (container, { data }) => {
             container.html(renderToString(<>
               <span className='d-block'>{moment(data.created_at.replace('Z', '-05:00')).fromNow()}</span>
@@ -158,20 +183,26 @@ const Sales = ({ statuses }) => {
         {
           dataField: 'status.name',
           caption: 'Estado',
+          width: '100px',
           cellTemplate: (container, { data }) => {
             ReactAppend(container, <>
-              <span className='badge rounded-pill' style={{
-                backgroundColor: data.status.color ? `${data.status.color}2e` : '#3333332e',
-                color: data.status.color ?? '#333'
-              }}>{data.status.name}</span>
-              <small className='d-block text-muted'>{data.status.description}</small>
+              <Tippy content={data.status.description}>
+                <span className='d-block mx-auto badge rounded-pill' style={{
+                  backgroundColor: data.status.color ? `${data.status.color}2e` : '#3333332e',
+                  color: data.status.color ?? '#333',
+                  width: 'max-content',
+                  marginBottom: '4px'
+                }}>{data.status.name}</span>
+              </Tippy>
+              {/* <small className='d-block text-muted text-center'>{data.status.description}</small> */}
             </>)
           }
         },
         {
-          dataField: 'total_cmount',
+          dataField: 'total_amount',
           caption: 'Total',
           dataType: 'number',
+          width: '100px',
           cellTemplate: (container, { data }) => {
             // const amount = Number(data.total_cmount) || 0
             // const delivery = Number(data.delivery) || 0
@@ -191,12 +222,13 @@ const Sales = ({ statuses }) => {
               icon: 'fa fa-eye',
               onClick: () => onModalOpen(data.id)
             }))
-            container.append(DxButton({
-              className: 'btn btn-xs btn-soft-danger',
-              title: 'Anular pedido',
-              icon: 'fa fa-trash',
-              onClick: () => onDeleteClicked(data.id)
-            }))
+            !data.status.confirm &&
+              container.append(DxButton({
+                className: 'btn btn-xs btn-soft-danger',
+                title: 'Anular pedido',
+                icon: 'fa fa-trash',
+                onClick: () => onDeleteClicked(data.id)
+              }))
           },
           allowFiltering: false,
           allowExporting: false
