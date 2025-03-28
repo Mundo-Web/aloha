@@ -155,6 +155,24 @@ const Sales = ({ statuses }) => {
           }
         },
         {
+          dataField: 'status.name',
+          caption: 'Estado',
+          width: '100px',
+          cellTemplate: (container, { data }) => {
+            ReactAppend(container, <>
+              <Tippy content={data.status.description}>
+                <span className='d-block mx-auto badge rounded-pill' style={{
+                  backgroundColor: data.status.color ? `${data.status.color}2e` : '#3333332e',
+                  color: data.status.color ?? '#333',
+                  width: 'max-content',
+                  marginBottom: '4px'
+                }}>{data.status.name}</span>
+              </Tippy>
+              {/* <small className='d-block text-muted text-center'>{data.status.description}</small> */}
+            </>)
+          }
+        },
+        {
           dataField: 'phone',
           caption: 'Teléfono',
           width: '120px',
@@ -188,24 +206,6 @@ const Sales = ({ statuses }) => {
               <span className='d-block'>{moment(data.created_at.replace('Z', '-05:00')).fromNow()}</span>
               <small className='d-block text-muted'>{moment(data.created_at).format('lll')}</small>
             </>))
-          }
-        },
-        {
-          dataField: 'status.name',
-          caption: 'Estado',
-          width: '100px',
-          cellTemplate: (container, { data }) => {
-            ReactAppend(container, <>
-              <Tippy content={data.status.description}>
-                <span className='d-block mx-auto badge rounded-pill' style={{
-                  backgroundColor: data.status.color ? `${data.status.color}2e` : '#3333332e',
-                  color: data.status.color ?? '#333',
-                  width: 'max-content',
-                  marginBottom: '4px'
-                }}>{data.status.name}</span>
-              </Tippy>
-              {/* <small className='d-block text-muted text-center'>{data.status.description}</small> */}
-            </>)
           }
         },
         {
