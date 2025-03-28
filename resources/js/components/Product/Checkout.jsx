@@ -383,7 +383,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                               type="text"
                               id="postalCode"
                               className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
-                              value={sale.province ?? session.department}
+                              value={sale.province ?? session?.department}
                               onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
                               required
                             />
