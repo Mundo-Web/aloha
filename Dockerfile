@@ -29,6 +29,8 @@ COPY . .
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 RUN php artisan key:generate 
 
+RUN chmod -R 775 storage
+RUN chmod -R 775 bootstrap/cache
 RUN chmod -R 777 storage
 RUN chmod -R 777 bootstrap/cache
 
