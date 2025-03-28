@@ -127,6 +127,19 @@ const Sales = ({ statuses }) => {
           visible: false
         },
         {
+          dataField: 'created_at',
+          caption: 'Fecha',
+          dataType: 'date',
+          sortOrder: 'desc',
+          width: '150px',
+          cellTemplate: (container, { data }) => {
+            container.html(renderToString(<>
+              <span className='d-block'>{moment(data.created_at.replace('Z', '-05:00')).fromNow()}</span>
+              <small className='d-block text-muted'>{moment(data.created_at).format('lll')}</small>
+            </>))
+          }
+        },
+        {
           dataField: 'fullname',
           caption: 'Orden',
           width: '250px',
@@ -173,6 +186,21 @@ const Sales = ({ statuses }) => {
           }
         },
         {
+          dataField: 'total_amount',
+          caption: 'Total',
+          dataType: 'number',
+          width: '100px',
+          cellTemplate: (container, { data }) => {
+            // const amount = Number(data.total_cmount) || 0
+            // const delivery = Number(data.delivery) || 0
+            // const bundle_discount = Number(data.bundle_discount) || 0
+            // const renewal_discount = Number(data.renewal_discount) || 0
+            // const coupon_discount = Number(data.coupon_discount) || 0
+            // container.text(`S/. ${Number2Currency(amount + delivery - bundle_discount - renewal_discount - coupon_discount)}`);
+            container.text(`S/. ${Number2Currency(data.total_amount)}`);
+          }
+        },
+        {
           dataField: 'phone',
           caption: 'Teléfono',
           width: '120px',
@@ -193,34 +221,6 @@ const Sales = ({ statuses }) => {
           caption: 'Ciudad',
           cellTemplate: (container, { data }) => {
             container.text(data.province || data.district);
-          }
-        },
-        {
-          dataField: 'created_at',
-          caption: 'Fecha',
-          dataType: 'date',
-          sortOrder: 'desc',
-          width: '150px',
-          cellTemplate: (container, { data }) => {
-            container.html(renderToString(<>
-              <span className='d-block'>{moment(data.created_at.replace('Z', '-05:00')).fromNow()}</span>
-              <small className='d-block text-muted'>{moment(data.created_at).format('lll')}</small>
-            </>))
-          }
-        },
-        {
-          dataField: 'total_amount',
-          caption: 'Total',
-          dataType: 'number',
-          width: '100px',
-          cellTemplate: (container, { data }) => {
-            // const amount = Number(data.total_cmount) || 0
-            // const delivery = Number(data.delivery) || 0
-            // const bundle_discount = Number(data.bundle_discount) || 0
-            // const renewal_discount = Number(data.renewal_discount) || 0
-            // const coupon_discount = Number(data.coupon_discount) || 0
-            // container.text(`S/. ${Number2Currency(amount + delivery - bundle_discount - renewal_discount - coupon_discount)}`);
-            container.text(`S/. ${Number2Currency(data.total_amount)}`);
           }
         },
         {
