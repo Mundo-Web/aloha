@@ -20,6 +20,7 @@ const saleStatusesRest = new SaleStatusesRest()
 
 const Sales = ({ statuses }) => {
   const gridRef = useRef()
+  const detailsModalRef = useRef()
   const modalRef = useRef()
 
   const [saleLoaded, setSaleLoaded] = useState(null);
@@ -70,7 +71,7 @@ const Sales = ({ statuses }) => {
     setSaleStatuses([])
     const newSale = await salesRest.get(saleId)
     setSaleLoaded(newSale)
-    $(modalRef.current).modal('show');
+    $(detailsModalRef.current).modal('show');
   }
 
   useEffect(() => {
@@ -100,6 +101,15 @@ const Sales = ({ statuses }) => {
             icon: 'refresh',
             hint: 'Refrescar tabla',
             onClick: () => $(gridRef.current).dxDataGrid('instance').refresh()
+          }
+        });
+        container.unshift({
+          widget: 'dxButton', location: 'after',
+          options: {
+            icon: 'plus',
+            hint: 'Agrega una venta manual',
+            text: 'Nueva venta',
+            onClick: () => $(modalRef.current).modal('show')
           }
         });
       }}
@@ -234,7 +244,7 @@ const Sales = ({ statuses }) => {
           allowExporting: false
         }
       ]} />
-    <Modal modalRef={modalRef} title={`Detalles del pedido #${Global.APP_CORRELATIVE}-${saleLoaded?.code}`} size='xl' bodyStyle={{
+    <Modal modalRef={detailsModalRef} title={`Detalles del pedido #${Global.APP_CORRELATIVE}-${saleLoaded?.code}`} size='xl' bodyStyle={{
       backgroundColor: '#ebeff2'
     }} hideButtonSubmit >
       <div className="row">
@@ -485,6 +495,178 @@ const Sales = ({ statuses }) => {
                 })
               }
             </div>
+          </div>
+        </div>
+      </div>
+    </Modal>
+    <Modal modalRef={modalRef} title='Nueva venta (No disponible aun)' size='lg' isStatic hideFooter>
+      <div id="progressbarwizard">
+        <ul className="nav nav-pills bg-light nav-justified mb-3 w-100">
+          <li className="nav-item">
+            <a href="#formula-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2 active">
+              <i className="mdi mdi-flask me-1"></i>
+              <span className="d-none d-sm-inline">Fórmula</span>
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#items-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2">
+              <i className="mdi mdi-bottle-soda me-1"></i>
+              <span className="d-none d-sm-inline">Items</span>
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#checkout-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2">
+              <i className="mdi mdi-map-marker-radius me-1"></i>
+              <span className="d-none d-sm-inline">Datos de envío</span>
+            </a>
+          </li>
+        </ul>
+
+        <div className="tab-content b-0 mb-0 pt-0">
+          <div className="progress mb-3" style={{ height: '7px' }}>
+            <div className="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+          </div>
+
+          {/* Paso 1: Fórmula básica */}
+          <div className="tab-pane active" id="formula-tab">
+            <div className="row">
+              <div className="col-12">
+                <div className="mb-3">
+                  <label className="form-label">¿Tienes algún tratamiento capilar? *</label>
+                  <select className="form-select" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="1">Si, actualmente</option>
+                    <option value="2">No, pero tuve</option>
+                    <option value="3">No, nunca</option>
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Tipo de cuero cabelludo *</label>
+                  <select className="form-select" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Graso</option>
+                    <option value="3">Seco</option>
+                    <option value="4">Mixto</option>
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Tipo de cabello *</label>
+                  <select className="form-select" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="1">Liso</option>
+                    <option value="2">Ondulado</option>
+                    <option value="3">Rizado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Paso 2: Selección de items */}
+          <div className="tab-pane" id="items-tab">
+            <div className="row">
+              <div className="col-12">
+                <div className="table-responsive">
+                  <table className="table table-centered table-nowrap mb-0">
+                    <thead>
+                      <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th style={{ width: '140px' }}>Cantidad</th>
+                        <th>Total</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <select className="form-select">
+                            <option value="">Seleccionar producto</option>
+                          </select>
+                        </td>
+                        <td>S/. <span className="product-price">0.00</span></td>
+                        <td>
+                          <input type="number" className="form-control" min="1" value="1" />
+                        </td>
+                        <td>S/. <span className="product-total">0.00</span></td>
+                        <td>
+                          <button className="btn btn-danger btn-sm">
+                            <i className="mdi mdi-trash-can"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan="5">
+                          <button className="btn btn-info btn-sm">
+                            <i className="mdi mdi-plus me-1"></i>
+                            Agregar producto
+                          </button>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Paso 3: Datos de envío */}
+          <div className="tab-pane" id="checkout-tab">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Nombres *</label>
+                  <input type="text" className="form-control" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Apellidos *</label>
+                  <input type="text" className="form-control" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Email *</label>
+                  <input type="email" className="form-control" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Teléfono *</label>
+                  <input type="tel" className="form-control" required />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">Tipo de documento *</label>
+                  <select className="form-select" required>
+                    <option value="dni">DNI</option>
+                    <option value="ruc">RUC</option>
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Número de documento *</label>
+                  <input type="text" className="form-control" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Dirección *</label>
+                  <input type="text" className="form-control" required />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Referencia</label>
+                  <input type="text" className="form-control" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-between mt-3">
+            <button type="button" className="btn btn-secondary" data-prev>
+              <i className="mdi mdi-arrow-left me-1"></i>
+              Anterior
+            </button>
+            <button type="button" className="btn btn-primary" data-next>
+              Siguiente
+              <i className="mdi mdi-arrow-right ms-1"></i>
+            </button>
           </div>
         </div>
       </div>
