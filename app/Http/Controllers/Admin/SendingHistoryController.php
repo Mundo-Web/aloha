@@ -62,6 +62,7 @@ class SendingHistoryController extends BasicController
             'type' => $templateJpa->type,
             'mapping' => $mapping,
             'total' => count($data),
+            'status' => count($data) == 0 ? true : null,
         ];
     }
 
@@ -74,6 +75,6 @@ class SendingHistoryController extends BasicController
             dxDataGrid::filter($query, $templateJpa->filters ?? [], false);
         });
         $data = $instance->get()->toArray();
-        SendMessagesJob::dispatchAfterResponse($jpa, $data);
+        if (count($data) > 0) SendMessagesJob::dispatchAfterResponse($jpa, $data);
     }
 }
