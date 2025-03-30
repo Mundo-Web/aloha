@@ -75,10 +75,10 @@ class SendMessagesJob implements ShouldQueue
         // $dominio = substr(strrchr($email, "@"), 1);
         // if (!checkdnsrr($dominio, "MX")) throw new Exception("Dominio sin servidor de correo");
 
-        $validator = new SMTP_Validate_Email();
-        $result = $validator->validate([$email], 'tu-correo@tudominio.com');
+        // $validator = new SMTP_Validate_Email();
+        // $result = $validator->validate([$email], 'tu-correo@tudominio.com');
 
-        if (!$result[$email]) throw new Exception("El correo no existe o no es válido");
+        // if (!$result[$email]) throw new Exception("El correo no existe o no es válido");
 
         $data = [];
         foreach ($templateJpa->vars as $var) {
