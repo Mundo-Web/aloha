@@ -36,7 +36,7 @@ class SendingHistoryController extends BasicController
     {
         $templateJpa = MailingTemplate::find($request->input('template_id'));
 
-        if ($templateJpa->auto_send) {
+        if ($templateJpa->auto_send && $templateJpa->model) {
             $model = 'App\\Models\\' . $templateJpa->model;
             $fillable = (new $model)->getFillable();
             $mapping = [];
@@ -69,12 +69,16 @@ class SendingHistoryController extends BasicController
     public function afterSave(Request $request, object $jpa, bool $isNew)
     {
         $templateJpa = MailingTemplate::find($jpa->mailing_template_id);
-        $model = 'App\\Models\\' . $templateJpa->model;
-        $instance  = $model::distinct();
-        $instance->where(function ($query) use ($templateJpa) {
-            dxDataGrid::filter($query, $templateJpa->filters ?? [], false);
-        });
-        $data = $instance->get()->toArray();
-        if (count($data) > 0) SendMessagesJob::dispatchAfterResponse($jpa, $data);
+        if ($templateJpa->auto_send && $templateJpa->model) {
+            $model = 'App\\Models\\' . $templateJpa->model;
+            $instance  = $model::distinct();
+            $instance->where(function ($query) use ($templateJpa) {
+                dxDataGrid::filter($query, $templateJpa->filters ?? [], false);
+            });
+            $data = $instance->get()->toArray();
+            if (count($data) > 0) SendMessagesJob::dispatchAfterResponse($jpa, $data);
+        } else {
+            SendMessagesJob::dispatchAfterResponse($jpa, JSON::parse($request->input('data')));
+        }
     }
 }
