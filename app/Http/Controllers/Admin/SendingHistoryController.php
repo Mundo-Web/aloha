@@ -78,7 +78,8 @@ class SendingHistoryController extends BasicController
             $data = $instance->get()->toArray();
             if (count($data) > 0) SendMessagesJob::dispatchAfterResponse($jpa, $data);
         } else {
-            SendMessagesJob::dispatchAfterResponse($jpa, JSON::parse($request->input('data')));
+            $data = JSON::parse(file_get_contents($request->file('data')));
+            SendMessagesJob::dispatchAfterResponse($jpa, $data);
         }
     }
 }
