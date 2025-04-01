@@ -215,9 +215,9 @@ const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage,
         <div className="flex flex-row text-white items-center gap-4">
           {
             totalPrice != finalPrice &&
-            <p className="text-sm font-light line-through">Antes: S/{Number2Currency(totalPrice)}</p>
+            <p className="font-light line-through">Antes: S/{Number2Currency(totalPrice)}</p>
           }
-          <h2 className="text-xl">S/{Number2Currency(finalPrice)}</h2>
+          <h2 className="text-2xl">S/{Number2Currency(finalPrice)}</h2>
         </div>
       </div>
     </div>
