@@ -23,7 +23,7 @@ const HairGoals = ({ test, setTest, values }) => {
   return <>
     <section className="p-[5%] py-[15%] md:py-[10%] lg:py-[5%] bg-white text-center text-[#404040]">
       <div className="max-w-xl mx-auto">
-        <h1 className="text-2xl mb-4">¿Qué <b className="font-bold text-[#303030]">quieres lograr</b> con tu cabello</h1>
+        <h1 className="text-2xl mb-4">¿Qué <b className="font-bold text-[#303030]">quieres lograr</b> con tu cabello?</h1>
         <p className="text-sm mb-4">Selecciona 3 objetivos para tu fórmula</p>
         <div className="flex flex-wrap justify-center text-sm w-full mb-4 gap-2">
           {values.map((value, index) => (

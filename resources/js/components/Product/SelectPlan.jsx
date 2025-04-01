@@ -54,7 +54,7 @@ const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan
         </div>
       </div>
       {
-        otherFormulas.length > 0 && <>
+        otherFormulas.length == 0 && <>
           {
             (!session?.id && planes.length > 0) ?
               <div className="p-4 text-center flex flex-col gap-2 items-center">
