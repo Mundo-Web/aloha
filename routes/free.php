@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/template/{id}', [MailingTemplateController::class, 'get'])->withoutMiddleware('throttle');
 Route::post('/template', [MailingTemplateController::class, 'save'])->withoutMiddleware('throttle');
 
-Route::prefix('mailing')->group(function () {
+Route::prefix('/mailing')->group(function () {
     Route::post('/send', [MailingController::class, 'send']);
     Route::get('/execute', [AdminSendingHistoryController::class, 'execute']);
     Route::post('/history', [SendingHistoryController::class, 'save']);
