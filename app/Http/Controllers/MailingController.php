@@ -43,6 +43,11 @@ class MailingController extends BasicController
                 $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
             }
             $mail->send();
+            try {
+                $mail->smtpClose();
+            } catch (\Throwable $th) {
+                // dump('Cerrando STMP Connection: '.$th->getMessage());
+            }
         });
         return response($response->toArray(), $response->status);
     }

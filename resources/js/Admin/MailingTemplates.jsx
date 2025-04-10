@@ -199,7 +199,6 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
       const formData = new FormData()
       formData.append('template_id', data.id)
       const result = await sendingHistoryRest.save(formData)
-      console.log(result)
     } else {
       const result = await mailingTemplatesRest.get(data.id)
       setDataLoaded(result)

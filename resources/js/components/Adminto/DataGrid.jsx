@@ -1,16 +1,22 @@
 import React, { useEffect } from 'react'
 import { Local } from 'sode-extend-react'
 
-const DataGrid = ({ gridRef: dataGridRef, rest, columns, toolBar, masterDetail, filterValue, pageSize = 10, exportable, exportableName, customizeCell = () => { }, onRefresh = () => { } }) => {
+const DataGrid = ({ gridRef: dataGridRef, allowQueryBuilder = true, rest, columns, toolBar, masterDetail, filterValue = null, pageSize = 10, exportable, exportableName, customizeCell = () => { }, onRefresh = () => { } }) => {
   useEffect(() => {
     DevExpress.localization.locale(navigator.language);
+
     $(dataGridRef.current).dxDataGrid({
       language: "es",
       dataSource: {
         load: async (params) => {
+          if (filterValue && typeof params.filter === 'undefined') {
+            return {
+              totalCount: 0,
+              data: []
+            }
+          }
           const data = await rest.paginate({
-            ...params,
-            // _token: $('[name="csrf_token"]').attr('content')
+            ...params
           })
           onRefresh(data)
           return data
@@ -42,7 +48,7 @@ const DataGrid = ({ gridRef: dataGridRef, rest, columns, toolBar, masterDetail, 
       allowColumnReordering: true,
       columnAutoWidth: true,
       scrollbars: 'auto',
-      filterPanel: { visible: true },
+      filterPanel: { visible: allowQueryBuilder },
       searchPanel: { visible: true },
       headerFilter: { visible: true, search: { enabled: true } },
       height: 'calc(100vh - 185px)',
@@ -126,7 +132,8 @@ const DataGrid = ({ gridRef: dataGridRef, rest, columns, toolBar, masterDetail, 
 
       //   Local.set('dxSettings', dxSettings)
       // }
-    }).dxDataGrid('instance')
+    })
+      .dxDataGrid('instance')
 
     tippy('.dx-button', { arrow: true })
 
@@ -134,10 +141,10 @@ const DataGrid = ({ gridRef: dataGridRef, rest, columns, toolBar, masterDetail, 
     // if (dxSettings[location.pathname]) {
     //   $(dataGridRef.current).dxDataGrid('instance').state(dxSettings[location.pathname])
     // }
-  }, [null])
+  }, [filterValue])
 
   return (
-    <div ref={dataGridRef}></div>
+    <div ref={dataGridRef} ></div>
   )
 }
 

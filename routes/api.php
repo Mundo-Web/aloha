@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\FormulaController as AdminFormulaController;
 use App\Http\Controllers\Admin\FragranceController as AdminFragranceController;
+use App\Http\Controllers\Admin\HistoryDetailController as AdminHistoryDetailController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\ItemController as AdminItemController;
 use App\Http\Controllers\Admin\MailingTemplateController as AdminMailingTemplateController;
@@ -200,6 +201,8 @@ Route::middleware('auth')->group(function () {
 
                 Route::post('/history', [AdminSendingHistoryController::class, 'save']);
                 Route::post('/history/paginate', [AdminSendingHistoryController::class, 'paginate']);
+
+                Route::post('/history-details/paginate', [AdminHistoryDetailController::class, 'paginate']);
             });
 
             Route::post('/subscriptions/paginate', [AdminSubscriptionController::class, 'paginate']);

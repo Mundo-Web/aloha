@@ -9,11 +9,16 @@ import ReactAppend from '../Utils/ReactAppend';
 import Table from '../Components/Adminto/Table';
 import SendingHistoryRest from '../actions/Admin/SendingHistoryRest';
 import DxPanelButton from '../Components/Adminto/Dx/DxPanelButton';
+import Modal from '../components/Adminto/Modal';
+import DataGrid from '../Components/Adminto/DataGrid';
+import HistoryDetailsRest from '../actions/Admin/HistoryDetailsRest';
 
 const sendingHistoryRest = new SendingHistoryRest()
+const historyDetailsRest = new HistoryDetailsRest()
 
 const SendingHistory = () => {
   const gridRef = useRef()
+  const detailsGridRef = useRef()
   const modalRef = useRef()
 
   // Form elements ref
@@ -22,17 +27,10 @@ const SendingHistory = () => {
   const tableRef = useRef()
   const descriptionRef = useRef()
 
-  const [isEditing, setIsEditing] = useState(false)
+  const [dataLoaded, setDataLoaded] = useState(false)
 
   const onModalOpen = (data) => {
-    if (data?.id) setIsEditing(true)
-    else setIsEditing(false)
-
-    idRef.current.value = data?.id || null
-    SetSelectValue(tableRef.current, data?.table?.id, data?.table?.name)
-    nameRef.current.value = data?.name || null
-    descriptionRef.current.value = data?.description || null
-
+    setDataLoaded(data)
     $(modalRef.current).modal('show')
   }
 
@@ -81,13 +79,6 @@ const SendingHistory = () => {
           icon: 'fas fa-undo-alt',
           onClick: () => $(gridRef.current).dxDataGrid('instance').refresh()
         }))
-        container.unshift(DxPanelButton({
-          className: 'btn btn-xs btn-soft-primary',
-          text: 'Nuevo',
-          title: 'Agregar registro',
-          icon: 'fa fa-plus',
-          onClick: () => onOpenModal()
-        }))
       }}
       pageSize={25}
       columns={[
@@ -128,27 +119,21 @@ const SendingHistory = () => {
           caption: 'Completados',
           dataType: 'number',
           width: '80px',
-          cellTemplate: (container, { value }) => {
-            container.html(renderToString(<b className='text-success'>{value}</b>))
-          }
+          cssClass: 'text-success font-bold',
         },
         {
           dataField: 'failed',
           caption: 'Fallidos',
           dataType: 'number',
           width: '80px',
-          cellTemplate: (container, { value }) => {
-            container.html(renderToString(<b className='text-danger'>{value}</b>))
-          }
+          cssClass: 'text-danger font-bold',
         },
         {
           dataField: 'total',
           caption: 'Total',
           dataType: 'number',
           width: '80px',
-          cellTemplate: (container, { value }) => {
-            container.html(renderToString(<b className='text-primary'>{value}</b>))
-          }
+          cssClass: 'text-primary font-bold',
         },
         {
           dataField: 'status',
@@ -189,11 +174,11 @@ const SendingHistory = () => {
           cellTemplate: (container, { data }) => {
             container.attr('style', 'display: flex; gap: 4px; overflow: unset')
 
-            if (data.status === null) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-primary' title='Reintentar envio' onClick={() => onReSendClicked(data.id)}>
+            if (data.status === 0) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-primary' title='Reintentar envio' onClick={() => onReSendClicked(data.id)}>
               <i className='mdi mdi-reload'></i>
             </TippyButton>)
 
-            if (data.status !== null) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Ver detalles de envio' onClick={() => console.log('hola')}>
+            if (data.status !== null) ReactAppend(container, <TippyButton className='btn btn-xs btn-soft-dark' title='Ver detalles de envio' onClick={() => onModalOpen(data)}>
               <i className='mdi mdi-format-list-bulleted-type'></i>
             </TippyButton>)
           },
@@ -201,6 +186,93 @@ const SendingHistory = () => {
           allowExporting: false
         }
       ]} />
+    <Modal modalRef={modalRef} title={<>
+      <h4 className='modal-title my-0'>Detalles de envío</h4>
+      <small className='text-muted'>{dataLoaded?.name}</small>
+    </>}
+      size='xl'
+      onClose={() => setDataLoaded(null)}
+      hideFooter>
+      <DataGrid gridRef={detailsGridRef}
+        rest={historyDetailsRest}
+        id='grid-a'
+        filterValue={['sending_history_id', '=', dataLoaded?.id ?? null]}
+        toolBar={(container) => {
+          container.unshift(DxPanelButton({
+            className: 'btn btn-xs btn-soft-dark',
+            text: 'Actualizar',
+            title: 'Refrescar tabla',
+            icon: 'fas fa-undo-alt',
+            onClick: () => $(detailsGridRef.current).dxDataGrid('instance').refresh()
+          }))
+        }}
+        pageSize={25}
+        allowQueryBuilder={false}
+        columns={[
+          {
+            dataField: 'sending_history_id',
+            caption: 'ID Historial',
+            visible: false
+          },
+          {
+            dataField: 'sent_to',
+            caption: 'Destinatario',
+          },
+          {
+            dataField: 'seen',
+            caption: 'Visualización',
+            dataType: 'boolean',
+            cellTemplate: (container, { data }) => {
+              ReactAppend(container, data.status
+                ? <span className='text-primary font-bold'>
+                  <i className='mdi mdi-email-open me-1'></i>
+                  Abierto
+                </span>
+                : <span className='text-muted'>
+                  <i className='mdi mdi-email me-1'></i>
+                  No abierto
+                </span>)
+            },
+            width: '150px'
+          },
+          {
+            dataField: 'status',
+            caption: 'Estado',
+            dataType: 'boolean',
+            cellTemplate: (container, { data }) => {
+              ReactAppend(container, data.status
+                ? <span className='text-success font-bold'>
+                  <i className='mdi mdi-check me-1'></i>
+                  Enviado
+                </span>
+                : <span className='text-danger font-bold'>
+                  <i className='mdi mdi-alert me-1'></i>
+                  No enviado
+                </span>)
+            },
+            width: '150px'
+          },
+          {
+            dataField: 'error',
+            caption: 'Error',
+            cssClass: 'text-danger',
+            // cellTemplate: (container, { value }) => {
+            //   container.html(renderToString(<span className='text-danger'>{value}</span>))
+            // }
+          },
+          {
+            dataField: 'created_at',
+            dataType: 'datetime',
+            caption: 'Fecha',
+            width: '200px',
+            sortOrder: 'desc',
+            cellTemplate: (container, { data }) => {
+              ReactAppend(container, <>{moment(data.created_at?.replace('Z', '+00:00')).format('lll')}</>)
+            }
+          },
+        ]}
+      />
+    </Modal>
   </>
   )
 };
