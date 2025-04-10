@@ -28,4 +28,9 @@ class SendingHistory extends Model
     protected $casts = [
         'mapping' => 'array',
     ];
+
+    public function details()
+    {
+        return $this->hasMany(HistoryDetail::class, 'sending_history_id', 'id');
+    }
 }

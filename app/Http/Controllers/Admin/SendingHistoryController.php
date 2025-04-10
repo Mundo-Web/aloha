@@ -33,6 +33,24 @@ class SendingHistoryController extends BasicController
         return response($response->toArray(), $response->status);
     }
 
+    public function setPaginationInstance(string $model)
+    {
+        SendingHistory::whereNull('status')
+            ->whereIn('id', function ($query) {
+                $query->select('sending_history_id')
+                    ->from('history_details as d1')
+                    ->whereRaw('d1.created_at = (
+                        SELECT MAX(created_at) 
+                        FROM history_details as d2 
+                        WHERE d2.sending_history_id = d1.sending_history_id
+                    )')
+                    ->where('created_at', '<=', now()->subMinutes(2));
+            })
+            ->update(['status' => false]);
+
+        return $model::query();
+    }
+
     public function beforeSave(Request $request)
     {
         $templateJpa = MailingTemplate::find($request->input('template_id'));
@@ -99,7 +117,6 @@ class SendingHistoryController extends BasicController
                     'body' => $jpa->toArray()
                 ]);
                 if (!$res->ok) {
-                    dump($res->text());
                     $jpa->status = false;
                     $jpa->save();
                 }
