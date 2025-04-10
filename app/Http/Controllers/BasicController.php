@@ -248,8 +248,6 @@ class BasicController extends Controller
 
         if (!file_exists($path)) {
           mkdir($path, 0777, true);
-        } else {
-          chmod($path, 0777);
         }
 
         if ($this->useIntervention) {
