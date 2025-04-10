@@ -246,9 +246,9 @@ class BasicController extends Controller
         $path = storage_path("app/images/{$snake_case}");
         $filename = "{$uuid}.{$ext}";
 
-        if (!file_exists($path)) {
+        // if (!file_exists($path)) {
           mkdir($path, 0777, true);
-        }
+        // }
 
         if ($this->useIntervention) {
           $image = Image::make($full);

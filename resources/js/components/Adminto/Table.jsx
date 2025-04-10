@@ -2,12 +2,12 @@ import React from 'react'
 import DataGrid from './DataGrid'
 import { renderToString } from 'react-dom/server'
 
-const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, exportable, pageSize}) => {
+const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, exportable, pageSize, hidden}) => {
   
   const html = renderToString(<div>{title}</div>)
   const text = $(html).text().trim().clean('-')
   
-  return (<div className="row">
+  return (<div className="row" hidden={hidden}>
     <div className="col-12">
       <div className="card">
         {
