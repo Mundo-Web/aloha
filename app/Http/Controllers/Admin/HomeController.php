@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
 use App\Models\Color;
+use App\Models\Formula;
 use App\Models\Sale;
 use App\Models\SaleDetail;
-use App\Models\User;
 use App\Models\UserFormula;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use SoDe\Extend\JSON;
 use SoDe\Extend\Response;
 
 class HomeController extends BasicController
@@ -70,33 +70,53 @@ class HomeController extends BasicController
             ->join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('statuses.is_ok', true)
             ->where('sales.created_at', '>=', now()->subDays(30))
+            ->whereRaw("JSON_LENGTH(colors) > 0")
             ->selectRaw("
-                JSON_UNQUOTE(JSON_EXTRACT(colors, '$[*].hex')) as hex,
+                sale_details.name as item,
+                colors as colors_json,
                 COUNT(*) as quantity
             ")
-            ->groupBy('hex')
+            ->groupBy('item', 'colors_json')
             ->orderBy('quantity', 'DESC')
-            ->limit(5)
-            ->get();
-
-        $colors = Color::select(['name', 'hex'])
-            ->distinct('name')
-            ->whereIn(
-                'hex',
-                array_map(
-                    fn($x) => \str_replace(['[', ']', '"', '\\'], '', $x['hex']),
-                    $topColors->toArray()
-                )
-            )
             ->get()
-            ->map(function ($color) use ($topColors) {
-                $found = $topColors->first(fn($x) => str_contains(strtolower($x['hex']), strtolower($color->hex)));
-                return (object)[
-                    'name' => $color->name,
-                    'hex' => $color->hex,
-                    'quantity' => $found ? $found->quantity : 0
+            ->map(function ($detail) {
+                $colors = json_decode($detail->colors_json, true);
+                return [
+                    'item' => $detail->item,
+                    'colors' => collect($colors)->map(function ($color) use ($detail) {
+                        $colorModel = Color::where('hex', $color['hex'])->first();
+                        return [
+                            'name' => $colorModel ? $colorModel->name : 'Unknown',
+                            'hex' => $color['hex'],
+                            'quantity' => $detail->quantity
+                        ];
+                    }),
+                    'quantity' => $detail->quantity
                 ];
-            });
+            })
+            ->groupBy('item')
+            ->map(function ($items, $itemName) {
+                $totalQuantity = $items->sum('quantity');
+                $colorCounts = $items->pluck('colors')
+                    ->flatten(1)
+                    ->groupBy('hex')
+                    ->map(function ($colorGroup) {
+                        $first = $colorGroup->first();
+                        return [
+                            'name' => $first['name'],
+                            'hex' => $first['hex'],
+                            'quantity' => $colorGroup->sum('quantity')
+                        ];
+                    })
+                    ->values();
+
+                return [
+                    'item' => $itemName,
+                    'total_quantity' => $totalQuantity,
+                    'colors' => $colorCounts
+                ];
+            })
+            ->values();
 
         $treatmentStats = UserFormula::with(['hasTreatment'])
             ->selectRaw('has_treatment, COUNT(*) as count')
@@ -139,15 +159,36 @@ class HomeController extends BasicController
             ->orderBy('count', 'DESC')
             ->get();
 
+        $hairGoalsStats = UserFormula::select('hair_goals')
+            ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->get()
+            ->pluck('hair_goals')
+            ->flatten()
+            ->countBy()
+            ->map(function ($count, $goalId) {
+                $formula = Formula::find($goalId);
+                return [
+                    'id' => $goalId,
+                    'name' => $formula ? $formula->description : 'Unknown',
+                    'count' => $count
+                ];
+            })
+            ->sortByDesc('count')
+            ->values();
+
         return [
             'newClients' => $newClients,
             'repurchaseRate' => $repurchaseRate,
             'topCities' => $topCities,
-            'topColors' => $colors,
+            'topColors' => $topColors,
             'treatmentStats' => $treatmentStats,
             'scalpTypeStats' => $scalpTypeStats,
             'hairTypeStats' => $hairTypeStats,
             'fragranceStats' => $fragranceStats,
+            'hairGoalsStats' => $hairGoalsStats
         ];
     }
 

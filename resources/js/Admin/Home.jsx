@@ -17,11 +17,14 @@ const homeRest = new HomeRest()
 const Home = ({
   newClients,
   repurchaseRate, topCities, topColors, fragranceStats,
-  treatmentStats, scalpTypeStats, hairTypeStats
+  treatmentStats, scalpTypeStats, hairTypeStats, hairGoalsStats
 }) => {
+
+  console.log(topColors)
 
   const [timeFrame, setTimeFrame] = useState('days');
   const [sales, setSales] = useState([]);
+  const [showAllGoals, setShowAllGoals] = useState(false);
 
   const data = {
     labels: timeFrame === 'days' ? sales.map(item => moment(item.date).format('DD MMM')) :
@@ -64,6 +67,9 @@ const Home = ({
         setSales(data)
       })
   }, [timeFrame])
+
+  const totalHairGoals = hairGoalsStats.reduce((acc, goal) => acc + Number(goal.count), 0);
+  const totalFragrances = fragranceStats.reduce((acc, fragrance) => acc + Number(fragrance.count), 0);
 
   return (
     <>
@@ -225,13 +231,57 @@ const Home = ({
                 </div>
               </div>
               <hr className='my-2' />
+              <h5 className="mt-0">Objetivos capilares</h5>
+              <div className="table-responsive">
+                <table className="table table-sm table-bordered mb-0">
+                  <tbody>
+                    {hairGoalsStats
+                      .sort((a, b) => b.count - a.count)
+                      .slice(0, showAllGoals ? undefined : 5)
+                      .map((goal, index) => {
+                        const percentage = goal.count / totalHairGoals * 100;
+                        return <Tippy content={`${goal.count} selecciones`}>
+                          <tr key={index} style={{ fontWeight: index === 0 ? 'bold' : 'normal' }}>
+                            <td>
+                              <div className='d-flex justify-content-between'>
+                                <span>
+                                  {goal.name}
+                                </span>
+                                <span>
+                                  {index === 0 && <i className='mdi mdi-crown me-1 text-warning'></i>}
+                                  {percentage.toFixed(1)}%
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        </Tippy>
+                      })}
+                  </tbody>
+                </table>
+                {hairGoalsStats.length > 5 && (
+                  <div className="text-center mt-2">
+                    <button
+                      className="btn btn-link btn-sm p-0"
+                      onClick={() => setShowAllGoals(!showAllGoals)}
+                    >
+                      {showAllGoals ? (
+                        <>Ver menos <i className="mdi mdi-chevron-up ms-1"></i></>
+                      ) : (
+                        <>Ver más <i className="mdi mdi-chevron-down ms-1"></i></>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+              <hr className='my-2' />
               <h5 className="mt-0">Fragancias</h5>
               <div className='d-flex flex-wrap justify-content-around align-items-center gap-2'>
                 {
                   fragranceStats
-                    .sort((a, b) => b.quantity - a.quantity)
+                    .sort((a, b) => b.count - a.count)
                     .map((fragrance, index) => {
-                      return <Tippy content={fragrance.fragrance.name}>
+                      const percentage = fragrance.count / totalFragrances * 100;
+                      return <Tippy content={`${fragrance.fragrance.name} (${fragrance.count} ventas)`}>
                         <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
                           <img className='mb-1' src={`/api/fragrances/media/${fragrance.fragrance.image}`} alt="" style={{
                             width: '40px',
@@ -240,24 +290,56 @@ const Home = ({
                             objectPosition: 'center',
                             borderRadius: '4px'
                           }} />
-                          <small className='text-muted d-block mb-0' >{fragrance.count} ventas</small>
+                          <small className='text-muted d-block mb-0' >{percentage.toFixed(1)} %</small>
                         </div>
                       </Tippy>
                     })
                 }
               </div>
               <hr className='my-2' />
-              <h5 className='mt-0'>Colores</h5>
-              <div className='d-flex flex-wrap justify-content-around align-items-center gap-2'>
+              <h5 className='mt-0'>Colores por producto</h5>
+              <div className='d-flex flex-column gap-2'>
                 {
                   topColors
-                    .sort((a, b) => b.quantity - a.quantity)
-                    .map((color, index) => {
-                      return <div key={index} className='text-center' style={{ fontWeight: index == 0 ? 'bold' : 'normal' }}>
-                        <i className='mdi mdi-circle mdi-24px d-block' style={{ color: color.hex }}></i>
-                        <small className='text-muted d-block' >{color.quantity} items</small>
-                        <span>{color.name}</span>
-                      </div>
+                    .sort((a, b) => b.total_quantity - a.total_quantity)
+                    .map((item, itemIndex) => {
+                      return (
+                        <div key={itemIndex}>
+                          <div className='d-flex justify-content-between align-items-center mb-1'>
+                            <span style={{ fontWeight: 'bold' }}>
+                              {item.item}
+                              {itemIndex === 0 && <i className='mdi mdi-crown ms-1 text-warning'></i>}
+                            </span>
+                            <small className='text-muted'>{item.total_quantity} ventas</small>
+                          </div>
+                          <table className="table table-sm table-bordered mb-0">
+                            <tbody>
+                              {
+                                item.colors
+                                  .sort((a, b) => b.quantity - a.quantity)
+                                  .slice(0, 3)
+                                  .map((color, colorIndex) => (
+                                    <Tippy key={colorIndex} content={`${color.quantity} ventas`}>
+                                      <tr style={{ fontWeight: colorIndex === 0 ? 'bold' : 'normal' }}>
+                                        <td className="ps-3" style={{ width: '1%' }}>
+                                          <div className="d-flex justify-content-between">
+                                            <span>
+                                              <i className='mdi mdi-circle me-1' style={{ color: color.hex }}></i>
+                                              {color.name}
+                                            </span>
+                                            <span>
+                                              {((color.quantity / item.total_quantity) * 100).toFixed(1)}%
+                                            </span>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    </Tippy>
+                                  ))
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      )
                     })
                 }
               </div>
