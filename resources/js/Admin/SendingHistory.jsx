@@ -186,16 +186,15 @@ const SendingHistory = () => {
           allowExporting: false
         }
       ]} />
-    <Modal modalRef={modalRef} title={<>
+    <Modal modalRef={modalRef} title={<div>
       <h4 className='modal-title my-0'>Detalles de envío</h4>
       <small className='text-muted'>{dataLoaded?.name}</small>
-    </>}
+    </div>}
       size='xl'
       onClose={() => setDataLoaded(null)}
       hideFooter>
       <DataGrid gridRef={detailsGridRef}
         rest={historyDetailsRest}
-        id='grid-a'
         filterValue={['sending_history_id', '=', dataLoaded?.id ?? null]}
         toolBar={(container) => {
           container.unshift(DxPanelButton({
