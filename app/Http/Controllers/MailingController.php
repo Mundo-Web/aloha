@@ -4,32 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Helpers\EmailConfig;
 use App\Models\Message;
-use App\Models\Ordenes;
 use App\Models\Social;
-use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
 use SoDe\Extend\File;
 use SoDe\Extend\JSON;
 use SoDe\Extend\Text;
 use Illuminate\Support\Facades\View;
+use SMTPValidateEmail\Validator as SMTP_Validate_Email;
+use SoDe\Extend\Response;
 
 class MailingController extends BasicController
 {
     public $model = 'Mailing';
 
-    static function send($email, $subject, $content)
+    public function send(Request $request)
     {
-        try {
+        $response = Response::simpleTryCatch(function () use ($request) {
+            $email = $request->email;
+            $subject = $request->subject;
+            $content = $request->content;
+
+            $dominio = substr(strrchr($email, "@"), 1);
+            if (!checkdnsrr($dominio, "MX")) throw new Exception("Dominio sin servidor de correo");
+
+            $validator = new SMTP_Validate_Email();
+            $result = $validator->validate([$email], env('MAIL_FROM_ADDRESS'));
+
+            if (!$result[$email]) throw new Exception("El correo no existe o no es válido");
+
             $mail = EmailConfig::config();
             $mail->Subject = $subject;
             $mail->isHTML(true);
             $mail->Body = $content;
-            $mail->addAddress($email);
+            if (env('APP_ENV') == 'production') {
+                $mail->addAddress($email);
+            } else {
+                $mail->addAddress('gamboapalominocarlosmanuel@gmail.com');
+            }
             $mail->send();
-
-            return [true, null];
-        } catch (\Throwable $th) {
-            return [false, $th->getMessage()];
-        }
+        });
+        return response($response->toArray(), $response->status);
     }
 
     static function notifyContact(Message $messageJpa)

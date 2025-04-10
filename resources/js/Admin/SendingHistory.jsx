@@ -164,10 +164,14 @@ const SendingHistory = () => {
               <i className='mdi mdi-alert me-1'></i>
               <span>Fallido</span>
             </>)
-            if (data.status === null) ReactAppend(container, <>
-              <i className='mdi mdi-spin mdi-autorenew me-1'></i>
-              <span>En curso</span>
-            </>)
+            if (data.status === null) {
+              const percent = (data.completed + data.failed) / data.total * 100
+              ReactAppend(container, <>
+                <i className='mdi mdi-spin mdi-autorenew me-1'></i>
+                <span className='me-1'>En curso</span>
+                <small className='text-muted'>{percent.toFixed(2)}%</small>
+              </>)
+            }
           },
           lookup: {
             dataSource: [

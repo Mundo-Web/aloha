@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
 use App\Http\Controllers\Controller;
+use App\Models\HistoryDetail;
 use App\Models\MailingTemplate;
 use Illuminate\Http\Request;
 

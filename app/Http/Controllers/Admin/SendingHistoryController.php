@@ -9,6 +9,7 @@ use App\Models\dxDataGrid;
 use App\Models\MailingTemplate;
 use App\Models\SendingHistory;
 use Illuminate\Http\Request;
+use SoDe\Extend\Fetch;
 use SoDe\Extend\JSON;
 use SoDe\Extend\Response;
 use SoDe\Extend\Trace;
@@ -76,10 +77,37 @@ class SendingHistoryController extends BasicController
                 dxDataGrid::filter($query, $templateJpa->filters ?? [], false);
             });
             $data = $instance->get()->toArray();
-            if (count($data) > 0) SendMessagesJob::dispatchAfterResponse($jpa, $data);
         } else {
             $data = JSON::parse(file_get_contents($request->file('data')));
-            SendMessagesJob::dispatchAfterResponse($jpa, $data);
+        }
+
+        if (count($data) > 0) {
+
+            $path = public_path('uploads/mailing-data');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            $filename = $jpa->id . '.json';
+            file_put_contents("{$path}/{$filename}", JSON::stringify($data));
+
+            try {
+                $res = new Fetch(env('WA_URL') . '/api/send/massive', [
+                    'method' => 'POST',
+                    'headers' => [
+                        'Content-Type' => 'application/json'
+                    ],
+                    'body' => $jpa->toArray()
+                ]);
+                if (!$res->ok) {
+                    dump($res->text());
+                    $jpa->status = false;
+                    $jpa->save();
+                }
+            } catch (\Throwable $th) {
+            }
+        } else {
+            $jpa->status = true;
+            $jpa->save();
         }
     }
 }

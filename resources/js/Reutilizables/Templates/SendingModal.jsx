@@ -52,7 +52,9 @@ const SendingModal = ({ modalRef, dataLoaded, setDataLoaded }) => {
     const result = await sendingHistoryRest.save(formData)
     if (!result) return
 
-    onModalClose()
+    setDataLoaded(null)
+    setExcelData(null)
+
     $(modalRef.current).modal('hide')
   }
 
@@ -67,11 +69,6 @@ const SendingModal = ({ modalRef, dataLoaded, setDataLoaded }) => {
     return data
   }
 
-  const onModalClose = () => {
-    setDataLoaded(null)
-    setExcelData(null)
-  }
-
   useEffect(() => {
     if (!dataLoaded) return
     let content = dataLoaded.content
@@ -84,7 +81,9 @@ const SendingModal = ({ modalRef, dataLoaded, setDataLoaded }) => {
     $(modalRef.current).modal('show')
   }, [dataLoaded, variableMappings, currentPreviewIndex])
 
-  return <Modal modalRef={modalRef} title={`Enviar mensajes masivos - ${dataLoaded?.name}`} size="full-width" btnSubmitText='Enviar' isStatic onSubmit={onModalSubmit} onClose={onModalClose}>
+  return <Modal modalRef={modalRef} title={`Enviar mensajes masivos - ${dataLoaded?.name}`} size="full-width" btnSubmitText='Enviar' isStatic onSubmit={onModalSubmit}
+    onClose={() => setDataLoaded(null)}
+  >
     <div className="row" style={{ height: 'calc(100vh - 220px)' }}>
       <div className="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div className="h-100 w-100">

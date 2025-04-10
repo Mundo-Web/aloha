@@ -10,18 +10,17 @@ import Swal from 'sweetalert2'
 import SelectFormGroup from '../components/Adminto/form/SelectFormGroup.jsx'
 import { Editor } from '@tinymce/tinymce-react'
 import MailingTemplatesRest from '../Actions/Admin/MailingTemplatesRest.js'
-import DxPanelButton from '../components/Adminto/Dx/DxPanelButton.jsx'
+import DxPanelButton from '../Components/Adminto/Dx/DxPanelButton.jsx'
 import EditorFormGroup from '../components/Adminto/form/EditorFormGroup.jsx'
 import { Clipboard } from 'sode-extend-react'
 import SwitchFormGroup from '../components/Adminto/form/SwitchFormGroup.jsx'
-import Table from '../components/Adminto/Table.jsx'
+import Table from '../Components/Adminto/Table.jsx'
 import SendingModal from '../Reutilizables/Templates/SendingModal.jsx'
 import RepositoryRest from '../actions/Admin/RepositoryRest.js'
 import Global from '../Utils/Global.js'
 import SendingHistoryRest from '../actions/Admin/SendingHistoryRest.js'
 import InputFormGroup from '../components/Adminto/form/InputFormGroup.jsx'
 import Base from '../Components/Adminto/Base.jsx'
-import { set } from 'sode-extend-react/sources/cookies.js'
 import Tippy from '@tippyjs/react'
 
 const mailingTemplatesRest = new MailingTemplatesRest()
@@ -200,6 +199,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
       const formData = new FormData()
       formData.append('template_id', data.id)
       const result = await sendingHistoryRest.save(formData)
+      console.log(result)
     } else {
       const result = await mailingTemplatesRest.get(data.id)
       setDataLoaded(result)
