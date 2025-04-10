@@ -2,12 +2,30 @@ import React from 'react'
 import DataGrid from './DataGrid'
 import { renderToString } from 'react-dom/server'
 
-const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], onRefresh, exportable, pageSize, hidden}) => {
-  
+const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterValue = [], isLoading, onRefresh, exportable, pageSize, hidden }) => {
+
   const html = renderToString(<div>{title}</div>)
   const text = $(html).text().trim().clean('-')
-  
-  return (<div className="row" hidden={hidden}>
+
+  console.log(isLoading)
+
+  return (<div className="row position-relative" hidden={hidden}>
+    {
+      isLoading && <div style={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        position: 'absolute',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+      }} role="status">
+        <i className="mdi mdi-spin mdi-loading mdi-48px"></i>
+      </div>
+    }
     <div className="col-12">
       <div className="card">
         {
@@ -24,7 +42,7 @@ const Table = ({ title, gridRef, rest, columns, toolBar, masterDetail, filterVal
               </h4>
               : ''
           }
-          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} exportable={exportable} exportableName={text.toLowerCase()} masterDetail={masterDetail} filterValue={filterValue} pageSize={pageSize} onRefresh={onRefresh}/>
+          <DataGrid gridRef={gridRef} rest={rest} columns={columns.filter(Boolean)} toolBar={toolBar} exportable={exportable} exportableName={text.toLowerCase()} masterDetail={masterDetail} filterValue={filterValue} pageSize={pageSize} onRefresh={onRefresh} />
         </div>
       </div>
     </div>

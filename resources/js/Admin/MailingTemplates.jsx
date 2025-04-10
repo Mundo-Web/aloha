@@ -76,6 +76,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
     setIsLoading(true)
     const result = await mailingTemplatesRest.get(data.id)
     setIsLoading(false)
+    if (!result) return
     setIsDesigning(true)
     setTemplateActive(result);
     setTypeEdition('wysiwyg')
@@ -271,6 +272,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
           onClick: () => onModalOpen()
         }))
       }}
+      isLoading={isLoading}
       columns={[
         {
           dataField: 'name',
@@ -363,7 +365,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
               Diseñador: {templateActive?.name}
             </h4>
             <div className='d-flex gap-1'>
-              <TippyButton className='btn btn-xs btn-white' title={templateActive.auto_send ? 'Enviar ahora' : 'Enviar mensajes masivos'} onClick={() => onSendingModalClicked(templateActive)}>
+              <TippyButton className='btn btn-xs btn-white' title={templateActive?.auto_send ? 'Enviar ahora' : 'Enviar mensajes masivos'} onClick={() => onSendingModalClicked(templateActive)}>
                 <i className='mdi mdi-email-send'></i>
               </TippyButton>
               <TippyButton className='btn btn-xs btn-soft-primary' title='Guardar' onClick={onDesignModalSubmit}>
@@ -417,7 +419,7 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
                       { value: 'Email', title: 'Email' },
                     ],
                     ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-                    height: '600px',
+                    height: '720px',
                     relative_urls: false,
                     remove_script_host: false,
                     convert_urls: false,
@@ -430,11 +432,11 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
                 <div className='mb-2'></div>
               </div>
               <div className={`tab-pane ${typeEdition == 'code' ? 'active' : ''}`} id="code-editor">
-                <EditorFormGroup editorRef={codeEditorRef} onChange={e => setCodeContent(e.target.value)} />
+                <EditorFormGroup editorRef={codeEditorRef} onChange={e => setCodeContent(e.target.value)} height={720} />
               </div>
               <div className={`tab-pane ${typeEdition == 'dropzone' ? 'active' : ''}`} id="dropzone">
                 <div ref={ddRef} className='d-flex align-items-center justify-content-center mb-2 border' style={{
-                  height: '600px',
+                  height: '720px',
                   borderRadius: '10px'
                 }}>
                   <div>
@@ -517,112 +519,6 @@ const MailingTemplates = ({ TINYMCE_KEY }) => {
         </div>
       </div>
     </Modal>
-    {/* <Modal modalRef={designModalRef} title={`Diseñador de plantillas - ${templateActive.name}`} btnSubmitText='Guardar' onSubmit={onDesignModalSubmit} size='xl' isStatic>
-      <ul className="nav nav-pills navtab-bg justify-content-center flex-wrap gap-1">
-        <li className="nav-item">
-          <a href="#wysiwyg-editor" className={`nav-link text-center ${typeEdition == 'wysiwyg' ? 'active' : ''}`} style={{
-            width: '200px'
-          }} onClick={() => onTypeEditionClicked('wysiwyg')}>
-            <i className='mdi mdi-page-layout-header-footer me-1'></i>
-            Editor WYSIWYG
-          </a>
-        </li>
-        <li className="nav-item">
-          <a href="#code-editor" className={`nav-link text-center ${typeEdition == 'code' ? 'active' : ''}`} style={{
-            width: '200px'
-          }} onClick={() => onTypeEditionClicked('code')}>
-            <i className='mdi mdi-code-tags me-1'></i>
-            Editor de codigo
-          </a>
-        </li>
-        <li className="nav-item">
-          <a href="#dropzone" className={`nav-link text-center ${typeEdition == 'dropzone' ? 'active' : ''}`} style={{
-            width: '200px'
-          }} onClick={() => onTypeEditionClicked('dropzone')}>
-            <i className='mdi mdi-cloud-upload me-1'></i>
-            Carga tu archivo
-          </a>
-        </li>
-      </ul>
-      <div className="tab-content">
-        <div className={`tab-pane ${typeEdition == 'wysiwyg' ? 'active' : ''}`} id="wysiwyg-editor">
-          <Editor
-            apiKey={TINYMCE_KEY}
-            init={{
-              plugins: [
-                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-              ],
-              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-              tinycomments_mode: 'embedded',
-              tinycomments_author: 'Author name',
-              mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' },
-              ],
-              ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-              height: '600px',
-              relative_urls: false,
-              remove_script_host: false,
-              convert_urls: false,
-              document_base_url: Global.APP_URL,
-            }}
-
-            value={wysiwygContent}
-            onEditorChange={(newValue) => processWywiwygContent(newValue)}
-          />
-          <div className='mb-2'></div>
-        </div>
-        <div className={`tab-pane ${typeEdition == 'code' ? 'active' : ''}`} id="code-editor">
-          <EditorFormGroup editorRef={codeEditorRef} onChange={e => setCodeContent(e.target.value)} />
-        </div>
-        <div className={`tab-pane ${typeEdition == 'dropzone' ? 'active' : ''}`} id="dropzone">
-          <div ref={ddRef} className='d-flex align-items-center justify-content-center mb-2 border' style={{
-            height: '600px',
-            borderRadius: '10px'
-          }}>
-            <div>
-
-              <input className='d-none' id='dropzone-file' type="file" accept='text/html,text/plain' onChange={(e) => {
-                e.preventDefault()
-                const files = [...e.target.files]
-                e.target.value = null
-                if (files.length == 0) return
-                onDropzoneChange(files[0])
-              }} />
-              <label htmlFor="dropzone-file" className='d-block mx-auto mb-2 btn btn-sm btn-white rounded-pill waves-effect' style={{
-                width: 'max-content'
-              }}>
-                <i className='mdi mdi-paperclip me-1'></i>
-                Seleccionar archivo
-              </label>
-              <label htmlFor="dropzone-file" className='d-block' style={{ cursor: 'pointer' }}>
-                Arrastra y suelta tu plantilla aquí, o haz clic para seleccionar tu archivo HTML.
-              </label>
-              {
-                dropzoneContent?.trim() &&
-                <button
-                  className='d-block mx-auto mt-2 btn btn-sm btn-primary rounded-pill waves-effect'
-                  onClick={() => {
-                    const blob = new Blob([dropzoneContent], { type: 'text/html' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'template.html';
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                  }}
-                  type='button'
-                >
-                  <i className='mdi mdi-download me-1'></i>
-                  Descargar HTML
-                </button>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal> */}
-
     <SendingModal modalRef={sendingModalRef} dataLoaded={dataLoaded} setDataLoaded={setDataLoaded} />
   </>
   )

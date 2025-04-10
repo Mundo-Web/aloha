@@ -9,7 +9,8 @@ const EditorFormGroup = ({
   required = false,
   rows = 6,
   value = '',
-  onChange = () => { }
+  onChange = () => { },
+  height = 600,
 }) => {
   const [editorValue, setEditorValue] = useState(value);
   const localRef = useRef();
@@ -31,7 +32,7 @@ const EditorFormGroup = ({
       lineNumbers: true,
     });
 
-    editorInstance.current.setSize(null, 600);
+    editorInstance.current.setSize(null, height);
 
     editorInstance.current.setValue(value);
 
