@@ -16,11 +16,10 @@ const homeRest = new HomeRest()
 
 const Home = ({
   newClients,
-  repurchaseRate, topCities, topColors, fragranceStats,
+  repurchaseRate, topCities, topOtherCities,
+  topColors, fragranceStats,
   treatmentStats, scalpTypeStats, hairTypeStats, hairGoalsStats
 }) => {
-
-  console.log(topColors)
 
   const [timeFrame, setTimeFrame] = useState('days');
   const [sales, setSales] = useState([]);
@@ -366,6 +365,38 @@ const Home = ({
                   </thead>
                   <tbody>
                     {topCities.map((city, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{city.department}</td>
+                        <td>{city.city}</td>
+                        <td className='text-end'>{city.count} ventas</td>
+                        <th className='text-nowrap text-end'>S/. {Number2Currency(city.amount)}</th>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-header">
+              <h4 className="header-title mb-0">Top 5 ciudades con más ventas fuera de Lima Metropolitana</h4>
+              <small className='text-muted'>Últimos 30 días</small>
+            </div>
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Departamento</th>
+                      <th>Ciudad</th>
+                      <th className='text-end'>Ventas</th>
+                      <th className='text-end'>Ingresos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topOtherCities.map((city, index) => (
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{city.department}</td>

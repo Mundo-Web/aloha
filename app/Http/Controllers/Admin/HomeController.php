@@ -51,6 +51,7 @@ class HomeController extends BasicController
         $topCities = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
             ->where('statuses.is_ok', true)
             ->where('sales.created_at', '>=', now()->subDays(30))
+            ->where('department', 'Lima Metropolitana')
             ->selectRaw('
                 department,
                 COALESCE(province, district) as city,
@@ -63,7 +64,21 @@ class HomeController extends BasicController
             ->limit(10)
             ->get();
 
-
+        $topOtherCities = Sale::join('statuses', 'statuses.id', '=', 'sales.status_id')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->where('department', '!=', 'Lima Metropolitana')
+            ->selectRaw('
+                department,
+                COALESCE(province, district) as city,
+                COUNT(*) as count,
+                SUM(total_amount) as amount
+            ')
+            ->groupBy('department', 'city')
+            ->orderBy('amount', 'DESC')
+            ->orderBy('count', 'DESC')
+            ->limit(5)
+            ->get();
 
         // Get most popular colors
         $topColors = SaleDetail::join('sales', 'sales.id', '=', 'sale_details.sale_id')
@@ -183,6 +198,7 @@ class HomeController extends BasicController
             'newClients' => $newClients,
             'repurchaseRate' => $repurchaseRate,
             'topCities' => $topCities,
+            'topOtherCities' => $topOtherCities,
             'topColors' => $topColors,
             'treatmentStats' => $treatmentStats,
             'scalpTypeStats' => $scalpTypeStats,
