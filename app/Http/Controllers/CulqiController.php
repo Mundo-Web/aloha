@@ -131,11 +131,27 @@ class CulqiController extends Controller
 
   private function createCharge($token, $sale): void
   {
+    // Validate required sale data
+    if (!$sale->amount || !$sale->code || !$sale->email || !$sale->address || 
+        !$sale->name || !$sale->lastname || !$sale->phone) {
+      throw new Exception('Missing required sale information');
+    }
+
+    // Validate token data
+    if (!isset($token['id'])) {
+      throw new Exception('Invalid token information');
+    }
+
     $amount = $sale->amount;
     if (isset($sale->delivery)) $amount += $sale->delivery;
     if (isset($sale->bundle_discount)) $amount -= $sale->bundle_discount;
     if (isset($sale->renewal_discount)) $amount -= $sale->renewal_discount;
     if (isset($sale->coupon_discount)) $amount -= $sale->coupon_discount;
+
+    // Validate final amount
+    if ($amount <= 0) {
+      throw new Exception('Invalid sale amount');
+    }
 
     $amount = Math::round($amount * 10) / 10;
 
@@ -163,6 +179,11 @@ class CulqiController extends Controller
     if (gettype($charge) == 'string') {
       $res = JSON::parse((string) $charge);
       throw new Exception($res['user_message']);
+    }
+
+    // Validate charge response
+    if (!isset($charge->id)) {
+      throw new Exception('Failed to create charge');
     }
   }
 
