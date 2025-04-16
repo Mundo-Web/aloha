@@ -41,7 +41,7 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
             A TODO LIMA METROPOLITANA!</b>
         </div>
       }
-      <header className="sticky top-0 w-screen z-40">
+      <header className="sticky top-0 w-full z-40">
         <div className={`flex justify-between items-center ${!isOpen && location.pathname == '/' && 'bg-opacity-80'} text-white pe-[5%] shadow-lg lg:shadow-none`}
           style={{
             backgroundImage: `linear-gradient(to right, ${gradientStart}, ${menuGradientEnd})`
