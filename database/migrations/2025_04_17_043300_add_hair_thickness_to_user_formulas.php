@@ -19,7 +19,7 @@ return new class extends Migration
                 ->nullOnDelete();
         });
     }
- 
+
     /**
      * Reverse the migrations.
      */
