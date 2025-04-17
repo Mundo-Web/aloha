@@ -169,7 +169,7 @@ const Home = ({
                   <h5 className="text-center">Tratamiento</h5>
                   <Pie
                     data={{
-                      labels: treatmentStats.map(item => item.has_treatment.description == 'Si'
+                      labels: treatmentStats.map(item => item.has_treatment.correlative == 'true'
                         ? 'Con tratamiento'
                         : 'Sin tratamiento'
                       ),

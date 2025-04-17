@@ -31,6 +31,7 @@ const Test = ({ session, otherFormulasCount, hasTreatment, scalpType, hairType, 
     'has_treatment': <Treatment test={test} setTest={setTest} values={hasTreatment} />,
     'scalp_type': <ScalpType test={test} setTest={setTest} values={scalpType} />,
     'hair_type': <HairType test={test} setTest={setTest} values={hairType} />,
+    'hair_thickness': 'grosor de cabello',
     'hair_goals': <HairGoals test={test} setTest={setTest} values={hairGoals} />,
     'fragrance': <Fragrance test={test} setTest={setTest} values={fragrances} formula={formula} />,
     'email': <Email test={test} setTest={setTest} session={session} />

@@ -13,14 +13,14 @@ const HairType = ({ test, setTest, values }) => {
 
   return <>
     <section className="p-[5%] py-[15%] md:py-[10%] lg:py-[5%] bg-white text-center text-[#404040]">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         <h1 className="text-2xl mb-4">Naturalmente, ¿Cuál es tu <br /><b className="font-bold text-[#303030]">tipo de cabello?</b></h1>
         <div className="flex flex-wrap justify-evenly text-sm w-full mb-4 gap-2">
           {
             values.map((value, index) => {
               return <button key={index} className="border border-1-[#9577B9] rounded-lg bg-white text-[#9577B9] hover:border-1-[#C5B8D4]  hover:bg-[#C5B8D4] hover:text-white font-bold w-32 min-w-32 transition-all"
                 onClick={() => onTypeClicked(value.id)}>
-                <img className="aspect-[4/3] rounded hover:scale-105 transition-all" src={`/assets/img/test/${value.correlative}.png`} alt="Crespo" />
+                <img className="aspect-[4/3] rounded hover:scale-105 transition-all" src={`/assets/img/test/${value.correlative}.png`} alt={value.description} />
                 <p className="p-2 uppercase">{value.description}</p>
               </button>
             })

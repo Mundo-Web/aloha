@@ -17,6 +17,7 @@ class Formula extends Model
         'name',
         'description',
         'correlative',
+        'presentation_order',
         'status',
     ];
 

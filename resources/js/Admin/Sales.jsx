@@ -6,14 +6,14 @@ import { renderToString } from 'react-dom/server';
 import Swal from 'sweetalert2';
 import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
 import SalesRest from '../Actions/Admin/SalesRest';
-import Modal from '../components/Modal';
-import Table from '../components/Adminto/Table';
-import DxButton from '../components/dx/DxButton';
+import Modal from '../Components/Modal';
+import Table from '../Components/Adminto/Table';
+import DxButton from '../Components/dx/DxButton';
 import CreateReactScript from '../Utils/CreateReactScript';
 import Global from '../Utils/Global';
 import Number2Currency from '../Utils/Number2Currency';
 import ReactAppend from '../Utils/ReactAppend';
-import UserFormulaInfo from '../components/Adminto/UserFormulas/UserFormulaInfo';
+import UserFormulaInfo from '../Components/Adminto/UserFormulas/UserFormulaInfo';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()

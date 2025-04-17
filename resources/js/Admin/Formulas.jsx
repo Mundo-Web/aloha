@@ -22,6 +22,7 @@ const Formulas = ({ }) => {
   const idRef = useRef()
   const nameRef = useRef()
   const descriptionRef = useRef()
+  const presentationOrderRef = useRef()
   const suppliesRef = useRef()
   const [isEditing, setIsEditing] = useState(false)
 
@@ -32,6 +33,7 @@ const Formulas = ({ }) => {
     idRef.current.value = data?.id ?? ''
     nameRef.current.value = data?.name ?? ''
     descriptionRef.current.value = data?.description ?? ''
+    presentationOrderRef.current.value = data?.presentation_order ?? 0
     SetSelectValue(suppliesRef.current, data?.supplies, 'id', 'name')
 
     $(modalRef.current).modal('show')
@@ -86,13 +88,19 @@ const Formulas = ({ }) => {
           lookup: {
             dataSource: names,
             valueExpr: "id",
-            displayExpr: "name"
-          }
+            displayExpr: "name",
+          },
+          sorOrder: 'asc',
         },
         {
           dataField: 'description',
           caption: 'Respuesta',
           width: '200px',
+        },
+        {
+          dataField: 'presentation_order',
+          caption: 'Orden',
+          width: '75px'
         },
         {
           dataField: 'supplies.name',
@@ -151,7 +159,7 @@ const Formulas = ({ }) => {
             })
           }
         </SelectFormGroup>
-        <InputFormGroup eRef={descriptionRef} label='Respuesta' required/>
+        <InputFormGroup eRef={descriptionRef} label='Respuesta' required />
         <SelectAPIFormGroup eRef={suppliesRef} label='Ingredientes' searchAPI='/api/admin/supplies/paginate' searchBy='name' required dropdownParent='#principal-container' col='col-12' multiple />
       </div>
     </Modal>
