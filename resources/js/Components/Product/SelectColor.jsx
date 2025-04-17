@@ -3,7 +3,7 @@ import { Local } from "sode-extend-react"
 import Tippy from "@tippyjs/react"
 import Aos from "aos"
 
-const SelectColor = ({ formula, otherFormulas, goToNextPage, goToPrevPage, items = [], setSelectedPlan }) => {
+const SelectColor = ({ formula, otherFormulas, goToNextPage, goToPrevPage, items = [], defaultColors = {}, setSelectedPlan }) => {
   const [cart, setCart] = useState((Local.get('vua_cart') ?? []).filter(item => !!item.formula_id))
 
   useEffect(() => {
@@ -13,7 +13,8 @@ const SelectColor = ({ formula, otherFormulas, goToNextPage, goToPrevPage, items
         const currentColors = item.colors ?? []
         const quantity = item.quantity
         const leftColorsCount = quantity - currentColors.length
-        const leftColor = new Array(leftColorsCount > 0 ? leftColorsCount : 0).fill(colors?.[0] ?? null)
+        const color2fill = structuredClone(colors).sort((a, b) => defaultColors[item.id] == a.id ? -1 : 1)
+        const leftColor = new Array(leftColorsCount > 0 ? leftColorsCount : 0).fill(color2fill?.[0] ?? null)
 
         if (currentColors.length < quantity) item.colors = [...currentColors, ...leftColor].filter(Boolean)
         else item.colors = currentColors.slice(0, quantity).filter(Boolean)

@@ -539,7 +539,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                           return <div key={index} className="mb-1 flex items-center justify-between text-sm">
                             <div className='flex gap-2'>
                               <div className='h-10 aspect-[3/4] relative'>
-                                <img className="h-10 aspect-[3/4] object-contain object-center rounded-md border" src={`/api/colors/media/${item.colors[0]?.image}`} alt={item.name} onError={e => e.target.src = `/api/items/media/${item.image}`} />
+                                <img className="h-10 aspect-[3/4] object-cover object-center rounded-md border" src={`/api/colors/media/${item.colors[0]?.image}`} alt={item.name} onError={e => e.target.src = `/api/items/media/${item.image}`} />
                               </div>
                               <div>
                                 <p>{item.name}</p>
@@ -547,7 +547,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                                   <span className='w-6 inline-block text-nowrap'>
                                     × {item.quantity}
                                   </span>
-                                  <div className='inline-flex flex-wrap gap-1'>
+                                  <div className='inline-flex flex-wrap gap-0.5'>
                                     {item.colors.map((color, index) => {
                                       return <i key={index} className='mdi mdi-circle' style={{ color: color?.hex ?? '#000', WebkitTextStroke: '1px #808080' }}></i>
                                     })}

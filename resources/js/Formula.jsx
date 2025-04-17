@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './components/Tailwind/Base';
+import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 
-import SelectColor from './components/Product/SelectColor';
-import SelectPlan from './components/Product/SelectPlan';
-import SelectProduct from './components/Product/SelectProduct';
-import Checkout from './components/Product/Checkout';
+import SelectColor from './Components/Product/SelectColor';
+import SelectPlan from './Components/Product/SelectPlan';
+import SelectProduct from './Components/Product/SelectProduct';
+import Checkout from './Components/Product/Checkout';
 import { Local } from 'sode-extend-react';
 
-
-const Formula = ({ user_formula, other_formulas, items, publicKey, session, bundles, planes }) => {
+const Formula = ({ user_formula, other_formulas, items, defaultColors, publicKey, session, bundles, planes }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [otherFormulas, setOtherFormulas] = useState(other_formulas.sort((a, b) => a.created_at < b.created_at ? 1 : -1))
@@ -35,7 +34,7 @@ const Formula = ({ user_formula, other_formulas, items, publicKey, session, bund
     },
     {
       name: 'Select Color',
-      component: <SelectColor formula={user_formula} otherFormulas={otherFormulas} items={items} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} setSelectedPlan={setSelectedPlan} />,
+      component: <SelectColor formula={user_formula} otherFormulas={otherFormulas} items={items} defaultColors={defaultColors} goToNextPage={goToNextPage} goToPrevPage={goToPrevPage} setSelectedPlan={setSelectedPlan} />,
     },
     {
       name: 'Select Plan',

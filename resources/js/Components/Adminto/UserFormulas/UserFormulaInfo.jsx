@@ -13,6 +13,13 @@ const UserFormulaInfo = ({ name, formula, details }) => {
       <b>✅ Tipo de cabello</b>:{' '}
       {formula?.hair_type?.description}
     </div>
+    {
+      formula?.hair_thickness &&
+      <div>
+        <b>💪 Grosor del cabello</b>:{' '}
+        {formula?.hair_thickness?.description}
+      </div>
+    }
     <div>
       <b>💡 Objetivos</b>:{' '}
       <ul className='mb-0'>
@@ -30,14 +37,16 @@ const UserFormulaInfo = ({ name, formula, details }) => {
       <ul>
         {
           details2process?.map((detail, index) => <li key={index}>
-            {detail.name}: {
-              detail?.colors?.map(color => color.name).join(', ')
+            {detail.name}{
+              detail?.colors?.length > 0 && <>: {
+                detail?.colors?.map(color => color.name).join(', ')
+              }</>
             }
           </li>)
         }
       </ul>
     </div>
-    <button className='btn btn-xs btn-dark' type='button' copy={`*Formula ${name}*\n\n🧐 Tratamiento: ${formula?.has_treatment?.description}\n👀 Cuero cabelludo: ${formula?.scalp_type?.description}\n✅ Tipo de cabello: ${formula?.hair_type?.description}\n💡 Objetivos:\n${formula?.hair_goals_list?.map(x => `- ${x.description}`).join('\n')}\n🫙 Fragancia: ${formula?.fragrance?.name}\n🎨 Colores:\n${details2process?.map(detail => `- ${detail.name}: ${detail?.colors?.map(color => color.name).join(', ')}`).join('\n')}`}>
+    <button className='btn btn-xs btn-dark' type='button' copy={`*Formula ${name}*\n\n🧐 Tratamiento: ${formula?.has_treatment?.description}\n👀 Cuero cabelludo: ${formula?.scalp_type?.description}\n✅ Tipo de cabello: ${formula?.hair_type?.description}\n${formula?.hair_thickness ? `💪 Grosor del cabello: ${formula?.hair_thickness?.description}\n` : ''}💡 Objetivos:\n${formula?.hair_goals_list?.map(x => `- ${x.description}`).join('\n')}\n🫙 Fragancia: ${formula?.fragrance?.name}\n🎨 Colores:\n${details2process?.map(detail => `- ${detail.name}${detail?.colors?.length > 0 ? `: ${detail?.colors?.map(color => color.name).join(', ')}` : ''}`).join('\n')}`}>
       <i className='mdi mdi-content-copy me-1'></i>
       Copiar
     </button>

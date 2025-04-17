@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import CreateReactScript from "./Utils/CreateReactScript";
 import { createRoot } from "react-dom/client";
-import Base from "./components/Tailwind/Base";
+import Base from "./Components/Tailwind/Base";
 import { Local } from "sode-extend-react";
 
 const Thanks = ({ session }) => {

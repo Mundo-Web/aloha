@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './components/Tailwind/Base';
+import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 
 
@@ -11,7 +11,7 @@ return (
       <div className='bg-[#FEFAF7] flex flex-col items-center '>
           <div className='flex flex-row gap-2 text-xl md:text-3xl text-white font-semibold rounded-3xl px-[10%] py-2 bg-[#C5B8D4] w-auto'><span>Solo por</span><span>00 : 10 : 58</span></div>
       </div>
-      <h2 className='text-xl md:text-2xl md:text-3xl mb-5 text-center'>
+      <h2 className='text-xl md:text-3xl mb-5 text-center'>
             <b>¿Te gustaría añadir a tu pedido?</b>
       </h2>
       <div className='grid grid-cols-3 gap-3 md:gap-10'>

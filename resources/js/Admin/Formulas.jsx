@@ -11,6 +11,7 @@ import FormulasRest from '../Actions/Admin/FormulasRest';
 import SelectFormGroup from '../Components/Adminto/form/SelectFormGroup';
 import SelectAPIFormGroup from '../Components/Adminto/form/SelectAPIFormGroup';
 import SetSelectValue from '../Utils/SetSelectValue';
+import Tippy from '@tippyjs/react';
 
 const formulasRest = new FormulasRest()
 
@@ -46,6 +47,7 @@ const Formulas = ({ }) => {
       id: idRef.current.value || undefined,
       name: nameRef.current.value,
       description: descriptionRef.current.value,
+      presentation_order: presentationOrderRef.current.value,
       supplies: $(suppliesRef.current).val()
     }
 
@@ -60,6 +62,7 @@ const Formulas = ({ }) => {
     { id: 'has_treatment', name: 'Recibió tratamiento' },
     { id: 'scalp_type', name: 'Tipo de cuero cabelludo' },
     { id: 'hair_type', name: 'Tipo de cabello' },
+    { id: 'hair_thickness', name: 'Grosor de cabello' },
     { id: 'hair_goals', name: 'Objetivos' }
   ]
 
@@ -90,7 +93,8 @@ const Formulas = ({ }) => {
             valueExpr: "id",
             displayExpr: "name",
           },
-          sorOrder: 'asc',
+          sortOrder: 'asc',
+          sortIndex: 0,
         },
         {
           dataField: 'description',
@@ -100,7 +104,9 @@ const Formulas = ({ }) => {
         {
           dataField: 'presentation_order',
           caption: 'Orden',
-          width: '75px'
+          width: '75px',
+          sortOrder: 'asc',
+          sortIndex: 1,
         },
         {
           dataField: 'supplies.name',
@@ -110,18 +116,20 @@ const Formulas = ({ }) => {
             ReactAppend(container, <div className='d-flex gap-1'>
               {
                 data.supplies.map((supply, index) => {
-                  return <img key={index}
-                    src={`/api/supplies/media/${supply.image}`}
-                    style={{
-                      width: '40px',
-                      backgroundColor: '#fff',
-                      border: '1px solid rgba(0,0,0,.125)',
-                      aspectRatio: 5 / 4,
-                      objectFit: 'contain',
-                      objectPosition: 'center',
-                      borderRadius: '4px'
-                    }}
-                    onError={e => e.target.src = '/assets/img/supplies/acido-salicilico.png'} />
+                  return <Tippy content={supply.name}>
+                    <img key={index}
+                      src={`/api/supplies/media/${supply.image}`}
+                      style={{
+                        width: '40px',
+                        backgroundColor: '#fff',
+                        border: '1px solid rgba(0,0,0,.125)',
+                        aspectRatio: 5 / 4,
+                        objectFit: 'contain',
+                        objectPosition: 'center',
+                        borderRadius: '4px'
+                      }}
+                      onError={e => e.target.src = '/assets/img/supplies/acido-salicilico.png'} />
+                  </Tippy>
                 })
               }
             </div>)
@@ -160,6 +168,7 @@ const Formulas = ({ }) => {
           }
         </SelectFormGroup>
         <InputFormGroup eRef={descriptionRef} label='Respuesta' required />
+        <InputFormGroup eRef={presentationOrderRef} label='Orden de presentacón' type='number' required />
         <SelectAPIFormGroup eRef={suppliesRef} label='Ingredientes' searchAPI='/api/admin/supplies/paginate' searchBy='name' required dropdownParent='#principal-container' col='col-12' multiple />
       </div>
     </Modal>

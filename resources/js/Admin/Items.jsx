@@ -4,7 +4,7 @@ import BaseAdminto from '@Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
 import Table from '../Components/Adminto/Table';
 import Modal from '../Components/Modal';
-import InputFormGroup from '../components/Adminto/form/InputFormGroup';
+import InputFormGroup from '../Components/Adminto/form/InputFormGroup';
 import ReactAppend from '../Utils/ReactAppend';
 import DxButton from '../Components/dx/DxButton';
 import TextareaFormGroup from '@Adminto/form/TextareaFormGroup';

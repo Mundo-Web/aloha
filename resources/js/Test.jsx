@@ -1,19 +1,20 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './components/Tailwind/Base';
+import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 import { Local } from 'sode-extend-react';
-import ProgressBar from './components/Test/components/ProgressBar';
+import ProgressBar from './Components/Test/components/ProgressBar';
 
-const Main = React.lazy(() => import('./components/Test/Main'));
-const Treatment = React.lazy(() => import('./components/Test/Treatment'));
-const HairType = React.lazy(() => import('./components/Test/HairType'));
-const Email = React.lazy(() => import('./components/Test/Email'));
-const ScalpType = React.lazy(() => import('./components/Test/ScalpType'));
-const HairGoals = React.lazy(() => import('./components/Test/HairGoals'));
-const Fragrance = React.lazy(() => import('./components/Test/Fragrance'));
+const Main = React.lazy(() => import('./Components/Test/Main'));
+const Treatment = React.lazy(() => import('./Components/Test/Treatment'));
+const HairType = React.lazy(() => import('./Components/Test/HairType'));
+const HairThickness = React.lazy(() => import('./Components/Test/HairThickness'));
+const Email = React.lazy(() => import('./Components/Test/Email'));
+const ScalpType = React.lazy(() => import('./Components/Test/ScalpType'));
+const HairGoals = React.lazy(() => import('./Components/Test/HairGoals'));
+const Fragrance = React.lazy(() => import('./Components/Test/Fragrance'));
 
-const Test = ({ session, otherFormulasCount, hasTreatment, scalpType, hairType, hairGoals, fragrances, userFormulasCount = 0, formula }) => {
+const Test = ({ session, otherFormulasCount, hasTreatment, scalpType, hairType, hairThickness, hairGoals, fragrances, userFormulasCount = 0, formula }) => {
 
   const vuaTest = Local.get('vua_test') ?? { has_started: !!formula }
   if (!hasTreatment.find(x => x.id == vuaTest.has_treatment)) vuaTest.has_treatment = null
@@ -31,7 +32,7 @@ const Test = ({ session, otherFormulasCount, hasTreatment, scalpType, hairType, 
     'has_treatment': <Treatment test={test} setTest={setTest} values={hasTreatment} />,
     'scalp_type': <ScalpType test={test} setTest={setTest} values={scalpType} />,
     'hair_type': <HairType test={test} setTest={setTest} values={hairType} />,
-    'hair_thickness': 'grosor de cabello',
+    'hair_thickness': <HairThickness test={test} setTest={setTest} values={hairThickness} />,
     'hair_goals': <HairGoals test={test} setTest={setTest} values={hairGoals} />,
     'fragrance': <Fragrance test={test} setTest={setTest} values={fragrances} formula={formula} />,
     'email': <Email test={test} setTest={setTest} session={session} />

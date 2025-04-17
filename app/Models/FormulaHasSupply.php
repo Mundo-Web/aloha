@@ -12,4 +12,9 @@ class FormulaHasSupply extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+
+    protected $fillable = [
+        'formula_id',
+        'supply_id'
+    ];
 }

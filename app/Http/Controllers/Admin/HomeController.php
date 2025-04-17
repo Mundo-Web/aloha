@@ -9,7 +9,6 @@ use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\UserFormula;
 use Illuminate\Http\Request;
-use SoDe\Extend\JSON;
 use SoDe\Extend\Response;
 
 class HomeController extends BasicController
@@ -87,11 +86,12 @@ class HomeController extends BasicController
             ->where('sales.created_at', '>=', now()->subDays(30))
             ->whereRaw("JSON_LENGTH(colors) > 0")
             ->selectRaw("
+                sale_details.item_id,
                 sale_details.name as item,
                 colors as colors_json,
                 COUNT(*) as quantity
             ")
-            ->groupBy('item', 'colors_json')
+            ->groupBy('item_id', 'item', 'colors_json')
             ->orderBy('quantity', 'DESC')
             ->get()
             ->map(function ($detail) {
@@ -99,7 +99,10 @@ class HomeController extends BasicController
                 return [
                     'item' => $detail->item,
                     'colors' => collect($colors)->map(function ($color) use ($detail) {
-                        $colorModel = Color::where('hex', $color['hex'])->first();
+                        $colorModel = Color::query()
+                            ->where('item_id', $detail->item_id)
+                            ->where('hex', $color['hex'])
+                            ->first();
                         return [
                             'name' => $colorModel ? $colorModel->name : 'Unknown',
                             'hex' => $color['hex'],

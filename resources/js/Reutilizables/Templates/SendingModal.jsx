@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import * as XLSX from 'xlsx'
-import Modal from "../../components/Adminto/Modal"
+import Modal from "../../Components/Adminto/Modal"
 import SendingHistoryRest from "../../actions/Admin/SendingHistoryRest"
 
 const sendingHistoryRest = new SendingHistoryRest()

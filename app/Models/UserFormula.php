@@ -21,6 +21,7 @@ class UserFormula extends Model
         'has_treatment',
         'scalp_type',
         'hair_type',
+        'hair_thickness',
         'hair_goals',
         'fragrance_id',
         'status',
@@ -46,6 +47,10 @@ class UserFormula extends Model
     public function hairType()
     {
         return $this->hasOne(Formula::class, 'id', 'hair_type');
+    }
+    public function hairThickness()
+    {
+        return $this->hasOne(Formula::class, 'id', 'hair_thickness');
     }
     public function fragrance()
     {

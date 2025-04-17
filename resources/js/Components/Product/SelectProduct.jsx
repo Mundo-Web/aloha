@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import Number2Currency from "../../Utils/Number2Currency";
 import { Local } from "sode-extend-react";
 import Aos from "aos";
-import NewFormulaButton from "./components/NewFormulaButton";
+import NewFormulaButton from "./Components/NewFormulaButton";
 import Tippy from "@tippyjs/react";
 import UserFormulasRest from "../../Actions/UserFormulasRest";
 import Swal from "sweetalert2";
@@ -11,11 +11,13 @@ const userFormulasRest = new UserFormulasRest()
 
 const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage, items = [], bundles = [] }) => {
 
-  const vua_cart = Local.get('vua_cart') ?? items.map(x => {
-    if (!x.is_default) return
-    x.quantity = 1;
-    x.formula_id = formula.id;
-    return x;
+  const vua_cart = Local.get('vua_cart') ?? items.map(itemDB => {
+    const item = structuredClone(itemDB)
+    delete item.colors
+    if (!item.is_default) return
+    item.quantity = 1;
+    item.formula_id = formula.id;
+    return item;
   }).filter(Boolean)
   const [cart, setCart] = useState(vua_cart.filter(x => !!items.find(y => x.id == y.id)) ?? []);
 
@@ -142,7 +144,9 @@ const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage,
     <div className="max-w-4xl mx-auto mb-8">
       <div className="flex flex-wrap items-center justify-center gap-4">
         {
-          items.map((item, index) => {
+          items.map((itemDB, index) => {
+            const item = structuredClone(itemDB)
+            delete item.colors
             const selected = cart.find(x => x.id == item.id && x.formula_id == formula.id)
             const quantity = selected?.quantity ?? 0
             return <div key={index} className="flex flex-col w-[180px] whitespace-nowrap" data-aos="fade-up">
@@ -173,7 +177,9 @@ const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage,
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {
-              items.map((item, index) => {
+              items.map((itemDB, index) => {
+                const item = structuredClone(itemDB)
+                delete item.colors
                 const selected = cart.find(x => x.id == item.id && x.formula_id == otherFormula.id)
                 const quantity = selected?.quantity ?? 0
                 return <div key={index} className="flex flex-col w-[180px] whitespace-nowrap" data-aos="fade-up">

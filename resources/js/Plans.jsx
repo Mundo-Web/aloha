@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './components/Tailwind/Base';
+import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 
 const Plans = ({ renewals }) => {

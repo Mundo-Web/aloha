@@ -36,7 +36,6 @@ const Email = ({ test, setTest, session }) => {
     Local.delete('vua_test')
     Local.delete('vua_cart')
     location.href = `/test/result/${result.data.id}`;
-    setTest({})
   }
 
   useEffect(() => {

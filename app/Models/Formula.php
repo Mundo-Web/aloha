@@ -14,6 +14,7 @@ class Formula extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'name',
         'description',
         'correlative',
@@ -21,7 +22,8 @@ class Formula extends Model
         'status',
     ];
 
-    public function supplies() {
+    public function supplies()
+    {
         return $this->hasManyThrough(Supply::class, FormulaHasSupply::class, 'formula_id', 'id', 'id', 'supply_id');
     }
 }

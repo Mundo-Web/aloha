@@ -21,6 +21,7 @@ class UserFormulaController extends BasicController
         $request->validate([
             'has_treatment' => 'required|string|min:36|max:36',
             'scalp_type' => 'required|string|min:36|max:36',
+            'hair_thickness' => 'required|string|min:36|max:36',
             'hair_type' => 'required|string|min:36|max:36',
             'hair_goals' => 'required|array',
             'email' => 'required|string|email|max:255',
@@ -33,6 +34,7 @@ class UserFormulaController extends BasicController
             ->where('has_treatment', $body['has_treatment'])
             ->where('scalp_type', $body['scalp_type'])
             ->where('hair_type', $body['hair_type'])
+            ->where('hair_thickness', $body['hair_thickness'])
             ->whereRaw('JSON_CONTAINS(hair_goals, ?)', [json_encode($body['hair_goals'])])
             ->where('fragrance_id', $body['fragrance_id'])
             ->where('email', $body['email'])

@@ -41,15 +41,15 @@ const ScalpType = ({ test, setTest, values }) => {
     </section>
     <ReactModal isOpen={modalOpen}
       onRequestClose={() => setModalOpen(false)}
-      className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-white p-10 rounded-2xl shadow-lg w-[95%] max-w-lg '
+      className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-white p-10 rounded-2xl shadow-lg w-[95%] max-w-xl '
       overlayClassName={'fixed inset-0 bg-black bg-opacity-50 z-50'}
     >
-      <span className="rounded-full px-4 py-2 bg-[#C5B8D4] text-white mx-auto block mb-4 w-max">¿Con cuál te identificas?</span>
+      <span className="rounded-full px-4 py-2 bg-[#C5B8D4] text-white md:text-lg mx-auto block mb-4 w-max">¿Con cuál te identificas?</span>
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
           <img className="p-[2.5%] md:p-[5%] aspect-square rounded-full" src="/assets/img/test/dry.png" alt="" />
           <span className="block my-2 w-max mx-auto px-3 py-1.5 rounded-full border text-sm">Seco</span>
-          <ul className="text-[8px] text-start">
+          <ul className="text-[8px] md:text-[10px] text-start">
             <li className="flex gap-1">
               <i className="mdi mdi-circle-small font-bold"></i>
               Tiene un aspecto apagado.</li>
@@ -70,7 +70,7 @@ const ScalpType = ({ test, setTest, values }) => {
         <div>
           <img className="p-[2.5%] md:p-[5%] aspect-square rounded-full" src="/assets/img/test/normal.png" alt="" />
           <span className="block my-2 w-max mx-auto px-3 py-1.5 rounded-full border text-sm">Normal</span>
-          <ul className="text-[8px] text-start">
+          <ul className="text-[8px] md:text-[10px] text-start">
             <li className="flex gap-1">
               <i className="mdi mdi-circle-small font-bold"></i>
               Se mantiene bien el peinado.</li>
@@ -88,7 +88,7 @@ const ScalpType = ({ test, setTest, values }) => {
         <div>
           <img className="p-[2.5%] md:p-[5%] aspect-square rounded-full" src="/assets/img/test/oily.png" alt="" />
           <span className="block my-2 w-max mx-auto px-3 py-1.5 rounded-full border text-sm">Graso</span>
-          <ul className="text-[8px] text-start">
+          <ul className="text-[8px] md:text-[10px] text-start">
             <li className="flex gap-1">
               <i className="mdi mdi-circle-small font-bold"></i>
               Después del lavado, la grasa aparece enseguida.</li>

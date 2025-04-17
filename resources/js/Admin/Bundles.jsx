@@ -11,8 +11,8 @@ import Swal from 'sweetalert2';
 import BundlesRest from '../Actions/Admin/BundlesRest';
 import SelectAPIFormGroup from '../Components/Adminto/form/SelectAPIFormGroup';
 import SetSelectValue from '../Utils/SetSelectValue';
-import InputFormGroup from '../components/Adminto/form/InputFormGroup';
-import SelectFormGroup from '../components/Adminto/form/SelectFormGroup';
+import InputFormGroup from '../Components/Adminto/form/InputFormGroup';
+import SelectFormGroup from '../Components/Adminto/form/SelectFormGroup';
 
 const bundlesRest = new BundlesRest()
 

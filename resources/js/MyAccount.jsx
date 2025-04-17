@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './components/Tailwind/Base';
+import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
 
-import Purchases from './components/Dashboard/Purchases';
-import Information from './components/Dashboard/Information';
-import Formulas from './components/Dashboard/Formulas';
+import Purchases from './Components/Dashboard/Purchases';
+import Information from './Components/Dashboard/Information';
+import Formulas from './Components/Dashboard/Formulas';
 import Logout from './Actions/Logout';
 
 

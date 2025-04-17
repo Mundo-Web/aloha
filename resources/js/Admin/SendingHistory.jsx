@@ -4,12 +4,12 @@ import { createRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
 import CreateReactScript from '../Utils/CreateReactScript';
 import Base from '../Components/Adminto/Base';
-import TippyButton from '../components/Adminto/form/TippyButton';
+import TippyButton from '../Components/Adminto/form/TippyButton';
 import ReactAppend from '../Utils/ReactAppend';
 import Table from '../Components/Adminto/Table';
 import SendingHistoryRest from '../actions/Admin/SendingHistoryRest';
 import DxPanelButton from '../Components/Adminto/Dx/DxPanelButton';
-import Modal from '../components/Adminto/Modal';
+import Modal from '../Components/Adminto/Modal';
 import DataGrid from '../Components/Adminto/DataGrid';
 import HistoryDetailsRest from '../actions/Admin/HistoryDetailsRest';
 
