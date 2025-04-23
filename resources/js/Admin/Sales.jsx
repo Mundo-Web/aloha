@@ -476,7 +476,7 @@ const Sales = ({ statuses }) => {
             }}>
               {
                 saleStatuses?.map((ss, index) => {
-                  const fullname = (`${ss.user?.name} ${ss.user?.lastname}`).trim() || 'Automático'
+                  const fullname = (`${ss.user?.name || ''} ${ss.user?.lastname || ''}`).trim() || 'Automático'
                   return <article key={index} className="border py-1 px-2 ms-3" style={{
                     position: 'relative',
                     borderRadius: '16px 4px 4px 16px',
