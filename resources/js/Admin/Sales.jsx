@@ -133,10 +133,14 @@ const Sales = ({ statuses }) => {
           sortOrder: 'desc',
           width: '150px',
           cellTemplate: (container, { data }) => {
-            container.html(renderToString(<>
+            container.css('cursor', 'pointer')
+            container.on('click', () => {
+              onModalOpen(data.id)
+            })
+            ReactAppend(container, <>
               <span className='d-block'>{moment(data.created_at.replace('Z', '-05:00')).fromNow()}</span>
               <small className='d-block text-muted'>{moment(data.created_at).format('lll')}</small>
-            </>))
+            </>)
           }
         },
         {
