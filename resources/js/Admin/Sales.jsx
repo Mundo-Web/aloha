@@ -476,6 +476,7 @@ const Sales = ({ statuses }) => {
             }}>
               {
                 saleStatuses?.map((ss, index) => {
+                  const fullname = (`${ss.user?.name} ${ss.user?.lastname}`).trim() || 'Automático'
                   return <article key={index} className="border py-1 px-2 ms-3" style={{
                     position: 'relative',
                     borderRadius: '16px 4px 4px 16px',
@@ -489,7 +490,7 @@ const Sales = ({ statuses }) => {
                       transform: 'translateY(-50%)'
                     }}></i>
                     <b style={{ color: ss.status.color || '#333' }}>{ss?.status?.name}</b>
-                    <small className='d-block text-truncate'>{ss?.user?.name} {ss?.user?.lastname}</small>
+                    <small className='d-block text-truncate'>{fullname}</small>
                     <small className='d-block text-muted'>{moment(ss.created_at).format('YYYY-MM-DD HH:mm')}</small>
                   </article>
                 })
