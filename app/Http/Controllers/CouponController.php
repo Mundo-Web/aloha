@@ -37,7 +37,12 @@ class CouponController extends BasicController
         if (!$coupon) return [false, 'Cupón inválido. Intente con uno distinto'];
 
         if ($coupon->one_time_use) {
-            $sale = Sale::where('email', $email)->first();
+            $sale = Sale::query()
+                ->join('statuses', 'statuses.id', '=', 'sales.status_id')
+                ->where('sales.email', $email)
+                ->where('sales.coupon_id', $coupon->id)
+                ->where('statuses.is_ok', true)
+                ->first();
             if ($sale) return [false, 'Este cupón no puede ser usado mas de una vez'];
         }
 
