@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 
 const userFormulasRest = new UserFormulasRest()
 
-const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage, items = [], bundles = [] }) => {
+const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage, items = [], bundles = [], freeShipping, freeShippingBannerText }) => {
 
   const vua_cart = Local.get('vua_cart') ?? items.map(itemDB => {
     const item = structuredClone(itemDB)
@@ -208,6 +208,15 @@ const SelectProduct = ({ formula, otherFormulas, setOtherFormulas, goToNextPage,
       <p className='text-md'>
         Agrega más de un producto y <b>obtén nuestros descuentos</b> por packs.
       </p>
+
+      {
+        freeShipping == 'true' &&
+        <div>
+          <div className="text-sm font-semibold bg-[#C5B8D4] text-white rounded-3xl mt-4 py-4 px-[5%] whitespace-pre-line shadow-lg">
+            {freeShippingBannerText}
+          </div>
+        </div>
+      }
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-[#EFBEC1] text-white rounded-3xl mt-4 py-4 px-[5%] font-extrabold shadow-lg">
         <div className="text-xl text-start">

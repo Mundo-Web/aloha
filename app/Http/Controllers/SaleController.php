@@ -6,6 +6,7 @@ use App\Jobs\SendSaleEmail;
 use App\Jobs\SendSaleWhatsApp;
 use App\Models\Sale;
 use App\Models\Bundle;
+use App\Models\General;
 use App\Models\Item;
 use App\Models\Renewal;
 use App\Models\SaleDetail;
@@ -129,8 +130,23 @@ class SaleController extends Controller
                 }
             }
 
+            $delivery = 0;
+            $free_shipping = General::select(['description'])->where('correlative', 'free_shipping')->first()->description ?? 'false';
+            if ($free_shipping == 'true') {
+                $free_shipping_zones = General::select(['description'])->where('correlative', 'free_shipping_zones')->first()->description ?? 'metropolitana';
+                if (str_contains($free_shipping_zones, $sale['department_code'])) {
+                    $free_shipping_minimum_amount = General::select(['description'])->where('correlative', 'free_shipping_minimum_amount')->first()->description ?? '100';
+                    if (($totalPrice - $bundle) < $free_shipping_minimum_amount) {
+                        $free_shipping_amount = General::select(['description'])->where('correlative', 'free_shipping_amount')->first()->description ?? '10';
+                        $delivery = $free_shipping_amount;
+                    }
+                } else {
+                    $delivery = null;
+                }
+            }
+
             $saleJpa->amount = Math::round($totalPrice * 10) / 10;
-            $saleJpa->delivery = 0; // Agregar lógica si es que se tiene precio por envío
+            $saleJpa->delivery = $delivery;
             $saleJpa->save();
 
             $detailsJpa = array();

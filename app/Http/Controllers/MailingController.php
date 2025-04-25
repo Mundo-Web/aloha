@@ -18,6 +18,17 @@ class MailingController extends BasicController
 {
     public $model = 'Mailing';
 
+    static function isValid(string $email)
+    {
+        $dominio = substr(strrchr($email, "@"), 1);
+        if (!checkdnsrr($dominio, "MX")) return false;
+
+        $validator = new SMTP_Validate_Email();
+        $result = $validator->validate([$email], env('MAIL_FROM_ADDRESS'));
+
+        return $result[$email];
+    }
+
     public function send(Request $request)
     {
         $response = Response::simpleTryCatch(function () use ($request) {

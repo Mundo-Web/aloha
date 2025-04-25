@@ -6,73 +6,74 @@ import Global from '../../Utils/Global';
 import Number2Currency from '../../Utils/Number2Currency';
 import CouponsRest from '../../Actions/CouponsRest';
 import Tippy from '@tippyjs/react';
+import places from './components/places.json';
 
-const places = {
-  'metropolitana': {
-    name: 'Lima Metropolitana',
-    delivery: 'Gratis',
-    items: [
-      'Ate',
-      'Barranco',
-      'Breña',
-      'Cercado de Lima',
-      'Chorrillos',
-      'Comas',
-      'El Agustino',
-      'Independencia',
-      'Jesús María',
-      'La Molina',
-      'La Victoria',
-      'Lince',
-      'Los Olivos',
-      'Magdalena del Mar',
-      'Miraflores',
-      'Pueblo Libre',
-      'Rímac',
-      'San Borja',
-      'San Isidro',
-      'San Juan de Lurigancho',
-      'San Juan de Miraflores',
-      'San Luis',
-      'San Martin de Porres',
-      'San Miguel',
-      'Santa Anita',
-      'Santiago de Surco',
-      'Surquillo',
-      'Villa el Salvador',
-      'Villa Maria del Triunfo'
-    ],
-  },
-  'alrededores': {
-    name: 'Lima Alrededores',
-    delivery: 'Por Shalom - Pago en destino',
-    items: [
-      'Ancón',
-      'Carabayllo',
-      'Chaclacayo',
-      'Cieneguilla',
-      'Lurín',
-      'Pachacámac',
-      'Pucusana',
-      'Puente Piedra',
-      'Punta Hermosa',
-      'Punta Negra',
-      'San Bartolo',
-      'Lurigancho (Chosica)',
-      'Santa María del Mar',
-      'Santa Rosa'
-    ],
-  },
-  'provincias': {
-    name: 'Provincias',
-    delivery: 'Por Shalom - Pago en destino',
-    items: '',
-  }
-}
+// const places = {
+//   'metropolitana': {
+//     name: 'Lima Metropolitana',
+//     delivery: 'Gratis',
+//     items: [
+//       'Ate',
+//       'Barranco',
+//       'Breña',
+//       'Cercado de Lima',
+//       'Chorrillos',
+//       'Comas',
+//       'El Agustino',
+//       'Independencia',
+//       'Jesús María',
+//       'La Molina',
+//       'La Victoria',
+//       'Lince',
+//       'Los Olivos',
+//       'Magdalena del Mar',
+//       'Miraflores',
+//       'Pueblo Libre',
+//       'Rímac',
+//       'San Borja',
+//       'San Isidro',
+//       'San Juan de Lurigancho',
+//       'San Juan de Miraflores',
+//       'San Luis',
+//       'San Martin de Porres',
+//       'San Miguel',
+//       'Santa Anita',
+//       'Santiago de Surco',
+//       'Surquillo',
+//       'Villa el Salvador',
+//       'Villa Maria del Triunfo'
+//     ],
+//   },
+//   'alrededores': {
+//     name: 'Lima Alrededores',
+//     delivery: 'Por Shalom - Pago en destino',
+//     items: [
+//       'Ancón',
+//       'Carabayllo',
+//       'Chaclacayo',
+//       'Cieneguilla',
+//       'Lurín',
+//       'Pachacámac',
+//       'Pucusana',
+//       'Puente Piedra',
+//       'Punta Hermosa',
+//       'Punta Negra',
+//       'San Bartolo',
+//       'Lurigancho (Chosica)',
+//       'Santa María del Mar',
+//       'Santa Rosa'
+//     ],
+//   },
+//   'provincias': {
+//     name: 'Provincias',
+//     delivery: 'Por Shalom - Pago en destino',
+//     items: '',
+//   }
+// }
 
 const couponRest = new CouponsRest()
 
-const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPlan, bundles, planes, session }) => {
+const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPlan, bundles, planes, session, freeShipping, freeShippingMinimumAmount, freeShippingAmount, freeShippingZones, }) => {
 
   const couponRef = useRef(null)
 
@@ -95,6 +96,39 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
 
   const cart = Local.get('vua_cart')
 
+  const [loading, isLoading] = useState(false);
+  const [coupon, setCoupon] = useState(null)
+
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const restBundles = bundles.filter(x => {
+    switch (x.comparator) {
+      case '<':
+        return totalQuantity < x.items_quantity
+      case '>':
+        return totalQuantity > x.items_quantity
+      default:
+        return totalQuantity == x.items_quantity
+    }
+  }).sort((a, b) => b.percentage - a.percentage)
+
+  const bundle = restBundles?.[0] ?? null
+  const bundleDiscount = totalPrice * (bundle?.percentage || 0)
+
+  let delivery = 0
+
+  if (freeShipping == 'true') {
+    for (const zone of freeShippingZones.split(',')) {
+      if ((totalPrice - bundleDiscount) >= freeShippingMinimumAmount) {
+        places[zone].delivery = 'Gratis'
+        delivery = 0
+      } else {
+        places[zone].delivery = `S/ ${Number2Currency(freeShippingAmount)}`
+        delivery = Number(freeShippingAmount)
+      }
+    }
+  }
+
   const department = Object.keys(places).find(x => places[x].name == session?.department)
 
   const [sale, setSale] = useState({
@@ -115,25 +149,6 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
     billing_type: 'boleta',
     billing_number: '',
   });
-
-  const [loading, isLoading] = useState(false);
-  const [coupon, setCoupon] = useState(null)
-
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0)
-  const restBundles = bundles.filter(x => {
-    switch (x.comparator) {
-      case '<':
-        return totalQuantity < x.items_quantity
-      case '>':
-        return totalQuantity > x.items_quantity
-      default:
-        return totalQuantity == x.items_quantity
-    }
-  }).sort((a, b) => b.percentage - a.percentage)
-
-  const bundle = restBundles?.[0] ?? null
-  const bundleDiscount = totalPrice * (bundle?.percentage || 0)
 
   const plan = planes.find(x => x.id == selectedPlan)
   const planDiscount = (totalPrice - bundleDiscount) * (plan?.percentage || 0)
@@ -157,6 +172,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
 
     return {
       ...sale,
+      department_code: sale.department,
       department, province, district
     }
   }
@@ -183,7 +199,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
     Culqi.settings({
       title: `${Global.APP_NAME} ${selectedPlan ? '(Suscripción)' : ''}`.trim(),
       currency: 'PEN',
-      amount: Math.round(Math.ceil((totalPrice - bundleDiscount - planDiscount - couponDiscount) * 100) / 10) * 10,
+      amount: Math.round(Math.ceil((totalPrice - bundleDiscount - planDiscount - couponDiscount + delivery) * 100) / 10) * 10,
       order: order_number
     })
     Culqi.open();
@@ -604,14 +620,16 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                         <span className='font-bold'>Envío</span>
                         <span>
                           {
-                            places?.[sale.department]?.delivery
+                            typeof places?.[sale.department]?.delivery == 'number'
+                              ? `S/ ${Number2Currency(places?.[sale.department]?.delivery)}`
+                              : places?.[sale.department]?.delivery
                           }
                         </span>
                       </div>
                     }
                     <div className="flex justify-between text-lg font-semibold">
                       <span>Total</span>
-                      <span>S/ {Number2Currency(Math.round((totalPrice - bundleDiscount - planDiscount - couponDiscount) * 10) / 10)}</span>
+                      <span>S/ {Number2Currency(Math.round((totalPrice - bundleDiscount - planDiscount - couponDiscount + delivery) * 10) / 10)}</span>
                     </div>
                   </div>
                   {

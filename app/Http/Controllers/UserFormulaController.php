@@ -8,6 +8,7 @@ use App\Models\FormulaHasSupply;
 use App\Models\Subscription;
 use App\Models\Supply;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SoDe\Extend\Text;
@@ -26,6 +27,9 @@ class UserFormulaController extends BasicController
             'hair_goals' => 'required|array',
             'email' => 'required|string|email|max:255',
         ]);
+
+        $isValid = MailingController::isValid($request->email);
+        if (!$isValid) throw new Exception('El email que ingresó no es valido. Intente con uno diferente.');
 
         $body = $request->all();
         $body['fragrance_id'] = $body['fragrance'];

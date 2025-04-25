@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
 use App\Models\Formula;
+use App\Models\Item;
 use App\Models\Sale;
 use App\Models\Status;
 use Exception;
@@ -65,8 +66,15 @@ class SaleController extends BasicController
             ->where('status', true)
             ->where('visible', true)
             ->get();
+
+        $itemsJpa = Item::with('colors')
+            ->where('visible', true)
+            ->where('status', true)
+            ->get();
+
         return [
-            'statuses' => $statusesJpa
+            'statuses' => $statusesJpa,
+            'items' => $itemsJpa
         ];
     }
 

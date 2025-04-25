@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bundle;
 use App\Models\Color;
+use App\Models\General;
 use App\Models\Item;
 use App\Models\Renewal;
 use App\Models\SaleDetail;
@@ -88,6 +89,12 @@ class FormulaController extends BasicController
             ->where('id', '<>', $userFormulaJpa->id)
             ->get();
 
+        $free_shipping = General::select(['description'])->where('correlative', 'free_shipping')->first();
+        $free_shipping_minimum_amount = General::select(['description'])->where('correlative', 'free_shipping_minimum_amount')->first();
+        $free_shipping_amount = General::select(['description'])->where('correlative', 'free_shipping_amount')->first();
+        $free_shipping_zones = General::select(['description'])->where('correlative', 'free_shipping_zones')->first();
+        $free_shipping_banner = General::select(['description'])->where('correlative', 'free_shipping_banner')->first();
+
         return [
             'user_formula' => $userFormulaJpa,
             'other_formulas' => $other_formulas,
@@ -95,7 +102,12 @@ class FormulaController extends BasicController
             'defaultColors' => $defaultColors,
             'bundles' => $bundlesJpa,
             'planes' => $planesJpa,
-            'publicKey' => env('CULQI_PUBLIC_KEY')
+            'publicKey' => env('CULQI_PUBLIC_KEY'),
+            'free_shipping' => $free_shipping->description ?? 'false',
+            'free_shipping_minimum_amount' => $free_shipping_minimum_amount->description ?? '100',
+            'free_shipping_amount' => $free_shipping_amount->description ?? '10',
+            'free_shipping_zones' => $free_shipping_zones->description ?? 'metropolitana',
+            'free_shipping_banner' => $free_shipping_banner->description ?? '',
         ];
     }
 }

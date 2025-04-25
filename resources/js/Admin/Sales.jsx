@@ -2,7 +2,6 @@ import BaseAdminto from '@Adminto/Base';
 import Tippy from '@tippyjs/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { renderToString } from 'react-dom/server';
 import Swal from 'sweetalert2';
 import SaleStatusesRest from '../Actions/Admin/SaleStatusesRest';
 import SalesRest from '../Actions/Admin/SalesRest';
@@ -14,14 +13,77 @@ import Global from '../Utils/Global';
 import Number2Currency from '../Utils/Number2Currency';
 import ReactAppend from '../Utils/ReactAppend';
 import UserFormulaInfo from '../Components/Adminto/UserFormulas/UserFormulaInfo';
+import places from '../Components/Product/components/places.json';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
 
-const Sales = ({ statuses }) => {
+const Sales = ({ statuses, items }) => {
   const gridRef = useRef()
   const detailsModalRef = useRef()
   const modalRef = useRef()
+
+  const [sale, setSale] = useState({
+    name: '',
+    lastname: '',
+    email: '',
+    phone: '',
+    country: 'Perú',
+    department: '',
+    province: '',
+    district: '',
+    zip_code: '',
+    address: '',
+    number: '',
+    reference: '',
+    comment: '',
+    billing_type: 'boleta',
+    billing_number: '',
+    items: []
+  })
+
+  const [saleItems, setSaleItems] = useState([{
+    item_id: '',
+    color_id: '',
+    quantity: 1,
+    price: 0
+  }])
+
+  const addItem = () => {
+    setSaleItems([...saleItems, {
+      item_id: '',
+      color_id: '',
+      quantity: 1,
+      price: 0
+    }])
+  }
+
+  const removeItem = (index) => {
+    setSaleItems(saleItems.filter((_, i) => i !== index))
+  }
+
+  const updateItem = (index, field, value) => {
+    const newItems = [...saleItems]
+    newItems[index][field] = value
+    setSaleItems(newItems)
+  }
+
+  const onModalSubmit = async (e) => {
+    e.preventDefault()
+    if (loading) return
+
+    const request = {
+      ...sale,
+      items: saleItems,
+      status: 'pending'
+    }
+
+    const result = await salesRest.save(request)
+    if (!result) return
+
+    $(gridRef.current).dxDataGrid('instance').refresh()
+    $(modalRef.current).modal('hide')
+  }
 
   const [saleLoaded, setSaleLoaded] = useState(null);
   const [saleStatuses, setSaleStatuses] = useState([]);
@@ -103,15 +165,15 @@ const Sales = ({ statuses }) => {
             onClick: () => $(gridRef.current).dxDataGrid('instance').refresh()
           }
         });
-        container.unshift({
-          widget: 'dxButton', location: 'after',
-          options: {
-            icon: 'plus',
-            hint: 'Agrega una venta manual',
-            text: 'Nueva venta',
-            onClick: () => $(modalRef.current).modal('show')
-          }
-        });
+        // container.unshift({
+        //   widget: 'dxButton', location: 'after',
+        //   options: {
+        //     icon: 'plus',
+        //     hint: 'Agrega una venta manual',
+        //     text: 'Nueva venta',
+        //     onClick: () => $(modalRef.current).modal('show')
+        //   }
+        // });
       }}
       exportable
       pageSize={25}
@@ -397,7 +459,12 @@ const Sales = ({ statuses }) => {
               </div>
               <div className="d-flex justify-content-between">
                 <b>Envío:</b>
-                <span>S/ {Number2Currency(saleLoaded?.delivery)}</span>
+                <span>{
+                  saleLoaded?.delivery === null ?
+                    'Pago en destino' :
+                    <>S/ {Number2Currency(saleLoaded?.delivery)}</>
+                }
+                </span>
               </div>
               {saleLoaded?.bundle && (
                 <div className="d-flex justify-content-between">
@@ -504,177 +571,232 @@ const Sales = ({ statuses }) => {
         </div>
       </div>
     </Modal>
-    <Modal modalRef={modalRef} title='Nueva venta (No disponible aun)' size='lg' isStatic hideFooter>
-      <div id="progressbarwizard">
-        <ul className="nav nav-pills bg-light nav-justified mb-3 w-100">
-          <li className="nav-item">
-            <a href="#formula-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2 active">
-              <i className="mdi mdi-flask me-1"></i>
-              <span className="d-none d-sm-inline">Fórmula</span>
-            </a>
-          </li>
-          <li className="nav-item">
-            <a href="#items-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2">
-              <i className="mdi mdi-bottle-soda me-1"></i>
-              <span className="d-none d-sm-inline">Items</span>
-            </a>
-          </li>
-          <li className="nav-item">
-            <a href="#checkout-tab" data-bs-toggle="tab" className="nav-link rounded-0 pt-2 pb-2">
-              <i className="mdi mdi-map-marker-radius me-1"></i>
-              <span className="d-none d-sm-inline">Datos de envío</span>
-            </a>
-          </li>
-        </ul>
-
-        <div className="tab-content b-0 mb-0 pt-0">
-          <div className="progress mb-3" style={{ height: '7px' }}>
-            <div className="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
-          </div>
-
-          {/* Paso 1: Fórmula básica */}
-          <div className="tab-pane active" id="formula-tab">
-            <div className="row">
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">¿Tienes algún tratamiento capilar? *</label>
-                  <select className="form-select" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="1">Si, actualmente</option>
-                    <option value="2">No, pero tuve</option>
-                    <option value="3">No, nunca</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Tipo de cuero cabelludo *</label>
-                  <select className="form-select" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="1">Normal</option>
-                    <option value="2">Graso</option>
-                    <option value="3">Seco</option>
-                    <option value="4">Mixto</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Tipo de cabello *</label>
-                  <select className="form-select" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="1">Liso</option>
-                    <option value="2">Ondulado</option>
-                    <option value="3">Rizado</option>
-                  </select>
-                </div>
-              </div>
+    <Modal modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter>
+      <form onSubmit={onModalSubmit}>
+        <div className="row">
+          <div className="col-12 mb-4">
+            <h4>Items</h4>
+            <div className="table-responsive">
+              <table className="table table-centered">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Color</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {saleItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <select
+                          className="form-select"
+                          value={item.item_id}
+                          onChange={(e) => {
+                            const selectedItem = items.find(x => x.id == e.target.value)
+                            updateItem(index, 'item_id', e.target.value)
+                            updateItem(index, 'price', selectedItem?.price || 0)
+                          }}
+                          required
+                        >
+                          <option value="">Seleccionar producto</option>
+                          {items.map(item => (
+                            <option key={item.id} value={item.id}>{item.name}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          className="form-select"
+                          value={item.color_id}
+                          onChange={(e) => updateItem(index, 'color_id', e.target.value)}
+                          required
+                        >
+                          <option value="">Seleccionar color</option>
+                          {items.find(x => x.id == item.item_id)?.colors.map(color => (
+                            <option key={color.id} value={color.id}>{color.name}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={item.price}
+                          onChange={(e) => updateItem(index, 'price', e.target.value)}
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={item.quantity}
+                          onChange={(e) => updateItem(index, 'quantity', e.target.value)}
+                          min="1"
+                          required
+                        />
+                      </td>
+                      <td>S/. {(item.price * item.quantity).toFixed(2)}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => removeItem(index)}
+                        >
+                          <i className="mdi mdi-trash-can"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="6">
+                      <button type="button" className="btn btn-info btn-sm" onClick={addItem}>
+                        <i className="mdi mdi-plus me-1"></i>
+                        Agregar producto
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan="4" className="text-end"><strong>Total:</strong></td>
+                    <td>S/. {saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           </div>
 
-          {/* Paso 2: Selección de items */}
-          <div className="tab-pane" id="items-tab">
-            <div className="row">
-              <div className="col-12">
-                <div className="table-responsive">
-                  <table className="table table-centered table-nowrap mb-0">
-                    <thead>
-                      <tr>
-                        <th>Producto</th>
-                        <th>Precio</th>
-                        <th style={{ width: '140px' }}>Cantidad</th>
-                        <th>Total</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <select className="form-select">
-                            <option value="">Seleccionar producto</option>
-                          </select>
-                        </td>
-                        <td>S/. <span className="product-price">0.00</span></td>
-                        <td>
-                          <input type="number" className="form-control" min="1" value="1" />
-                        </td>
-                        <td>S/. <span className="product-total">0.00</span></td>
-                        <td>
-                          <button className="btn btn-danger btn-sm">
-                            <i className="mdi mdi-trash-can"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td colSpan="5">
-                          <button className="btn btn-info btn-sm">
-                            <i className="mdi mdi-plus me-1"></i>
-                            Agregar producto
-                          </button>
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">Nombres *</label>
+              <input
+                type="text"
+                className="form-control"
+                value={sale.name}
+                onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Apellidos *</label>
+              <input
+                type="text"
+                className="form-control"
+                value={sale.lastname}
+                onChange={(e) => setSale(old => ({ ...old, lastname: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Email *</label>
+              <input
+                type="email"
+                className="form-control"
+                value={sale.email}
+                onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Teléfono *</label>
+              <input
+                type="tel"
+                className="form-control"
+                value={sale.phone}
+                onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
+                required
+              />
             </div>
           </div>
-
-          {/* Paso 3: Datos de envío */}
-          <div className="tab-pane" id="checkout-tab">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Nombres *</label>
-                  <input type="text" className="form-control" required />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Apellidos *</label>
-                  <input type="text" className="form-control" required />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Email *</label>
-                  <input type="email" className="form-control" required />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Teléfono *</label>
-                  <input type="tel" className="form-control" required />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Tipo de documento *</label>
-                  <select className="form-select" required>
-                    <option value="dni">DNI</option>
-                    <option value="ruc">RUC</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Número de documento *</label>
-                  <input type="text" className="form-control" required />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Dirección *</label>
-                  <input type="text" className="form-control" required />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Referencia</label>
-                  <input type="text" className="form-control" />
-                </div>
-              </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">Departamento *</label>
+              <select
+                className="form-select"
+                value={sale.department}
+                onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
+                required
+              >
+                <option value="">Seleccionar departamento</option>
+                {Object.keys(places ?? {}).map((key) => (
+                  <option key={key} value={key}>{places?.[key].name}</option>
+                ))}
+              </select>
             </div>
-          </div>
+            {
+              places?.[sale.department] && (
+                <>
+                  {
+                    places?.[sale.department]?.items ?
+                      <div className="mb-3">
+                        <label className="form-label">Provincia *</label>
+                        <select
+                          className="form-select"
+                          value={sale.province}
+                          onChange={(e) => {
+                            setSale(old => ({
+                              ...old,
+                              province: e.target.value,
+                              district: '' // Resetear el distrito cuando cambia la provincia
+                            }))
+                          }}
+                          required
+                        >
+                          <option value="">Seleccionar provincia</option>
+                          {places?.[sale.department]?.items?.map((province) => (
+                            <option key={province} value={province}>{province}</option>
+                          ))}
+                        </select>
+                      </div>
+                      : <div className="mb-3">
+                        <label className="form-label">Seleccionar distrito *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={sale.district}
+                          onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+                          required
+                        />
+                      </div>
+                  }
 
-          <div className="d-flex justify-content-between mt-3">
-            <button type="button" className="btn btn-secondary" data-prev>
-              <i className="mdi mdi-arrow-left me-1"></i>
-              Anterior
-            </button>
-            <button type="button" className="btn btn-primary" data-next>
-              Siguiente
-              <i className="mdi mdi-arrow-right ms-1"></i>
-            </button>
+                  <div className="mb-3">
+                    <label className="form-label">Dirección *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={sale.address}
+                      onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Referencia</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={sale.reference}
+                      onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+                    />
+                  </div>
+                </>
+              )
+            }
           </div>
         </div>
-      </div>
+
+        <div className="text-end mt-3">
+          <button type="submit" className="btn btn-primary">
+            Crear Venta
+          </button>
+        </div>
+      </form>
     </Modal>
   </>
   )

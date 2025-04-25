@@ -33,10 +33,15 @@ const Generals = ({ generals }) => {
     location: {
       lat: Number(location.split(',').map(x => x.trim())[0]),
       lng: Number(location.split(',').map(x => x.trim())[1])
-    }
+    },
+    freeShipping: generals.find(x => x.correlative == 'free_shipping')?.description == 'true' ?? false,
+    freeShippingMinimumAmount: generals.find(x => x.correlative == 'free_shipping_minimum_amount')?.description ?? '100',
+    freeShippingAmount: generals.find(x => x.correlative == 'free_shipping_amount')?.description ?? '10',
+    freeShippingZones: (generals.find(x => x.correlative == 'free_shipping_zones')?.description ?? 'metropolitana').split(','),
+    freeShippingBannerText: generals.find(x => x.correlative == 'free_shipping_banner')?.description ?? '',
   });
 
-  const [activeTab, setActiveTab] = useState('policies');
+  const [activeTab, setActiveTab] = useState('delivery');
 
   const handleInputChange = (e, index, field) => {
     const { value } = e.target;
@@ -89,7 +94,12 @@ const Generals = ({ generals }) => {
         { correlative: 'seo_title', name: 'Titulo - SEO', description: formData.seoTitle },
         { correlative: 'seo_description', name: 'Descripcion - SEO', description: formData.seoDescription },
         { correlative: 'seo_keywords', name: 'Palabras clave - SEO', description: formData.seoKeywords },
-        { correlative: 'location', name: 'Ubicación', description: `${formData.location.lat},${formData.location.lng}` }
+        { correlative: 'location', name: 'Ubicación', description: `${formData.location.lat},${formData.location.lng}` },
+        { correlative: 'free_shipping', name: 'Envíos gratis', description: formData.freeShipping?.toString() ?? false },
+        { correlative: 'free_shipping_minimum_amount', name: 'Monto mínimo para envío gratis', description: formData.freeShippingMinimumAmount.toString() },
+        { correlative: 'free_shipping_amount', name: 'Monto mínimo para envío gratis', description: formData.freeShippingAmount.toString() },
+        { correlative: 'free_shipping_zones', name: 'Zonas con envío gratis', description: formData.freeShippingZones.join(',') },
+        { correlative: 'free_shipping_banner', name: 'Texto para banner', description: formData.freeShippingBannerText },
       ]);
       // alert('Datos guardados exitosamente');
     } catch (error) {
@@ -104,6 +114,8 @@ const Generals = ({ generals }) => {
     $('#cbo-keywords option').prop('selected', true).trigger('change')
   }, [null])
 
+  console.log(formData)
+
   return (
     <div className="card">
       <form className='card-body' onSubmit={handleSubmit}>
@@ -111,6 +123,11 @@ const Generals = ({ generals }) => {
           <li className="nav-item" role="presentation" hidden> {/* Quitar el hidden para que se muestren las opciones */}
             <button className={`nav-link ${activeTab === 'contact' ? 'active' : ''}`} onClick={() => setActiveTab('contact')} type="button" role="tab">
               Información de Contacto
+            </button>
+          </li>
+          <li className="nav-item" role="presentation">
+            <button className={`nav-link ${activeTab === 'delivery' ? 'active' : ''}`} onClick={() => setActiveTab('delivery')} type="button" role="tab">
+              Configuración de Envíos
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -210,6 +227,145 @@ const Generals = ({ generals }) => {
                 onChange={(e) => setFormData({ ...formData, supportEmail: e.target.value })}
                 required
               />
+            </div>
+          </div>
+
+          <div className={`tab-pane fade ${activeTab === 'delivery' ? 'show active' : ''}`} role="tabpanel">
+            <div className="row">
+              <div className="col-xl-3 col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <div className="mb-3">
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="free-shipping"
+                      checked={formData.freeShipping}
+                      onChange={(e) => setFormData({ ...formData, freeShipping: e.target.checked })}
+                    />
+                    <label className="form-check-label" htmlFor="free-shipping">
+                      Habilitar envíos gratis
+                      <small className="text-muted d-block">Al habilitar esta opción </small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xl-3 col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <div className="mb-3">
+                  <label className="form-label">Monto mínimo para envío gratis</label>
+                  <div className="input-group mb-1">
+                    <span className="input-group-text">S/</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={formData.freeShippingMinimumAmount}
+                      onChange={(e) => setFormData({ ...formData, freeShippingMinimumAmount: e.target.value })}
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                  <small className="text-muted">Las ventas que superen este monto tendrán envío gratis en las zonas seleccionadas</small>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xl-3 col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <div className="mb-3">
+                  <label className="form-label">Costo de envío</label>
+                  <div className="input-group mb-1">
+                    <span className="input-group-text">S/</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={formData.freeShippingAmount}
+                      onChange={(e) => setFormData({ ...formData, freeShippingAmount: e.target.value })}
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                  <small className="text-muted">El costo de envío para las zonas seleccionadas</small>
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className="col-xl-3 col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <div className="mb-3">
+                  <label className="form-label">Zonas con envío gratis disponible</label>
+                  <div className="form-check mb-2">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="metropolitana"
+                      checked={formData.freeShippingZones?.includes('metropolitana')}
+                      onChange={(e) => {
+                        const zones = e.target.checked
+                          ? [...formData.freeShippingZones, 'metropolitana']
+                          : formData.freeShippingZones.filter(z => z !== 'metropolitana');
+                        setFormData({ ...formData, freeShippingZones: zones });
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="metropolitana">
+                      Lima Metropolitana
+                      <small className="text-muted d-block">Distritos principales de Lima</small>
+                    </label>
+                  </div>
+
+                  <div className="form-check mb-2">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="alrededores"
+                      checked={formData.freeShippingZones?.includes('alrededores')}
+                      onChange={(e) => {
+                        const zones = e.target.checked
+                          ? [...formData.freeShippingZones, 'alrededores']
+                          : formData.freeShippingZones.filter(z => z !== 'alrededores');
+                        setFormData({ ...formData, freeShippingZones: zones });
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="alrededores">
+                      Lima Alrededores
+                      <small className="text-muted d-block">Distritos periféricos de Lima</small>
+                    </label>
+                  </div>
+
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="provincias"
+                      checked={formData.freeShippingZones?.includes('provincias')}
+                      onChange={(e) => {
+                        const zones = e.target.checked
+                          ? [...formData.freeShippingZones, 'provincias']
+                          : formData.freeShippingZones.filter(z => z !== 'provincias');
+                        setFormData({ ...formData, freeShippingZones: zones });
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="provincias">
+                      Provincias
+                      <small className="text-muted d-block">Envíos a nivel nacional</small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xl-3 col-lg-4 col-md-6 col-sm-8 col-xs-12">
+                <div className="mb-3">
+                  <label className="form-label">Texto para banner</label>
+                  <textarea
+                    className="form-control"
+                    value={formData.freeShippingBannerText}
+                    onChange={(e) => setFormData({ ...formData, freeShippingBannerText: e.target.value })}
+                    required
+                    style={{ minHeight: (3 * 27), fieldSizing: 'content' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

@@ -350,6 +350,10 @@
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js"
     ]
   },
+  "_places-DAXM8Qkz.js": {
+    "file": "assets/places-DAXM8Qkz.js",
+    "name": "places"
+  },
   "_proxy-BWRiLWDQ.js": {
     "file": "assets/proxy-BWRiLWDQ.js",
     "name": "proxy",
@@ -793,7 +797,7 @@
     ]
   },
   "resources/js/Admin/Generals.jsx": {
-    "file": "assets/Generals-YEtwb96t.js",
+    "file": "assets/Generals-gSE9q4b-.js",
     "name": "Generals",
     "src": "resources/js/Admin/Generals.jsx",
     "isEntry": true,
@@ -1117,7 +1121,7 @@
     ]
   },
   "resources/js/Admin/Sales.jsx": {
-    "file": "assets/Sales-CfTKjJIw.js",
+    "file": "assets/Sales-DY4pA18P.js",
     "name": "Sales",
     "src": "resources/js/Admin/Sales.jsx",
     "isEntry": true,
@@ -1127,7 +1131,6 @@
       "_tippy-react.esm-CHhA99mn.js",
       "_index-B80Lgev0.js",
       "resources/js/Utils/ReactAppend.jsx",
-      "_server.browser-D3N0_gce.js",
       "_sweetalert2.all-Dh0rZL5X.js",
       "_main-B2CtU6ez.js",
       "_BasicRest-Dr9i-95X.js",
@@ -1137,11 +1140,13 @@
       "_CreateReactScript-DH4VP3S3.js",
       "_Number2Currency-e57Tgsuk.js",
       "_ReactAppend-C-tNgxIf.js",
+      "_places-DAXM8Qkz.js",
       "_Logout-CPQZ59pt.js",
       "_index.esm-Cu-mVv1q.js",
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js",
       "resources/js/Components/modals/WhatsAppModal.jsx",
-      "_index-DO3Aws4m.js"
+      "_index-DO3Aws4m.js",
+      "_server.browser-D3N0_gce.js"
     ],
     "css": [
       "tippy.css",
@@ -1637,7 +1642,7 @@
     ]
   },
   "resources/js/Components/Adminto/Modal.jsx": {
-    "file": "assets/Modal-ClxeGkIS.js",
+    "file": "assets/Modal-uOWZuDyS.js",
     "name": "Modal",
     "src": "resources/js/Components/Adminto/Modal.jsx",
     "isEntry": true,
@@ -1786,7 +1791,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
+    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/Adminto/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2188,7 +2193,7 @@
     ]
   },
   "resources/js/Components/Modal.jsx": {
-    "file": "assets/Modal-uOWZuDyS.js",
+    "file": "assets/Modal-ClxeGkIS.js",
     "name": "Modal",
     "src": "resources/js/Components/Modal.jsx",
     "isEntry": true,
@@ -2344,10 +2349,10 @@
     ]
   },
   "resources/js/Components/Test/Email.jsx": {
-    "file": "assets/Email-BGMZsfq6.js",
+    "file": "assets/Email-DLJQnew_.js",
     "name": "Email",
     "src": "resources/js/Components/Test/Email.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2359,15 +2364,17 @@
     ]
   },
   "resources/js/Components/Test/Fragrance.jsx": {
-    "file": "assets/Fragrance-Dxjull-t.js",
+    "file": "assets/Fragrance-B9J_XAm4.js",
     "name": "Fragrance",
     "src": "resources/js/Components/Test/Fragrance.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
+      "_tippy-react.esm-CHhA99mn.js",
       "_index-B80Lgev0.js",
       "_UserFormulasRest-CUuZlsfm.js",
       "_main-B2CtU6ez.js",
+      "_index-DO3Aws4m.js",
       "_BasicRest-Dr9i-95X.js",
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js"
     ]
@@ -2419,10 +2426,10 @@
     ]
   },
   "resources/js/Components/Test/ScalpType.jsx": {
-    "file": "assets/ScalpType-CpPx52vs.js",
+    "file": "assets/ScalpType-BgZeougA.js",
     "name": "ScalpType",
     "src": "resources/js/Components/Test/ScalpType.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2592,7 +2599,7 @@
     ]
   },
   "resources/js/Components/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
+    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2733,7 +2740,7 @@
     ]
   },
   "resources/js/Formula.jsx": {
-    "file": "assets/Formula-ofyrwxQ4.js",
+    "file": "assets/Formula-BBHmFYNR.js",
     "name": "Formula",
     "src": "resources/js/Formula.jsx",
     "isEntry": true,
@@ -2751,6 +2758,7 @@
       "_UserFormulasRest-CUuZlsfm.js",
       "_sweetalert2.all-Dh0rZL5X.js",
       "_CouponsRest-CF_zR6Xf.js",
+      "_places-DAXM8Qkz.js",
       "_createLucideIcon-Cx5eUsrb.js",
       "_index-DO3Aws4m.js",
       "resources/js/Components/Tailwind/Base.jsx",

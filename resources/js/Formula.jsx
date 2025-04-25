@@ -9,7 +9,7 @@ import SelectProduct from './Components/Product/SelectProduct';
 import Checkout from './Components/Product/Checkout';
 import { Local } from 'sode-extend-react';
 
-const Formula = ({ user_formula, other_formulas, items, defaultColors, publicKey, session, bundles, planes }) => {
+const Formula = ({ user_formula, other_formulas, items, defaultColors, publicKey, session, bundles, planes, free_shipping, free_shipping_minimum_amount, free_shipping_amount, free_shipping_zones, free_shipping_banner, }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [otherFormulas, setOtherFormulas] = useState(other_formulas.sort((a, b) => a.created_at < b.created_at ? 1 : -1))
@@ -30,7 +30,15 @@ const Formula = ({ user_formula, other_formulas, items, defaultColors, publicKey
   const pages = [
     {
       name: 'Select Product',
-      component: <SelectProduct formula={user_formula} otherFormulas={otherFormulas} setOtherFormulas={setOtherFormulas} items={items} goToNextPage={goToNextPage} bundles={bundles} />,
+      component: <SelectProduct
+        formula={user_formula}
+        otherFormulas={otherFormulas}
+        setOtherFormulas={setOtherFormulas}
+        items={items}
+        goToNextPage={goToNextPage}
+        bundles={bundles}
+        freeShipping={free_shipping}
+        freeShippingBannerText={free_shipping_banner} />,
     },
     {
       name: 'Select Color',
@@ -42,7 +50,20 @@ const Formula = ({ user_formula, other_formulas, items, defaultColors, publicKey
     },
     {
       name: 'Checkout',
-      component: <Checkout formula={user_formula} otherFormulas={otherFormulas} goToPrevPage={goToPrevPage} publicKey={publicKey} selectedPlan={selectedPlan} goToNextPage={goToNextPage} bundles={bundles} planes={planes} session={session} />,
+      component: <Checkout
+        formula={user_formula}
+        otherFormulas={otherFormulas}
+        goToPrevPage={goToPrevPage}
+        publicKey={publicKey}
+        selectedPlan={selectedPlan}
+        goToNextPage={goToNextPage}
+        bundles={bundles}
+        planes={planes}
+        session={session}
+        freeShipping={free_shipping}
+        freeShippingMinimumAmount={free_shipping_minimum_amount}
+        freeShippingAmount={free_shipping_amount}
+        freeShippingZones={free_shipping_zones} />,
     }
   ];
 
