@@ -132,7 +132,7 @@ class SaleController extends Controller
 
             $delivery = 0;
             $free_shipping = General::select(['description'])->where('correlative', 'free_shipping')->first()->description ?? 'false';
-            if ($free_shipping == 'true') {
+            if ($free_shipping == 'true' && !$renewalJpa) {
                 $free_shipping_zones = General::select(['description'])->where('correlative', 'free_shipping_zones')->first()->description ?? 'metropolitana';
                 if (str_contains($free_shipping_zones, $sale['department_code'])) {
                     $free_shipping_minimum_amount = General::select(['description'])->where('correlative', 'free_shipping_minimum_amount')->first()->description ?? '100';

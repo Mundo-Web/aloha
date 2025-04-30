@@ -117,7 +117,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
 
   let delivery = 0
 
-  if (freeShipping == 'true') {
+  if (freeShipping == 'true' && !selectedPlan) {
     for (const zone of freeShippingZones.split(',')) {
       if ((totalPrice - bundleDiscount) >= freeShippingMinimumAmount) {
         places[zone].delivery = 'Gratis'

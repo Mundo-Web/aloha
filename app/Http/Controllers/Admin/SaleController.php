@@ -9,6 +9,8 @@ use App\Models\Sale;
 use App\Models\Status;
 use Exception;
 use Illuminate\Http\Request;
+use SoDe\Extend\File;
+use SoDe\Extend\JSON;
 use SoDe\Extend\Response;
 
 class SaleController extends BasicController
@@ -72,9 +74,12 @@ class SaleController extends BasicController
             ->where('status', true)
             ->get();
 
+        $phone_prefixes = JSON::parse(File::get('../storage/app/utils/phone_prefixes.json'));
+
         return [
             'statuses' => $statusesJpa,
-            'items' => $itemsJpa
+            'items' => $itemsJpa,
+            'phone_prefixes' => $phone_prefixes
         ];
     }
 

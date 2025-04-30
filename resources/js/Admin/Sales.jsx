@@ -18,7 +18,7 @@ import places from '../Components/Product/components/places.json';
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
 
-const Sales = ({ statuses, items }) => {
+const Sales = ({ statuses, items, phone_prefixes }) => {
   const gridRef = useRef()
   const detailsModalRef = useRef()
   const modalRef = useRef()
@@ -165,15 +165,15 @@ const Sales = ({ statuses, items }) => {
             onClick: () => $(gridRef.current).dxDataGrid('instance').refresh()
           }
         });
-        // container.unshift({
-        //   widget: 'dxButton', location: 'after',
-        //   options: {
-        //     icon: 'plus',
-        //     hint: 'Agrega una venta manual',
-        //     text: 'Nueva venta',
-        //     onClick: () => $(modalRef.current).modal('show')
-        //   }
-        // });
+        container.unshift({
+          widget: 'dxButton', location: 'after',
+          options: {
+            icon: 'plus',
+            hint: 'Agrega una venta manual',
+            text: 'Nueva venta',
+            onClick: () => $(modalRef.current).modal('show')
+          }
+        });
       }}
       exportable
       pageSize={25}
@@ -247,7 +247,6 @@ const Sales = ({ statuses, items }) => {
                   marginBottom: '4px'
                 }}>{data.status.name}</span>
               </Tippy>
-              {/* <small className='d-block text-muted text-center'>{data.status.description}</small> */}
             </>)
           }
         },
@@ -257,12 +256,6 @@ const Sales = ({ statuses, items }) => {
           dataType: 'number',
           width: '100px',
           cellTemplate: (container, { data }) => {
-            // const amount = Number(data.total_cmount) || 0
-            // const delivery = Number(data.delivery) || 0
-            // const bundle_discount = Number(data.bundle_discount) || 0
-            // const renewal_discount = Number(data.renewal_discount) || 0
-            // const coupon_discount = Number(data.coupon_discount) || 0
-            // container.text(`S/. ${Number2Currency(amount + delivery - bundle_discount - renewal_discount - coupon_discount)}`);
             container.text(`S/. ${Number2Currency(data.total_amount)}`);
           }
         },
@@ -574,7 +567,160 @@ const Sales = ({ statuses, items }) => {
     <Modal modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter>
       <form onSubmit={onModalSubmit}>
         <div className="row">
-          <div className="col-12 mb-4">
+          <div className="col-md-6">
+            <h4 className='mt-0'>Datos del cliente</h4>
+            <div className="row">
+              <div className="col-md-6 mb-2">
+                <label className="form-label">
+                  Nombres
+                  <b className='text-danger ms-1' children='*' />
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sale.name}
+                  onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="col-md-6 mb-2">
+                <label className="form-label">
+                  Apellidos
+                  <b className='text-danger ms-1' children='*' />
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sale.lastname}
+                  onChange={(e) => setSale(old => ({ ...old, lastname: e.target.value }))}
+                  required
+                />
+              </div>
+            </div>
+            <div className="mb-2">
+              <label className="form-label">
+                Email
+                <b className='text-danger ms-1' children='*' />
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                value={sale.email}
+                onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
+                required
+              />
+            </div>
+            <label htmlFor="" className='form-label'>
+              Celular
+              <b className='text-danger ms-1' children='*' />
+            </label>
+            <div className="row">
+              <div className="col-md-4 mb-2">
+                <select name="" id="" className='form-select'>
+                  {
+                    phone_prefixes
+                      .sort((a, b) => a.country.localeCompare(b.country))
+                      .map((prefix, index) => {
+                        return <option
+                          key={index}
+                          value={prefix.realCode}
+                          data-code={prefix.beautyCode}
+                          data-flag={prefix.flag}
+                        >
+                          {prefix.country}
+                        </option>
+                      })
+                  }
+                </select>
+              </div>
+              <div className="col-md-8 mb-2">
+                <input
+                  type="tel"
+                  className="form-control"
+                  value={sale.phone}
+                  onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label className="form-label">Departamento *</label>
+              <select
+                className="form-select"
+                value={sale.department}
+                onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
+                required
+              >
+                <option value="">Seleccionar departamento</option>
+                {Object.keys(places ?? {}).map((key) => (
+                  <option key={key} value={key}>{places?.[key].name}</option>
+                ))}
+              </select>
+            </div>
+            {
+              places?.[sale.department] && (
+                <>
+                  {
+                    places?.[sale.department]?.items ?
+                      <div className="mb-3">
+                        <label className="form-label">Provincia *</label>
+                        <select
+                          className="form-select"
+                          value={sale.province}
+                          onChange={(e) => {
+                            setSale(old => ({
+                              ...old,
+                              province: e.target.value,
+                              district: '' // Resetear el distrito cuando cambia la provincia
+                            }))
+                          }}
+                          required
+                        >
+                          <option value="">Seleccionar provincia</option>
+                          {places?.[sale.department]?.items?.map((province) => (
+                            <option key={province} value={province}>{province}</option>
+                          ))}
+                        </select>
+                      </div>
+                      : <div className="mb-3">
+                        <label className="form-label">Seleccionar distrito *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={sale.district}
+                          onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+                          required
+                        />
+                      </div>
+                  }
+
+                  <div className="mb-3">
+                    <label className="form-label">Dirección *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={sale.address}
+                      onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div className="">
+
+                    <label className="form-label">Referencia</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={sale.reference}
+                      onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+                    />
+                  </div>
+                </>
+              )
+            }
+          </div>
+          <div className="col-12">
             <h4>Items</h4>
             <div className="table-responsive">
               <table className="table table-centered">
@@ -640,7 +786,11 @@ const Sales = ({ statuses, items }) => {
                           required
                         />
                       </td>
-                      <td>S/. {(item.price * item.quantity).toFixed(2)}</td>
+                      <td>
+                        <div className='text-nowrap'>
+                          S/. {Number2Currency(item.price * item.quantity)}
+                        </div>
+                      </td>
                       <td>
                         <button
                           type="button"
@@ -670,124 +820,6 @@ const Sales = ({ statuses, items }) => {
                 </tfoot>
               </table>
             </div>
-          </div>
-
-          <div className="col-md-6">
-            <div className="mb-3">
-              <label className="form-label">Nombres *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={sale.name}
-                onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Apellidos *</label>
-              <input
-                type="text"
-                className="form-control"
-                value={sale.lastname}
-                onChange={(e) => setSale(old => ({ ...old, lastname: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Email *</label>
-              <input
-                type="email"
-                className="form-control"
-                value={sale.email}
-                onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Teléfono *</label>
-              <input
-                type="tel"
-                className="form-control"
-                value={sale.phone}
-                onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="mb-3">
-              <label className="form-label">Departamento *</label>
-              <select
-                className="form-select"
-                value={sale.department}
-                onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
-                required
-              >
-                <option value="">Seleccionar departamento</option>
-                {Object.keys(places ?? {}).map((key) => (
-                  <option key={key} value={key}>{places?.[key].name}</option>
-                ))}
-              </select>
-            </div>
-            {
-              places?.[sale.department] && (
-                <>
-                  {
-                    places?.[sale.department]?.items ?
-                      <div className="mb-3">
-                        <label className="form-label">Provincia *</label>
-                        <select
-                          className="form-select"
-                          value={sale.province}
-                          onChange={(e) => {
-                            setSale(old => ({
-                              ...old,
-                              province: e.target.value,
-                              district: '' // Resetear el distrito cuando cambia la provincia
-                            }))
-                          }}
-                          required
-                        >
-                          <option value="">Seleccionar provincia</option>
-                          {places?.[sale.department]?.items?.map((province) => (
-                            <option key={province} value={province}>{province}</option>
-                          ))}
-                        </select>
-                      </div>
-                      : <div className="mb-3">
-                        <label className="form-label">Seleccionar distrito *</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={sale.district}
-                          onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
-                          required
-                        />
-                      </div>
-                  }
-
-                  <div className="mb-3">
-                    <label className="form-label">Dirección *</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={sale.address}
-                      onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Referencia</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={sale.reference}
-                      onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
-                    />
-                  </div>
-                </>
-              )
-            }
           </div>
         </div>
 
