@@ -378,7 +378,7 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
                   }
                 </tbody>
               </table>
-              <button className='btn btn-xs btn-dark' type='button' copy={`Nombres: ${saleLoaded?.fullname}\nEmail: ${saleLoaded?.email}\nTeléfono: ${saleLoaded?.phone}\nDirección: ${saleLoaded?.address} ${saleLoaded?.number}\n_${saleLoaded?.province ?? saleLoaded?.district}, ${saleLoaded?.department}, ${saleLoaded?.country} ${saleLoaded?.zip_code ? `- ${saleLoaded?.zip_code}` : ''}_`}>
+              <button className='btn btn-xs btn-dark' type='button' copy={`Nombres: ${saleLoaded?.fullname}\nEmail: ${saleLoaded?.email}\nTeléfono: ${saleLoaded?.phone}\nDirección: ${saleLoaded?.address} ${saleLoaded?.number}${saleLoaded?.zip_code ? `\nCódigo Postal: ${saleLoaded?.zip_code}` : ''}\nUbicación: ${saleLoaded?.province ?? saleLoaded?.district}, ${saleLoaded?.department}, ${saleLoaded?.country}${saleLoaded?.reference ? `\nReferencia: ${saleLoaded?.reference}` : ''}${saleLoaded?.comment ? `\nComentario: ${saleLoaded?.comment}` : ''}${(saleLoaded?.billing_type && saleLoaded?.billing_number) ? `\nComprobante: ${saleLoaded.billing_type.toTitleCase()}\n${saleLoaded.billing_type == 'boleta' ? 'DNI' : 'RUC'}: ${saleLoaded?.billing_number}` : ''}`}>
                 <i className='mdi mdi-content-copy me-1'></i>
                 Copiar
               </button>
