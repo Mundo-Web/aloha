@@ -553,7 +553,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                           </Tippy>
                           <small className='block text-xs font-light'>{coupon.name} <Tippy content={coupon.description}>
                             <i className='mdi mdi-information-outline ms-1'></i>
-                          </Tippy> ({coupon.type == 'fixed_amount' ? `S/ ${Number2Currency(coupon.amount)}` : `-${Math.round(coupon.amount * 100) / 100}%`})</small>
+                          </Tippy> ({coupon.type == 'fixed_amount' ? `S/ -${Number2Currency(coupon.amount)}` : `-${Math.round(coupon.amount * 100) / 100}%`})</small>
                         </span>
                         <span>S/ -{Number2Currency(couponDiscount)}</span>
                       </div>
