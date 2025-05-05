@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import Modal from "../Modal"
 import SelectFormGroup from "../form/SelectFormGroup";
 import { renderToString } from "react-dom/server";
+import InputFormGroup from "../form/InputFormGroup";
 
 const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
 
@@ -181,16 +182,7 @@ const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
         </div>
         <div className="col-md-6">
           <h4 className='mt-0'>Dirección del cliente</h4>
-          <SelectFormGroup label='Pais' dropdownParent='#new-sale-modal'>
-            {
-              phone_prefixes.sort((a, b) => a.country.localeCompare(b.country))
-                .map((prefix, index) => (
-                  <option key={index} value={prefix.country}>
-                    {prefix.country}
-                  </option>
-                ))
-            }
-          </SelectFormGroup>
+          <InputFormGroup label='Pais' value='Perú' disabled/>
         </div>
 
         <div className="col-12 mt-4">

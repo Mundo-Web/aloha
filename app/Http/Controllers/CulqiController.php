@@ -132,7 +132,7 @@ class CulqiController extends Controller
   private function createCharge($token, $sale): void
   {
     // Validate required sale data
-    if (!$sale->amount || !$sale->code || !$sale->email || !$sale->address || 
+    if (!$sale->total_amount || !$sale->code || !$sale->email || !$sale->address || 
         !$sale->name || !$sale->lastname || !$sale->phone) {
       throw new Exception('Missing required sale information');
     }
@@ -142,11 +142,11 @@ class CulqiController extends Controller
       throw new Exception('Invalid token information');
     }
 
-    $amount = $sale->amount;
-    if (isset($sale->delivery)) $amount += $sale->delivery;
-    if (isset($sale->bundle_discount)) $amount -= $sale->bundle_discount;
-    if (isset($sale->renewal_discount)) $amount -= $sale->renewal_discount;
-    if (isset($sale->coupon_discount)) $amount -= $sale->coupon_discount;
+    $amount = $sale->total_amount;
+    // if (isset($sale->delivery)) $amount += $sale->delivery;
+    // if (isset($sale->bundle_discount)) $amount -= $sale->bundle_discount;
+    // if (isset($sale->renewal_discount)) $amount -= $sale->renewal_discount;
+    // if (isset($sale->coupon_discount)) $amount -= $sale->coupon_discount;
 
     // Validate final amount
     if ($amount <= 0) {
