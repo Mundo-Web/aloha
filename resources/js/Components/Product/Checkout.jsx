@@ -8,69 +8,6 @@ import CouponsRest from '../../Actions/CouponsRest';
 import Tippy from '@tippyjs/react';
 import places from './components/places.json';
 
-// const places = {
-//   'metropolitana': {
-//     name: 'Lima Metropolitana',
-//     delivery: 'Gratis',
-//     items: [
-//       'Ate',
-//       'Barranco',
-//       'Breña',
-//       'Cercado de Lima',
-//       'Chorrillos',
-//       'Comas',
-//       'El Agustino',
-//       'Independencia',
-//       'Jesús María',
-//       'La Molina',
-//       'La Victoria',
-//       'Lince',
-//       'Los Olivos',
-//       'Magdalena del Mar',
-//       'Miraflores',
-//       'Pueblo Libre',
-//       'Rímac',
-//       'San Borja',
-//       'San Isidro',
-//       'San Juan de Lurigancho',
-//       'San Juan de Miraflores',
-//       'San Luis',
-//       'San Martin de Porres',
-//       'San Miguel',
-//       'Santa Anita',
-//       'Santiago de Surco',
-//       'Surquillo',
-//       'Villa el Salvador',
-//       'Villa Maria del Triunfo'
-//     ],
-//   },
-//   'alrededores': {
-//     name: 'Lima Alrededores',
-//     delivery: 'Por Shalom - Pago en destino',
-//     items: [
-//       'Ancón',
-//       'Carabayllo',
-//       'Chaclacayo',
-//       'Cieneguilla',
-//       'Lurín',
-//       'Pachacámac',
-//       'Pucusana',
-//       'Puente Piedra',
-//       'Punta Hermosa',
-//       'Punta Negra',
-//       'San Bartolo',
-//       'Lurigancho (Chosica)',
-//       'Santa María del Mar',
-//       'Santa Rosa'
-//     ],
-//   },
-//   'provincias': {
-//     name: 'Provincias',
-//     delivery: 'Por Shalom - Pago en destino',
-//     items: '',
-//   }
-// }
-
 const couponRest = new CouponsRest()
 
 const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPlan, bundles, planes, session, freeShipping, freeShippingMinimumAmount, freeShippingAmount, freeShippingZones, }) => {
@@ -153,7 +90,14 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
   const plan = planes.find(x => x.id == selectedPlan)
   const planDiscount = (totalPrice - bundleDiscount) * (plan?.percentage || 0)
 
-  const couponDiscount = (totalPrice - bundleDiscount - planDiscount) * (coupon?.amount || 0) / 100
+  let couponDiscount = 0
+  if (coupon) {
+    if (coupon.type == 'fixed_amount') {
+      couponDiscount = coupon?.amount || 0
+    } else if (coupon.type == 'percentage') {
+      couponDiscount = (totalPrice - bundleDiscount - planDiscount) * (coupon?.amount || 0) / 100
+    }
+  }
 
   const getSale = () => {
     let department = 'Lima';
@@ -274,23 +218,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                   VOLVER
                 </button>
                 <h2 className="mb-4 text-xl font-semibold">Información del cliente</h2>
-                <div className="mb-4">
-                  <label className="mb-1 block text-sm font-medium " htmlFor="email">
-                    Dirección de correo electrónico <b className='text-red-500'>*</b>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
-                    value={sale.email}
-                    placeholder='Dirección de correo electrónico'
-                    onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
-                    required
-                    disabled
-                  />
-                </div>
-                <h2 className="mb-4 text-xl font-semibold">Detalles de facturación</h2>
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2 mb-4">
                   <div>
                     <label className="mb-1 block text-sm font-medium " htmlFor="firstName">
                       Nombre <b className='text-red-500'>*</b>
@@ -318,6 +246,39 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                     />
                   </div>
                 </div>
+                <div className="mb-4">
+                  <label className="mb-1 block text-sm font-medium " htmlFor="email">
+                    Dirección de correo electrónico <b className='text-red-500'>*</b>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
+                    value={sale.email}
+                    placeholder='Dirección de correo electrónico'
+                    onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
+                    required
+                    disabled
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="mb-1 block text-sm font-medium " htmlFor="phone">
+                    Teléfono/Celular <b className='text-red-500'>*</b>
+                  </label>
+                  <div className='flex border rounded-md border-gray-300'>
+                    <span className='py-2 px-3 border-e'>+51</span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      className="w-full p-2 text-sm outline-none"
+                      value={sale.phone}
+                      onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
+                      placeholder='900000000'
+                      required
+                    />
+                  </div>
+                </div>
+                <h2 className="mb-4 text-xl font-semibold">Dirección del cliente</h2>
                 <div className="mt-4">
                   <label className="mb-1 block text-sm font-medium " htmlFor="country">
                     País / Región <b className='text-red-500'>*</b>
@@ -478,23 +439,6 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                   />
                 </div>
                 <div className="mt-4">
-                  <label className="mb-1 block text-sm font-medium " htmlFor="phone">
-                    Teléfono/Celular <b className='text-red-500'>*</b>
-                  </label>
-                  <div className='flex border rounded-md border-gray-300'>
-                    <span className='py-2 px-3 border-e'>+51</span>
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="w-full p-2 text-sm outline-none"
-                      value={sale.phone}
-                      onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
-                      placeholder='900000000'
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="mt-4">
                   <label className="mb-1 block text-sm font-medium " htmlFor="orderNotes">
                     Notas del pedido (opcional)
                   </label>
@@ -609,7 +553,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                           </Tippy>
                           <small className='block text-xs font-light'>{coupon.name} <Tippy content={coupon.description}>
                             <i className='mdi mdi-information-outline ms-1'></i>
-                          </Tippy> (-{Math.round(coupon.amount * 100) / 100}%)</small>
+                          </Tippy> ({coupon.type == 'fixed_amount' ? `S/ ${Number2Currency(coupon.amount)}` : `-${Math.round(coupon.amount * 100) / 100}%`})</small>
                         </span>
                         <span>S/ -{Number2Currency(couponDiscount)}</span>
                       </div>
@@ -699,7 +643,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                   <button type='submit' className="mt-6 w-full rounded-md bg-[#C5B8D4] py-3 text-white disabled:cursor-not-allowed" disabled={loading}>
                     <i className='mdi mdi-lock me-1'></i>
                     Pagar Ahora
-                    <small className='ms-1'>(S/ {Number2Currency(totalPrice - bundleDiscount - planDiscount - couponDiscount)})</small>
+                    <small className='ms-1'>(S/ {Number2Currency(Math.round((totalPrice - bundleDiscount - planDiscount - couponDiscount + delivery) * 10) / 10)})</small>
                   </button>
                 </div>
               </div>

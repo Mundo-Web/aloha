@@ -52,11 +52,16 @@
 
     {{-- icons --}}
     <link href="/lte/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 
     @vite('resources/js/' . $route)
     @inertiaHead
 
     <style>
+        .font-emoji {
+            font-family: "Noto Color Emoji", sans-serif;
+        }
+
         .font-bold {
             font-weight: bold;
         }
