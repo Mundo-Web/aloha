@@ -18,7 +18,7 @@ const Home = ({
   newClients,
   repurchaseRate, topCities, topOtherCities,
   topColors, fragranceStats,
-  treatmentStats, scalpTypeStats, hairTypeStats, hairGoalsStats
+  treatmentStats, scalpTypeStats, hairTypeStats, hairThicknessStats, hairGoalsStats
 }) => {
 
   const [timeFrame, setTimeFrame] = useState('days');
@@ -47,9 +47,20 @@ const Home = ({
         data: timeFrame === 'days' ? sales.map(item => item.count) :
           timeFrame === 'months' ? sales.map(item => item.count) :
             sales.map(item => item.count),
-        backgroundColor: 'rgba(16, 196, 105, 0.5)',
-        borderColor: 'rgba(16, 196, 105, 0.75)',
+        backgroundColor: 'rgba(24, 138, 226, 0.5)',
+        borderColor: 'rgba(24, 138, 226, 0.75)',
         fill: true,
+      },
+      {
+        label: 'Monto total (S/.)',
+        data: timeFrame === 'days' ? sales.map(item => item.total_amount) :
+          timeFrame === 'months' ? sales.map(item => item.total_amount) :
+            sales.map(item => item.total_amount),
+        type: 'line',
+        borderColor: 'rgba(16, 196, 105, 0.75)',
+        borderDash: [4, 4],
+        fill: false,
+        yAxisID: 'y1'
       }
     ],
   };
@@ -151,7 +162,21 @@ const Home = ({
                 </div>
               </div>
               <h4 className="header-title mb-3">Ventas</h4>
-              <Bar data={data} height={100} />
+              <Bar data={data} height={100} options={{
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    position: 'left',
+                  },
+                  y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: {
+                      drawOnChartArea: false,
+                    },
+                  }
+                }
+              }} />
             </div>
           </div>
         </div>
@@ -228,6 +253,29 @@ const Home = ({
                     }}
                   />
                 </div>
+              </div>
+              <hr className='my-2' />
+              <h5 className="mt-0">Grosor de cabello</h5>
+              <div className="table-responsive">
+                <table className="table table-sm table-bordered mb-0">
+                  <tbody>
+                    {hairThicknessStats.map((thickness, index) => (
+                      <tr key={index} style={{ fontWeight: index === 0 ? 'bold' : 'normal' }}>
+                        <td>
+                          <div className="d-flex justify-content-between">
+                            <span>
+                              {thickness.hair_thickness?.description?.toTitleCase() ?? 'Sin especificar'}
+                            </span>
+                            <span>
+                              {index === 0 && <i className='mdi mdi-crown me-1 text-warning'></i>}
+                              {((thickness.count / hairThicknessStats.reduce((acc, item) => acc + item.count, 0)) * 100).toFixed(1)}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
               <hr className='my-2' />
               <h5 className="mt-0">Objetivos capilares</h5>

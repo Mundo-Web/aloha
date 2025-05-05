@@ -166,6 +166,17 @@ class HomeController extends BasicController
             ->orderBy('count', 'DESC')
             ->get();
 
+        $hairThicknessStats = UserFormula::with(['hairThickness'])
+            ->selectRaw('hair_thickness, COUNT(*) as count')
+            ->join('sales','sales.user_formula_id', 'user_formulas.id')
+            ->join('statuses','statuses.id', '=','sales.status_id')
+            ->whereNotNull('hair_thickness')
+            ->where('statuses.is_ok', true)
+            ->where('sales.created_at', '>=', now()->subDays(30))
+            ->groupBy('hair_thickness')
+            ->orderBy('count', 'DESC')
+            ->get();
+
         $fragranceStats = UserFormula::with(['fragrance'])
             ->selectRaw('fragrance_id, COUNT(*) as count')
             ->join('sales', 'sales.user_formula_id', 'user_formulas.id')
@@ -206,6 +217,7 @@ class HomeController extends BasicController
             'treatmentStats' => $treatmentStats,
             'scalpTypeStats' => $scalpTypeStats,
             'hairTypeStats' => $hairTypeStats,
+            'hairThicknessStats' => $hairThicknessStats,
             'fragranceStats' => $fragranceStats,
             'hairGoalsStats' => $hairGoalsStats
         ];
@@ -221,6 +233,7 @@ class HomeController extends BasicController
                         ->selectRaw('
                             YEAR(sales.created_at) as year, 
                             COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN sales.total_amount ELSE 0 END) as total_amount,
                             SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
                         ')
                         ->groupBy('year')
@@ -234,6 +247,7 @@ class HomeController extends BasicController
                             MONTH(sales.created_at) as month, 
                             YEAR(sales.created_at) as year, 
                             COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN sales.total_amount ELSE 0 END) as total_amount,
                             SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
                         ')
                         ->groupBy('month', 'year')
@@ -247,6 +261,7 @@ class HomeController extends BasicController
                         ->selectRaw('
                             DATE(sales.created_at) as date, 
                             COUNT(*) as total_count,
+                            SUM(CASE WHEN statuses.is_ok = true THEN sales.total_amount ELSE 0 END) as total_amount,
                             SUM(CASE WHEN statuses.is_ok = true THEN 1 ELSE 0 END) as count
                         ')
                         ->groupBy('date')

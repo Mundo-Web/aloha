@@ -435,7 +435,7 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
               <div className="d-flex justify-content-between">
                 <b>Total:</b>
                 <span>
-                  <strong>S/ {Number2Currency(totalAmount)}</strong>
+                  <strong>S/ {Number2Currency(saleLoaded?.total_amount)}</strong>
                 </span>
               </div>
             </div>
