@@ -415,7 +415,7 @@ const Checkout = ({ formula, otherFormulas, goToPrevPage, publicKey, selectedPla
                         Número <b className='text-red-500'>*</b>
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         id="number"
                         className="w-full rounded-md border border-gray-300 p-2 text-sm outline-none"
                         value={sale.number}

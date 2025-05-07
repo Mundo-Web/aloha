@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react"
 
-const SelectFormGroup = ({ id, col, className, label, specification, eRef, required = false, children, dropdownParent, noMargin = false, multiple = false, disabled = false, onChange = () => { },
+const SelectFormGroup = ({ id, col, className, label, specification, eRef, value = null, required = false, children, dropdownParent, noMargin = false, multiple = false, disabled = false, onChange = () => { },
   templateResult,
   templateSelection,
   minimumInputLength = 0,
+  minimumResultsForSearch,
+  effectWith = [],
   tags
 }) => {
 
@@ -16,10 +18,11 @@ const SelectFormGroup = ({ id, col, className, label, specification, eRef, requi
       templateResult,
       templateSelection,
       minimumInputLength,
+      minimumResultsForSearch,
       tags
     })
     $(eRef.current).on('change', onChange)
-  }, [dropdownParent])
+  }, [dropdownParent, value, ...effectWith])
 
   return <div className={`form-group ${col} ${!noMargin && 'mb-2'}`}>
     <label htmlFor={id} className="form-label mb-1">
@@ -34,7 +37,7 @@ const SelectFormGroup = ({ id, col, className, label, specification, eRef, requi
         </>
       }
     </label>
-    <select ref={eRef} id={id} required={required} className={`form-control ${className}`} style={{ width: '100%' }} disabled={disabled} multiple={multiple}>
+    <select ref={eRef} id={id} required={required} className={`form-control ${className}`} style={{ width: '100%' }} disabled={disabled} multiple={multiple} value={value}>
       {children}
     </select>
   </div>

@@ -41,6 +41,7 @@ class SendSaleEmail implements ShouldQueue
         'formula.hasTreatment',
         'formula.scalpType',
         'formula.hairType',
+        'formula.hairThickness',
         'formula.fragrance',
         'status',
         'details',

@@ -19,6 +19,7 @@ class WhatsAppController extends Controller
                 'formula.hasTreatment',
                 'formula.scalpType',
                 'formula.hairType',
+                'formula.hairThickness',
                 'formula.fragrance',
                 'status',
                 'details',
@@ -42,6 +43,11 @@ class WhatsAppController extends Controller
             $doc = Text::toTitleCase($sale->billing_type);
             $type_document = $sale->billing_type == 'boleta' ? 'DNI' : 'RUC';
 
+            $reference = '';
+            if ($sale->reference) $reference = "\n*Referencia*: {$sale->reference}";
+            $comment = '';
+            if ($sale->comment) $comment = "\n*Comentario*: {$sale->comment}";
+
             try {
                 if ($send2client) {
                     new Fetch(env('WA_URL') . '/api/send', [
@@ -52,7 +58,7 @@ class WhatsAppController extends Controller
                         'body' => [
                             'from' => env('APP_CORRELATIVE'),
                             'to' => ['51' . Text::keep($sale->phone, '0123456789')],
-                            'content' => "Hola *{$onlyName}*! nos llegó tu pedido por la web 🥰\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}",
+                            'content' => "Hola *{$onlyName}*! nos llegó tu pedido por la web 🥰\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}\n*Dirección*: {$sale->address} {$sale->number}, {$address}{$reference}{$comment}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}",
                             'html' => $content
                         ]
                     ]);
@@ -82,7 +88,7 @@ class WhatsAppController extends Controller
                         'body' => [
                             'from' => env('APP_CORRELATIVE'),
                             'to' => [env('WAGROUP_VENTAS_ID')],
-                            'content' => "Pedido `{$sale->code}`\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}\n*Dirección*: {$sale->address} {$sale->number}, {$address}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}\n\n> " . $sale->created_at->format('Y-m-d H:i:s'),
+                            'content' => "Pedido `{$sale->code}`\n\n*Nombre*: {$sale->name} {$sale->lastname}\n*Correo electrónico*: {$sale->email}\n*Teléfono*: {$sale->phone}\n*Dirección*: {$sale->address} {$sale->number}, {$address}{$reference}{$comment}\n*Comprobante*: {$doc}\n*{$type_document}*: {$sale->billing_number}\n\n> " . $sale->created_at->format('Y-m-d H:i:s'),
                             'html' => $content
                         ]
                     ]);

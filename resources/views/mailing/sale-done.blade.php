@@ -56,6 +56,14 @@
             </p>
             <p>
                 <b>
+                    <img src="https://vua.pe/assets/img/emojis/check.png" alt=""
+                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                    Grosor de cabello
+                </b>
+                {{ $sale->formula->hairThickness->description }}
+            </p>
+            <p>
+                <b>
                     <img src="https://vua.pe/assets/img/emojis/bulb.png" alt=""
                         style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
                     Objetivos
@@ -77,31 +85,41 @@
             style="color: #fff; padding: 10px 20px; border: 1px solid #fff; border-radius: 16px; width: max-content; margin-bottom: 10px;">
             Resumen de tu pedido</h2>
         <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+            @php
+                $lastFormula = $sale->user_formula_id;
+            @endphp
             @foreach ($sale->details as $detail)
-                <div style="width: 146.25px; background-color: #fff; border-radius: 16px; position: relative;">
-                    @if ($detail->quantity > 1)
-                        <span
-                            style="display: block; position: absolute; background-color: #9577B9; padding: 2px 10px; color: #fff; border-radius: 25px; right: 8px; top: 8px;">×{{ round($detail->quantity) }}</span>
-                    @endif
-                    @if (isset($detail->colors) && count($detail->colors) > 0)
-                        <img src="https://vua.pe/api/colors/media/{{ $detail->colors[0]['image'] }}"
-                            alt="{{ $detail->name }}"
-                            style="width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center;">
-                    @else
-                        <img src="https://vua.pe/api/items/media/{{ $detail->item->image }}" alt="{{ $detail->name }}"
-                            style="width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center;">
-                    @endif
-                    <div
-                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; gap: 5px;">
-                        <b style="text-align: center;">{{ $detail->name }}</b>
-                        <div style="display: flex; justify-content: center; gap: 5px;">
-                            @foreach ($detail->colors as $color)
-                                <span
-                                    style="display: block; width: 20px; height: 20px; background-color: {{ $color['hex'] }}; border: 1px solid #000; border-radius: 50%;"></span>
-                            @endforeach
-                        </div>
+                @if ($detail->user_formula_id != $lastFormula)
+                    @php
+                        $lastFormula = $detail->user_formula_id;
+                    @endphp
+        </div>
+        <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+            @endif
+            <div style="width: 146.25px; background-color: #fff; border-radius: 16px; position: relative;">
+                @if ($detail->quantity > 1)
+                    <span
+                        style="display: block; position: absolute; background-color: #9577B9; padding: 2px 10px; color: #fff; border-radius: 25px; right: 8px; top: 8px;">×{{ round($detail->quantity) }}</span>
+                @endif
+                @if (isset($detail->colors) && count($detail->colors) > 0)
+                    <img src="https://vua.pe/api/colors/media/{{ $detail->colors[0]['image'] }}"
+                        alt="{{ $detail->name }}"
+                        style="width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center;">
+                @else
+                    <img src="https://vua.pe/api/items/media/{{ $detail->item->image }}" alt="{{ $detail->name }}"
+                        style="width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center;">
+                @endif
+                <div
+                    style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 5px; gap: 5px;">
+                    <b style="text-align: center;">{{ $detail->name }}</b>
+                    <div style="display: flex; justify-content: center; gap: 5px;">
+                        @foreach ($detail->colors as $color)
+                            <span
+                                style="display: block; width: 20px; height: 20px; background-color: {{ $color['hex'] }}; border: 1px solid #000; border-radius: 50%;"></span>
+                        @endforeach
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
         <div

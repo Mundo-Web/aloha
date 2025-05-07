@@ -3,6 +3,8 @@ import Modal from "../Modal"
 import SelectFormGroup from "../form/SelectFormGroup";
 import { renderToString } from "react-dom/server";
 import InputFormGroup from "../form/InputFormGroup";
+import places from '../../../Components/Product/components/places.json';
+import TextareaFormGroup from "../form/TextareaFormGroup";
 
 const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
 
@@ -71,121 +73,162 @@ const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
         <div className="col-md-6">
           <h4 className='mt-0'>Información del cliente</h4>
           <div className="row">
-            <div className="col-md-6 mb-2">
-              <label className="form-label">
-                Nombres
-                <b className='text-danger ms-1' children='*' />
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                value={sale.name}
-                onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="col-md-6 mb-2">
-              <label className="form-label">
-                Apellidos
-                <b className='text-danger ms-1' children='*' />
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                value={sale.lastname}
-                onChange={(e) => setSale(old => ({ ...old, lastname: e.target.value }))}
-                required
-              />
-            </div>
+            <InputFormGroup label='Nombres'
+              col='col-md-6'
+              value={sale.name}
+              onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+              required />
+            <InputFormGroup label='Apellidos'
+              col='col-md-6'
+              value={sale.name}
+              onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+              required />
           </div>
-          <div className="mb-2">
-            <label className="form-label">
-              Email
-              <b className='text-danger ms-1' children='*' />
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              value={sale.email}
-              onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))}
-              required
-            />
-          </div>
+          <InputFormGroup label='Email'
+            type="email"
+            value={sale.email}
+            onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))} // Implementar lógica para cambiar email
+            required />
           <label htmlFor="" className='form-label'>
             Celular
             <b className='text-danger ms-1' children='*' />
           </label>
           <div className="row">
-            <div className="col-md-4">
-              <SelectFormGroup
-                dropdownParent='#new-sale-modal'
-                minimumInputLength={-1}
-                templateResult={prefixTemplate}
-                templateSelection={prefixTemplate}>
-                {
-                  phone_prefixes
-                    .sort((a, b) => a.country.localeCompare(b.country))
-                    .map((prefix, index) => (
-                      <option
-                        key={index}
-                        value={prefix.realCode}
-                        data-code={prefix.beautyCode}
-                        data-flag={prefix.flag}
-                        data-country={prefix.country}
-                      >
-                        {prefix.beautyCode} {prefix.country}
-                      </option>
-                    ))
-                }
-              </SelectFormGroup>
-            </div>
-            <div className="col-md-8 mb-2">
-              <input
-                type="tel"
-                className="form-control"
-                value={sale.phone}
-                onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
-                required
-              />
-            </div>
+            <SelectFormGroup
+              col='col-md-4'
+              dropdownParent='#new-sale-modal'
+              minimumInputLength={-1}
+              templateResult={prefixTemplate}
+              templateSelection={prefixTemplate}
+              required>
+              {
+                phone_prefixes
+                  .sort((a, b) => a.country.localeCompare(b.country))
+                  .map((prefix, index) => (
+                    <option
+                      key={index}
+                      value={prefix.realCode}
+                      data-code={prefix.beautyCode}
+                      data-flag={prefix.flag}
+                      data-country={prefix.country}
+                    >
+                      {prefix.beautyCode} {prefix.country}
+                    </option>
+                  ))
+              }
+            </SelectFormGroup>
+            <InputFormGroup
+              col='col-md-8'
+              type="tel"
+              value={sale.phone}
+              onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
+              required />
           </div>
 
           <div className="mb-2">
-            <label className="form-label">
-              Origen de venta
-              <b className='text-danger ms-1' children='*' />
-            </label>
-            <select
-              className="form-select"
+            <SelectFormGroup
+              label='Origen de venta'
+              minimumResultsForSearch={-1}
+              dropdownParent='#new-sale-modal'
               value={sale.source}
               onChange={(e) => setSale(old => ({ ...old, source: e.target.value }))}
               required
             >
-              <option value="">Seleccionar origen</option>
+              <option value="">Elige una opción</option>
               <option value="llamada">Llamada telefónica</option>
               <option value="whatsapp">WhatsApp</option>
               <option value="presencial">Presencial</option>
               <option value="otro">Otro</option>
-            </select>
+            </SelectFormGroup>
           </div>
-
-          <div className="mb-3">
-            <label className="form-label">Comentario interno</label>
-            <textarea
-              className="form-control"
-              value={sale.internal_comment}
-              onChange={(e) => setSale(old => ({ ...old, internal_comment: e.target.value }))}
-              rows={3}
-              placeholder="Ingresa un comentario sobre por qué se está creando esta venta desde interno..."
-            ></textarea>
-          </div>
+          <TextareaFormGroup label='Comentario interno'
+            value={sale.comment}
+            onChange={(e) => setSale(old => ({...old, comment: e.target.value }))}
+            placeholder="Ingresa un comentario sobre por qué se está creando esta venta..."
+          />
         </div>
         <div className="col-md-6">
           <h4 className='mt-0'>Dirección del cliente</h4>
-          <InputFormGroup label='Pais' value='Perú' disabled/>
+          <InputFormGroup label='Pais' value='Perú' disabled required />
+          <SelectFormGroup label='Región / Provincia'
+            value={sale.department || ''}
+            onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
+            minimumResultsForSearch={-1}
+            dropdownParent='#new-sale-modal'
+            required
+          >
+            <option value=''>Elige una opción</option>
+            {
+              Object.keys(places).map((key, index) => {
+                return <option key={index} value={key}>{places[key].name}</option>
+              })
+            }
+          </SelectFormGroup>
+          {
+            places[sale.department] &&
+            <div className="row">
+              {
+                Array.isArray(places[sale.department].items)
+                  ? <SelectFormGroup
+                    label='Provincia'
+                    col='col-md-8'
+                    dropdownParent='#new-sale-modal'
+                    value={sale.province}
+                    effectWith={[sale.department]}
+                    onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
+                    required>
+                    <option value=''>Elige una opción</option>
+                    {
+                      places[sale.department].items.map((province, index) => {
+                        return <option key={index} value={province}>{province}</option>
+                      })
+                    }
+                  </SelectFormGroup>
+                  : <>
+                    <InputFormGroup label='Departamento'
+                      col='col-md-4'
+                      value={sale.province}
+                      onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
+                      required />
+                    <InputFormGroup label='Distrito'
+                      col='col-md-4'
+                      value={sale.district}
+                      onChange={(e) => setSale(old => ({ ...old, district: e.target.value }))}
+                      required />
+                  </>
+              }
+              <InputFormGroup label='Cód. Postal'
+                col='col-md-4'
+                value={sale.zip_code}
+                onChange={(e) => setSale(old => ({ ...old, zip_code: e.target.value }))}
+              />
+            </div>
+          }
+          <div className="row">
+            <InputFormGroup label='Dirección'
+              col={'col-md-8'}
+              value={sale.address}
+              onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+              required />
+            <InputFormGroup label='Número'
+              col={'col-md-4'}
+              type="number"
+              value={sale.number}
+              onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))}
+              required />
+          </div>
+          <InputFormGroup label='Apartamento, habitación, piso, etc.'
+            value={sale.reference}
+            onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+          />
+          <TextareaFormGroup label='Notas del pedido'
+            value={sale.additional_references}
+            placeholder='Notas sobre el pedido, por ejemplo, notas especiales para la entrega.'
+            onChange={(e) => setSale(old => ({...old, additional_references: e.target.value }))}
+          />
         </div>
 
-        <div className="col-12 mt-4">
+        <div className="col-12">
           <h4>Productos</h4>
           <div className="table-responsive">
             <table className="table table-centered table-nowrap">
