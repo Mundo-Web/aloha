@@ -140,7 +140,7 @@ class AuthController extends Controller
       $password = Controller::decode($request->password);
 
       $userJpa = User::where('email', $email)->first();
-      if (!$userJpa) throw new Exception('Este usuario que no existe');
+      if (!$userJpa) throw new Exception('Este usuario no existe, cree una cuenta nueva');
       if ($userJpa->status == null) throw new Exception('Este usuario se encuentra baneado del sistema');
       if (!$userJpa->status) throw new Exception('Este usuario se encuentra inactivo');
 
