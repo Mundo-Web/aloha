@@ -12,9 +12,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use SoDe\Extend\Crypto;
 use SoDe\Extend\Response;
+use SoDe\Extend\Text;
 use SoDe\Extend\Trace;
 use Spatie\Permission\Models\Role;
 
@@ -66,7 +68,12 @@ class AuthController extends Controller
         ])->assignRole($roleJpa->name);
 
         try {
-          Subscription::updateOrCreate(['description' => $userJpa->email], ['is_user' => true]);
+          Subscription::updateOrCreate([
+            'description' => $userJpa->email,
+            'name' => Text::getEmailProvider($userJpa->email)
+          ], [
+            'is_user' => true
+          ]);
         } catch (\Throwable $th) {
         }
 
@@ -153,14 +160,15 @@ class AuthController extends Controller
       }
 
       $request->session()->regenerate();
+
+      return Auth::user();
     });
     return response($response->toArray(), $response->status);
   }
 
   public function signup(Request $request): HttpResponse | ResponseFactory | RedirectResponse
   {
-    $response = new Response();
-    try {
+    $response = Response::simpleTryCatch(function () use ($request) {
       $request->validate([
         'name' => 'required|string|max:255',
         'lastname' => 'required|string|max:255',
@@ -191,28 +199,82 @@ class AuthController extends Controller
         'email' => $body['email'],
         'role' => $roleJpa->relative_id,
         'password' => Controller::decode($body['password']),
-        'confirmation_token' => Crypto::randomUUID(),
+        'confirmation_token' => $request->type == 'direct'
+          ? strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6))
+          : Crypto::randomUUID(),
         'notify_me' => $body['notify_me'],
         'token' => Crypto::randomUUID(),
       ]);
 
-      MailingController::simpleNotify('mailing.confirm-email', $preUserJpa->email, [
-        'title' => 'Confirmacion - ' . env('APP_NAME'),
-        'preUser' => $preUserJpa->toArray()
+      MailingController::simpleNotify(
+        $request->type == 'direct'
+          ? 'mailing.code-email'
+          : 'mailing.confirm-email',
+        $preUserJpa->email,
+        [
+          'title' => 'Confirmacion - ' . env('APP_NAME'),
+          'preUser' => $preUserJpa->toArray()
+        ]
+      );
+
+      return $preUserJpa->token;
+    });
+
+    return response($response->toArray(), $response->status);
+  }
+
+  public function verifyCode(Request $request)
+  {
+    $response = Response::simpleTryCatch(function () use ($request) {
+      DB::beginTransaction();
+
+      $preUserJpa = PreUser::select()
+        ->where('email', $request->email)
+        ->where('confirmation_token', $request->code)
+        ->first();
+
+      if (!$preUserJpa) throw new Exception('El codigo de confirmacion no es valido');
+
+      $roleJpa = Role::where('relative_id', $preUserJpa->role)->first();
+
+      $userJpa = User::create([
+        'uuid' => Crypto::randomUUID(),
+        'name' => $preUserJpa->name,
+        'lastname' => $preUserJpa->lastname,
+        'email' => $preUserJpa->email,
+        'birth_day' => $preUserJpa->birth_day,
+        'birth_month' => $preUserJpa->birth_month,
+        'email_verified_at' => Trace::getDate('mysql'),
+        'password' => $preUserJpa->password,
+        'notify_me' => $preUserJpa->notify_me,
+        'status' => true
+      ])->assignRole($roleJpa->name);
+
+      Subscription::updateOrCreate([
+        'description' => $userJpa->email,
+        'name' => Text::getEmailProvider($userJpa->email)
+      ], [
+        'is_user' => true
       ]);
 
-      $response->status = 200;
-      $response->message = 'Operacion correcta';
-      $response->data = $preUserJpa->token;
-    } catch (\Throwable $th) {
-      $response->status = 400;
-      $response->message = $th->getMessage();
-    } finally {
-      return response(
-        $response->toArray(),
-        $response->status
-      );
-    }
+      $preUserJpa->delete();
+
+      // Attempt authentication after user creation
+      if (!Auth::attempt([
+        'email' => $userJpa->email,
+        'password' => $preUserJpa->password
+      ])) {
+        throw new Exception('Error al iniciar sesión automáticamente');
+      }
+
+      $request->session()->regenerate();
+
+      DB::commit();
+
+      return Auth::user();
+    });
+
+    return response($response->toArray(), $response->status);
   }
 
   /**

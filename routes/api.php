@@ -69,6 +69,7 @@ use App\Http\Controllers\UserFormulaController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signup', [AuthController::class, 'signup']);
+Route::post('/verify-code', [AuthController::class, 'verifyCode']);
 Route::get('/sliders/media/{uuid}', [AdminSliderController::class, 'media'])->withoutMiddleware('throttle');
 Route::get('/testimonies/media/{uuid}', [AdminTestimonyController::class, 'media'])->withoutMiddleware('throttle');
 Route::get('/posts/media/{uuid}', [AdminPostController::class, 'media'])->withoutMiddleware('throttle');

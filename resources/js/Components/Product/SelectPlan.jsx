@@ -1,8 +1,10 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Local } from "sode-extend-react"
 import Number2Currency from "../../Utils/Number2Currency";
+import AuthModal from '../Auth/AuthModal'
 
-const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan, bundles = [], planes = [], session }) => {
+const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan, bundles = [], planes = [], session, setSession, recaptchaSiteKey }) => {
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   const cart = Local.get('vua_cart') ?? []
 
@@ -31,6 +33,10 @@ const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan
   useEffect(() => {
     if (otherFormulas.length > 0) onSelectPlan(null)
   }, [null])
+
+  useEffect(() => {
+    if (session?.id) setShowAuthModal(false)
+  }, [session])
 
   return <section className='px-[3%] lg:px-[10%] py-[10%] md:py-[7.5%] lg:py-[5%] bg-[#F9F3EF] text-center'>
 
@@ -62,7 +68,10 @@ const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan
                   o inicia sesion para acceder a <br />
                   <b>planes de suscripcion</b>
                 </span>
-                <button href='/login' className="block rounded-full px-3 py-2 bg-[#A191B8] text-white text-sm uppercase">Iniciar sesion</button>
+                <button onClick={() => setShowAuthModal(true)}
+                  className="block rounded-full px-3 py-2 bg-[#A191B8] text-white text-sm uppercase">
+                  Iniciar sesion
+                </button>
               </div>
               : planes.sort((a, b) => b.percentage - a.percentage).map((plan, index) => {
                 const price = Math.round((finalPrice - (finalPrice * plan.percentage)) * 10) / 10
@@ -104,6 +113,14 @@ const SelectPlan = ({ otherFormulas, goToNextPage, goToPrevPage, setSelectedPlan
       </button>
     </div>
 
+    <AuthModal
+      session={session}
+      setSession={setSession}
+      isOpen={showAuthModal}
+      setIsOpen={setShowAuthModal}
+      onClose={() => setShowAuthModal(false)}
+      recaptchaSiteKey={recaptchaSiteKey}
+    />
   </section>
 }
 

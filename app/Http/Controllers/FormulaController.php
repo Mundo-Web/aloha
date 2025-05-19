@@ -103,6 +103,7 @@ class FormulaController extends BasicController
             'bundles' => $bundlesJpa,
             'planes' => $planesJpa,
             'publicKey' => env('CULQI_PUBLIC_KEY'),
+            'recaptchaSiteKey' => env('RECAPTCHA_SITE_KEY'),
             'free_shipping' => $free_shipping->description ?? 'false',
             'free_shipping_minimum_amount' => $free_shipping_minimum_amount->description ?? '100',
             'free_shipping_amount' => $free_shipping_amount->description ?? '10',

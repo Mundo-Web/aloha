@@ -1,6 +1,7 @@
 import Tippy from "@tippyjs/react";
 import React, { useState, useEffect, useRef } from "react"
 import { Local } from "sode-extend-react";
+import Logout from "../../actions/Logout";
 
 const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -15,17 +16,33 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
     }
   }
 
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const profileMenuRef = useRef(null)
+
   useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (btnToggleRef.current == event.target || btnToggleRef.current.contains(event.target)) return
+    const handleClickOutside = (event) => {
+      // Manejo del menú principal
+      if (btnToggleRef.current == event.target || btnToggleRef.current?.contains(event.target)) return
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsOpen(false)
       }
     }
 
-    document.addEventListener('mousedown', handleOutsideClick)
+    const handleProfileClickOutside = (event) => {
+      // Manejo del menú de perfil
+      const profileButton = document.querySelector('.profile-button')
+      if (profileButton && (profileButton === event.target || profileButton.contains(event.target))) return
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setIsProfileOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleProfileClickOutside)
+
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleProfileClickOutside)
     }
   }, [])
 
@@ -68,23 +85,47 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
             </ul>
 
             <button href="/test" className="rounded-full px-3 py-2 bg-white text-[#A191B8] text-sm">CREA TU FÓRMULA</button>
-            <Tippy content={session ? `Perfil de ${session.name}` : 'Iniciar sesión'}>
-              <a className="relative block" href='/login'>
-                {
-                  session &&
-                  <span className="w-2 h-2 bg-green-500 rounded-full font-bold absolute bottom-0 -right-1"></span>
-                }
-                <i className="text-xl fa fa-user"></i>
-              </a>
-            </Tippy>
-            {
-              showCartIcon &&
+            <div className="relative">
+              <Tippy content={session ? `Perfil de ${session.name}` : 'Iniciar sesión'}>
+                <button 
+                  className="relative block profile-button" 
+                  onClick={() => {
+                    if (!session) {
+                      location.href = '/login'
+                    } else {
+                      setIsProfileOpen(!isProfileOpen)
+                    }
+                  }}
+                >
+                  {session && (
+                    <span className="w-2 h-2 bg-green-500 rounded-full font-bold absolute bottom-0 -right-1"></span>
+                  )}
+                  <i className="text-xl fa fa-user"></i>
+                </button>
+              </Tippy>
+              {session && isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 text-gray-700">
+                  <a href="/login" className="block px-4 py-2 hover:bg-gray-100">
+                    <i className="fa fa-user-circle mr-2"></i>
+                    Ver perfil
+                  </a>
+                  <button 
+                    onClick={Logout} 
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    <i className="fa fa-sign-out-alt mr-2"></i>
+                    Cerrar sesión
+                  </button>
+                </div>
+              )}
+            </div>
+            {showCartIcon && (
               <Tippy content={'Seguir comprando'}>
                 <a href={`/formula/${formula.id}`}>
                   <i className="text-xl fas fa-shopping-cart scale-110 hover:scale-125 transition-transform duration-300"></i>
                 </a>
               </Tippy>
-            }
+            )}
           </div>
 
         </div>

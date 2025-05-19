@@ -1,10 +1,10 @@
-import { Fetch, Notify } from "sode-extend-react"
+import { Cookies, Fetch, FetchParams, Notify } from "sode-extend-react"
 
 class AuthRest {
   static login = async (request) => {
     try {
 
-      const { status, result } = await Fetch('./api/login', {
+      const { status, result } = await Fetch('/api/login', {
         method: 'POST',
         body: JSON.stringify(request)
       })
@@ -15,6 +15,12 @@ class AuthRest {
         title: 'Operacion correcta',
         body: 'Se inicio sesion correctamente'
       })
+
+      FetchParams.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Xsrf-Token': decodeURIComponent(Cookies.get('XSRF-TOKEN'))
+      }
 
       return result
     } catch (error) {
@@ -31,7 +37,7 @@ class AuthRest {
   static signup = async (request) => {
     try {
 
-      const { status, result } = await Fetch('./api/signup', {
+      const { status, result } = await Fetch('/api/signup', {
         method: 'POST',
         body: JSON.stringify(request)
       })
@@ -43,7 +49,46 @@ class AuthRest {
         body: 'Se registro el usuario correctamente'
       })
 
+      FetchParams.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Xsrf-Token': decodeURIComponent(Cookies.get('XSRF-TOKEN'))
+      }
+
       return result.data
+    } catch (error) {
+      Notify.add({
+        icon: '/assets/img/favicon.png',
+        title: 'Error',
+        body: error.message,
+        type: 'danger'
+      })
+      return null
+    }
+  }
+
+  static verifyCode = async (request) => {
+    try {
+
+      const { status, result } = await Fetch('/api/verify-code', {
+        method: 'POST',
+        body: JSON.stringify(request)
+      })
+      if (!status) throw new Error(result?.message || 'Error al registrar el usuario')
+
+      Notify.add({
+        icon: '/assets/img/favicon.png',
+        title: 'Operacion correcta',
+        body: 'Se registro el usuario correctamente'
+      })
+
+      FetchParams.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Xsrf-Token': decodeURIComponent(Cookies.get('XSRF-TOKEN'))
+      }
+
+      return result
     } catch (error) {
       Notify.add({
         icon: '/assets/img/favicon.png',
