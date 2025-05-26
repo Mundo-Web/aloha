@@ -73,6 +73,10 @@
         .dx-datagrid-content .dx-datagrid-table .dx-row>td {
             vertical-align: middle;
         }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
     </style>
 </head>
 

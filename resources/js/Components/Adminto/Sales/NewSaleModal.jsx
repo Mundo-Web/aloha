@@ -6,14 +6,27 @@ import InputFormGroup from "../form/InputFormGroup";
 import places from '../../../Components/Product/components/places.json';
 import TextareaFormGroup from "../form/TextareaFormGroup";
 
-const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
+const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
 
   if (!modalRef) modalRef = useRef()
 
   const [sale, setSale] = useState([]);
   const [cart, setCart] = useState([]);
+
   const [couponCode, setCouponCode] = useState('');
   const [coupon, setCoupon] = useState(null);
+
+  const productOptions = [
+    { id: 1, name: 'Shampoo', price: 79.90 },
+    { id: 2, name: 'Acondicionador', price: 79.90 },
+    { id: 3, name: 'Crema de Peinar', price: 79.90 }
+  ];
+
+  const colorOptions = [
+    { id: 1, name: 'Rojo', code: '#FF0000' },
+    { id: 2, name: 'Verde', code: '#00FF00' },
+    { id: 3, name: 'Azul', code: '#0000FF' }
+  ];
 
   const calculateBundle = (cart) => {
     return null
@@ -29,7 +42,38 @@ const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
   const finalPrice = totalPrice - bundleDiscount - couponDiscount;
 
   const onAddProduct = () => {
-    // Implementar lógica para agregar producto
+    setCart([...cart, {
+      id: Date.now(),
+      productId: '',
+      name: '',
+      price: 79.90,
+      selectedColors: [],
+      quantity: 0
+    }]);
+  };
+
+  const onProductChange = (index, item_id) => {
+    const newCart = [...cart];
+    newCart[index] = {
+      ...newCart[index],
+      item_id,
+      colors: [],
+    };
+    setCart(newCart);
+  };
+
+  const onColorClick = (index, color) => {
+    const newCart = [...cart];
+    const item = newCart[index];
+    item.colors.push(color)
+    setCart(newCart);
+  };
+
+  const onColorBadgeClick = (index, colorId) => {
+    const newCart = [...cart];
+    const item = newCart[index];
+    item.colors = item.colors.filter(x => x.id !== colorId);
+    setCart(newCart);
   };
 
   const onColorChange = (index, colorId) => {
@@ -48,8 +92,10 @@ const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
     // Implementar lógica para aplicar cupón
   };
 
-  const onModalSubmit = () => {
+  const onModalSubmit = (e) => {
+    e.preventDefault()
 
+    console.log(sale)
   }
 
   const prefixTemplate = (data) => {
@@ -67,291 +113,320 @@ const NewSaleModal = ({ modalRef, phone_prefixes = [] }) => {
     return $(container)
   }
 
-  return <Modal id="new-sale-modal" modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter>
-    <form onSubmit={onModalSubmit}>
-      <div className="row">
-        <div className="col-md-6">
-          <h4 className='mt-0'>Información del cliente</h4>
-          <div className="row">
-            <InputFormGroup label='Nombres'
-              col='col-md-6'
-              value={sale.name}
-              onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
-              required />
-            <InputFormGroup label='Apellidos'
-              col='col-md-6'
-              value={sale.name}
-              onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
-              required />
-          </div>
-          <InputFormGroup label='Email'
-            type="email"
-            value={sale.email}
-            onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))} // Implementar lógica para cambiar email
+  return <Modal id="new-sale-modal" modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter onSubmit={onModalSubmit}>
+    <div className="row">
+      <div className="col-md-6">
+        <h4 className='mt-0'>Información del cliente</h4>
+        <div className="row">
+          <InputFormGroup label='Nombres'
+            col='col-md-6'
+            value={sale.name}
+            onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
             required />
-          <label htmlFor="" className='form-label'>
-            Celular
-            <b className='text-danger ms-1' children='*' />
-          </label>
-          <div className="row">
-            <SelectFormGroup
-              col='col-md-4'
-              dropdownParent='#new-sale-modal'
-              minimumInputLength={-1}
-              templateResult={prefixTemplate}
-              templateSelection={prefixTemplate}
-              required>
-              {
-                phone_prefixes
-                  .sort((a, b) => a.country.localeCompare(b.country))
-                  .map((prefix, index) => (
-                    <option
-                      key={index}
-                      value={prefix.realCode}
-                      data-code={prefix.beautyCode}
-                      data-flag={prefix.flag}
-                      data-country={prefix.country}
-                    >
-                      {prefix.beautyCode} {prefix.country}
-                    </option>
-                  ))
-              }
-            </SelectFormGroup>
-            <InputFormGroup
-              col='col-md-8'
-              type="tel"
-              value={sale.phone}
-              onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))}
-              required />
-          </div>
-
-          <div className="mb-2">
-            <SelectFormGroup
-              label='Origen de venta'
-              minimumResultsForSearch={-1}
-              dropdownParent='#new-sale-modal'
-              value={sale.source}
-              onChange={(e) => setSale(old => ({ ...old, source: e.target.value }))}
-              required
-            >
-              <option value="">Elige una opción</option>
-              <option value="llamada">Llamada telefónica</option>
-              <option value="whatsapp">WhatsApp</option>
-              <option value="presencial">Presencial</option>
-              <option value="otro">Otro</option>
-            </SelectFormGroup>
-          </div>
-          <TextareaFormGroup label='Comentario interno'
-            value={sale.comment}
-            onChange={(e) => setSale(old => ({...old, comment: e.target.value }))}
-            placeholder="Ingresa un comentario sobre por qué se está creando esta venta..."
-          />
+          <InputFormGroup label='Apellidos'
+            col='col-md-6'
+            value={sale.lastname}
+            onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+            required />
         </div>
-        <div className="col-md-6">
-          <h4 className='mt-0'>Dirección del cliente</h4>
-          <InputFormGroup label='Pais' value='Perú' disabled required />
-          <SelectFormGroup label='Región / Provincia'
-            value={sale.department || ''}
-            onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
-            minimumResultsForSearch={-1}
+        <InputFormGroup label='Email'
+          type="email"
+          value={sale.email}
+          onChange={(e) => setSale(old => ({ ...old, email: e.target.value }))} // Implementar lógica para cambiar email
+          required />
+        <label htmlFor="" className='form-label'>
+          Celular
+        </label>
+        <div className="row">
+          <SelectFormGroup
+            col='col-md-4'
             dropdownParent='#new-sale-modal'
-            required
-          >
-            <option value=''>Elige una opción</option>
+            minimumInputLength={-1}
+            templateResult={prefixTemplate}
+            templateSelection={prefixTemplate}>
             {
-              Object.keys(places).map((key, index) => {
-                return <option key={index} value={key}>{places[key].name}</option>
-              })
+              phone_prefixes
+                .sort((a, b) => a.country.localeCompare(b.country))
+                .map((prefix, index) => (
+                  <option
+                    key={index}
+                    value={prefix.realCode}
+                    data-code={prefix.beautyCode}
+                    data-flag={prefix.flag}
+                    data-country={prefix.country}
+                  >
+                    {prefix.beautyCode} {prefix.country}
+                  </option>
+                ))
             }
           </SelectFormGroup>
-          {
-            places[sale.department] &&
-            <div className="row">
-              {
-                Array.isArray(places[sale.department].items)
-                  ? <SelectFormGroup
-                    label='Provincia'
-                    col='col-md-8'
-                    dropdownParent='#new-sale-modal'
-                    value={sale.province}
-                    effectWith={[sale.department]}
-                    onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
-                    required>
-                    <option value=''>Elige una opción</option>
-                    {
-                      places[sale.department].items.map((province, index) => {
-                        return <option key={index} value={province}>{province}</option>
-                      })
-                    }
-                  </SelectFormGroup>
-                  : <>
-                    <InputFormGroup label='Departamento'
-                      col='col-md-4'
-                      value={sale.province}
-                      onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
-                      required />
-                    <InputFormGroup label='Distrito'
-                      col='col-md-4'
-                      value={sale.district}
-                      onChange={(e) => setSale(old => ({ ...old, district: e.target.value }))}
-                      required />
-                  </>
-              }
-              <InputFormGroup label='Cód. Postal'
-                col='col-md-4'
-                value={sale.zip_code}
-                onChange={(e) => setSale(old => ({ ...old, zip_code: e.target.value }))}
-              />
-            </div>
-          }
-          <div className="row">
-            <InputFormGroup label='Dirección'
-              col={'col-md-8'}
-              value={sale.address}
-              onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
-              required />
-            <InputFormGroup label='Número'
-              col={'col-md-4'}
-              type="number"
-              value={sale.number}
-              onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))}
-              required />
-          </div>
-          <InputFormGroup label='Apartamento, habitación, piso, etc.'
-            value={sale.reference}
-            onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
-          />
-          <TextareaFormGroup label='Notas del pedido'
-            value={sale.additional_references}
-            placeholder='Notas sobre el pedido, por ejemplo, notas especiales para la entrega.'
-            onChange={(e) => setSale(old => ({...old, additional_references: e.target.value }))}
-          />
+          <InputFormGroup
+            col='col-md-8'
+            type="tel"
+            value={sale.phone}
+            onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))} />
         </div>
 
-        <div className="col-12">
-          <h4>Productos</h4>
-          <div className="table-responsive">
-            <table className="table table-centered table-nowrap">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Color</th>
-                  <th>Cantidad</th>
-                  <th>Precio</th>
-                  <th>Subtotal</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>
-                      <select
-                        className="form-select"
-                        value={item.color?.id}
-                        onChange={(e) => onColorChange(index, e.target.value)}
-                      >
-                        <option value="">Seleccionar color</option>
-                        {item.colors?.map((color, i) => (
-                          <option key={i} value={color.id}>{color.name}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={item.quantity}
-                        onChange={(e) => onQuantityChange(index, e.target.value)}
-                        min={1}
-                      />
-                    </td>
-                    <td>S/.{item.price}</td>
-                    <td>S/.{(item.price * item.quantity).toFixed(2)}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm"
-                        onClick={() => onRemoveItem(index)}
-                      >
-                        <i className="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={4} className="text-end">Subtotal:</td>
-                  <td>S/.{totalPrice.toFixed(2)}</td>
-                  <td></td>
-                </tr>
-                {bundle && (
-                  <tr>
-                    <td colSpan={4} className="text-end">Descuento por paquete ({(bundle.percentage * 100).toFixed(2)}%):</td>
-                    <td>-S/.{bundleDiscount.toFixed(2)}</td>
-                    <td></td>
-                  </tr>
-                )}
-                {coupon && (
-                  <tr>
-                    <td colSpan={4} className="text-end">Cupón ({coupon.code}):</td>
-                    <td>-S/.{couponDiscount.toFixed(2)}</td>
-                    <td></td>
-                  </tr>
-                )}
-                <tr>
-                  <td colSpan={4} className="text-end">Total:</td>
-                  <td>S/.{finalPrice.toFixed(2)}</td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
+        <div className="mb-2">
+          <SelectFormGroup
+            label='Origen de venta'
+            minimumResultsForSearch={-1}
+            dropdownParent='#new-sale-modal'
+            value={sale.source}
+            onChange={(e) => setSale(old => ({ ...old, source: e.target.value }))}
+            required
+          >
+            <option value="">Elige una opción</option>
+            <option value="Banner">Banner publicitario</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Instagram">Instagram</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="TikTok">TikTok</option>
+          </SelectFormGroup>
+        </div>
+        <TextareaFormGroup label='Comentario interno'
+          value={sale.origin_comment}
+          onChange={(e) => setSale(old => ({ ...old, origin_comment: e.target.value }))}
+          placeholder="Ingresa un comentario sobre por qué se está creando esta venta..."
+        />
+      </div>
+      <div className="col-md-6">
+        <h4 className='mt-0'>Dirección del cliente</h4>
+        <InputFormGroup label='Pais' value='Perú' disabled required />
+        <SelectFormGroup label='Región / Provincia'
+          value={sale.department || ''}
+          onChange={(e) => setSale(old => ({ ...old, department: e.target.value }))}
+          minimumResultsForSearch={-1}
+          dropdownParent='#new-sale-modal'
+          required
+        >
+          <option value=''>Elige una opción</option>
+          {
+            Object.keys(places).map((key, index) => {
+              return <option key={index} value={key}>{places[key].name}</option>
+            })
+          }
+        </SelectFormGroup>
+        {
+          places[sale.department] &&
+          <div className="row">
+            {
+              Array.isArray(places[sale.department].items)
+                ? <SelectFormGroup
+                  label='Provincia'
+                  col='col-md-8'
+                  dropdownParent='#new-sale-modal'
+                  value={sale.province}
+                  effectWith={[sale.department]}
+                  onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
+                  required>
+                  <option value=''>Elige una opción</option>
+                  {
+                    places[sale.department].items.map((province, index) => {
+                      return <option key={index} value={province}>{province}</option>
+                    })
+                  }
+                </SelectFormGroup>
+                : <>
+                  <InputFormGroup label='Departamento'
+                    col='col-md-4'
+                    value={sale.province}
+                    onChange={(e) => setSale(old => ({ ...old, province: e.target.value }))}
+                    required />
+                  <InputFormGroup label='Distrito'
+                    col='col-md-4'
+                    value={sale.district}
+                    onChange={(e) => setSale(old => ({ ...old, district: e.target.value }))}
+                    required />
+                </>
+            }
+            <InputFormGroup label='Cód. Postal'
+              col='col-md-4'
+              value={sale.zip_code}
+              onChange={(e) => setSale(old => ({ ...old, zip_code: e.target.value }))}
+            />
           </div>
+        }
+        <div className="row">
+          <InputFormGroup label='Dirección'
+            col={'col-md-8'}
+            value={sale.address}
+            onChange={(e) => setSale(old => ({ ...old, address: e.target.value }))}
+            required />
+          <InputFormGroup label='Número'
+            col={'col-md-4'}
+            type="number"
+            value={sale.number}
+            onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))} />
+        </div>
+        <InputFormGroup label='Apartamento, habitación, piso, etc.'
+          value={sale.reference}
+          onChange={(e) => setSale(old => ({ ...old, reference: e.target.value }))}
+        />
+        <TextareaFormGroup label='Notas del pedido'
+          value={sale.comment}
+          placeholder='Notas sobre el pedido, por ejemplo, notas especiales para la entrega.'
+          onChange={(e) => setSale(old => ({ ...old, comment: e.target.value }))}
+        />
+      </div>
 
-          <div className="row mt-3">
-            <div className="col-md-6">
+      <div className="col-12">
+        <h4>Productos</h4>
+        <div className="table-responsive">
+          <table className="table table-centered table-nowrap">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Color</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((detail, index) => {
+                const colors = items.find(item => item.id === detail.item_id)?.colors || [];
+                const colorsCount = detail.colors?.length ?? 0;
+                return <tr key={index}>
+                  <td>
+                    <SelectFormGroup
+                      noMargin
+                      dropdownParent="#new-sale-modal"
+                      value={detail.item_id}
+                      onChange={(e) => onProductChange(index, e.target.value)}
+                    >
+                      <option value="">Seleccionar producto</option>
+                      {
+                        items.map((product, index) => {
+                          return <option key={index} value={product.id}>
+                            {product.name}
+                          </option>
+                        })
+                      }
+                    </SelectFormGroup>
+                  </td>
+                  <td style={{ width: '150px' }}>
+                    <div className="d-flex flex-wrap gap-1">
+                      {colors.map(color => {
+                        const selecteds = detail.colors.filter(x => x.id === color.id).length;
+                        return (
+                          <div
+                            key={color.id}
+                            onClick={() => onColorClick(index, color)}
+                            className="position-relative cursor-pointer"
+                          >
+                            <div
+                              className={`rounded-circle position-relative p-2 border ${selecteds > 0 ? 'border-primary' : ''}`}
+                              style={{ backgroundColor: color.hex }}
+                            ></div>
+                            {selecteds > 0 && (
+                              <small
+                                className="position-absolute translate-middle badge rounded-pill bg-primary"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onColorBadgeClick(index, color.id);
+                                }}
+                                style={{
+                                  padding: '2px 4px',	
+                                  top: '4px',
+                                  fontSize: '10px',
+                                  right: '-12px',
+                                }}
+                              >
+                                {selecteds}
+                              </small>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </td>
+                  <td>{colorsCount}</td>
+                  <td>S/.{detail.price}</td>
+                  <td>S/.{(detail.price * colorsCount).toFixed(2)}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => onRemoveItem(index)}
+                    >
+                      <i className="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={4} className="text-end">Subtotal:</td>
+                <td>S/.{totalPrice.toFixed(2)}</td>
+                <td></td>
+              </tr>
+              {bundle && (
+                <tr>
+                  <td colSpan={4} className="text-end">Descuento por paquete ({(bundle.percentage * 100).toFixed(2)}%):</td>
+                  <td>-S/.{bundleDiscount.toFixed(2)}</td>
+                  <td></td>
+                </tr>
+              )}
+              {coupon && (
+                <tr>
+                  <td colSpan={4} className="text-end">Cupón ({coupon.code}):</td>
+                  <td>-S/.{couponDiscount.toFixed(2)}</td>
+                  <td></td>
+                </tr>
+              )}
+              <tr>
+                <td colSpan={4} className="text-end">Total:</td>
+                <td>S/.{finalPrice.toFixed(2)}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div className="row mt-3">
+          <div className="col-md-6">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onAddProduct}
+            >
+              <i className="fa fa-plus me-1"></i>
+              Agregar producto
+            </button>
+          </div>
+          <div className="col-md-6">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Código de cupón"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+              />
               <button
                 type="button"
-                className="btn btn-primary"
-                onClick={onAddProduct}
+                className="btn btn-secondary"
+                onClick={onApplyCoupon}
               >
-                <i className="fa fa-plus me-1"></i>
-                Agregar producto
+                Aplicar cupón
               </button>
-            </div>
-            <div className="col-md-6">
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Código de cupón"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={onApplyCoupon}
-                >
-                  Aplicar cupón
-                </button>
-              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div className="text-end mt-4">
-        <button type="button" className="btn btn-light me-2" onClick={() => $(modalRef.current).modal('hide')}>
-          Cancelar
-        </button>
-        <button type="submit" className="btn btn-primary">
-          Guardar venta
-        </button>
-      </div>
-    </form>
+    <div className="text-end mt-4">
+      <button type="button" className="btn btn-light me-2" onClick={() => $(modalRef.current).modal('hide')}>
+        Cancelar
+      </button>
+      <button type="submit" className="btn btn-primary">
+        Guardar venta
+      </button>
+    </div>
   </Modal>
 }
 

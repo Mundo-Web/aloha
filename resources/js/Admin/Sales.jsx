@@ -503,7 +503,7 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
         </div>
       </div>
     </Modal>
-    <NewSaleModal modalRef={modalRef} phone_prefixes={phone_prefixes}/>
+    <NewSaleModal modalRef={modalRef} items={items} phone_prefixes={phone_prefixes}/>
   </>
   )
 }
