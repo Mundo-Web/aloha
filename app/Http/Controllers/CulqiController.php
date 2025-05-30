@@ -69,13 +69,14 @@ class CulqiController extends Controller
         // "expiration_date" => time() + (60), // desarrollo
         "confirm" => false
       ];
-
       $order = $this->culqi->Orders->create($config);
+
 
       if (gettype($order) == 'string') {
         $res = JSON::parse((string) $order);
         Sale::where('id', $sale['id'])->delete();
-        throw new Exception($res['user_message']);
+        // throw new Exception($res['user_message']);
+        $order = null;
       }
       return \array_merge((array) $order, [
         'amount' => $amount,
