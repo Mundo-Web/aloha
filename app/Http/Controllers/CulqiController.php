@@ -73,7 +73,6 @@ class CulqiController extends Controller
 
 
       if (gettype($order) == 'string') {
-        dump($order);
         $res = JSON::parse((string) $order);
         Sale::where('id', $sale['id'])->delete();
         throw new Exception($res['user_message']);

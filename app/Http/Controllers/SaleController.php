@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use SoDe\Extend\Trace;
 use SoDe\Extend\Math;
 use SoDe\Extend\Response;
+use SoDe\Extend\Text;
 
 class SaleController extends Controller
 {
@@ -47,7 +48,7 @@ class SaleController extends Controller
             $saleJpa->name = $sale['name'];
             $saleJpa->lastname = $sale['lastname'];
             $saleJpa->email = $sale['email'];
-            $saleJpa->phone = $sale['phone'];
+            $saleJpa->phone = Text::keep($sale['phone'], '0123456789');
             $saleJpa->status_id = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b';
             $saleJpa->billing_type = $sale['billing_type'];
             $saleJpa->billing_number = $sale['billing_number'];
