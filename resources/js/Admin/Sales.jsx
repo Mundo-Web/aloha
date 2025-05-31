@@ -224,7 +224,7 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
         {
           dataField: 'origin',
           caption: 'Origen',
-        }, 
+        },
         {
           caption: 'Acciones',
           cellTemplate: (container, { data }) => {
