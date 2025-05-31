@@ -13,13 +13,12 @@ import Global from '../Utils/Global';
 import Number2Currency from '../Utils/Number2Currency';
 import ReactAppend from '../Utils/ReactAppend';
 import UserFormulaInfo from '../Components/Adminto/UserFormulas/UserFormulaInfo';
-import places from '../Components/Product/components/places.json';
 import NewSaleModal from '../Components/Adminto/Sales/NewSaleModal';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
 
-const Sales = ({ statuses, items, phone_prefixes }) => {
+const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
   const gridRef = useRef()
   const detailsModalRef = useRef()
   const modalRef = useRef()
@@ -65,7 +64,8 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
     if (!isConfirmed) return
     const result = await salesRest.delete(id)
     if (!result) return
-    $(gridRef.current).dxDataGrid('instance').refresh()
+    
+    
   }
 
   const onModalOpen = async (saleId) => {
@@ -220,6 +220,10 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
           cellTemplate: (container, { data }) => {
             container.text(data.province || data.district);
           }
+        },
+        {
+          dataField: 'origin',
+          caption: 'Origen',
         },
         {
           caption: 'Acciones',
@@ -503,7 +507,7 @@ const Sales = ({ statuses, items, phone_prefixes }) => {
         </div>
       </div>
     </Modal>
-    <NewSaleModal modalRef={modalRef} items={items} phone_prefixes={phone_prefixes}/>
+    <NewSaleModal modalRef={modalRef} gridRef={gridRef} items={items} phone_prefixes={phone_prefixes} bundles={bundles}/>
   </>
   )
 }

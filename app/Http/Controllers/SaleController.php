@@ -35,7 +35,7 @@ class SaleController extends Controller
                     : $itemJpa->price;
                 $itemJpa->quantity = $detail['quantity'];
                 $itemJpa->colors = $detail['colors'];
-                $itemJpa->user_formula_id = $detail['formula_id'];
+                $itemJpa->user_formula_id = $detail['formula_id'] ?? null;
                 $itemsJpa2Proccess[] = $itemJpa;
             }
 
@@ -43,7 +43,7 @@ class SaleController extends Controller
 
             // Sale info
             $saleJpa->code = Trace::getId();
-            $saleJpa->user_formula_id = $sale['user_formula_id'];
+            $saleJpa->user_formula_id = $sale['user_formula_id'] ?? null;
             $saleJpa->user_id = Auth::check() ? Auth::user()->id : null;
             $saleJpa->name = $sale['name'];
             $saleJpa->lastname = $sale['lastname'];
@@ -52,17 +52,19 @@ class SaleController extends Controller
             $saleJpa->status_id = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b';
             $saleJpa->billing_type = $sale['billing_type'];
             $saleJpa->billing_number = $sale['billing_number'];
+            $saleJpa->origin = $sale['origin'] ?? null; // web, app, adm
+            $saleJpa->origin_comment = $sale['origin_comment'] ?? null; // web, app, adm
 
             // Address info
             $saleJpa->country = $sale['country'];
             $saleJpa->department = $sale['department'];
             $saleJpa->province = $sale['province'];
             $saleJpa->district = $sale['district'];
-            $saleJpa->zip_code = $sale['zip_code'];
+            $saleJpa->zip_code = $sale['zip_code'] ?? null;
             $saleJpa->address = $sale['address'];
             $saleJpa->number = $sale['number'];
-            $saleJpa->reference = $sale['reference'];
-            $saleJpa->comment = $sale['comment'];
+            $saleJpa->reference = $sale['reference'] ?? null;
+            $saleJpa->comment = $sale['comment'] ?? null;
 
             if (Auth::check()) {
                 $userJpa = User::find(Auth::user()->id);
@@ -71,10 +73,10 @@ class SaleController extends Controller
                 $userJpa->department = $sale['department'];
                 $userJpa->province = $sale['province'];
                 $userJpa->district = $sale['district'];
-                $userJpa->zip_code = $sale['zip_code'];
+                $userJpa->zip_code = $sale['zip_code'] ?? null;
                 $userJpa->address = $sale['address'];
                 $userJpa->address_number = $sale['number'];
-                $userJpa->address_reference = $sale['reference'];
+                $userJpa->address_reference = $sale['reference'] ?? null;
                 $userJpa->save();
             }
 

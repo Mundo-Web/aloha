@@ -11,10 +11,11 @@ const SelectFormGroup = ({ id, col, className, label, specification, eRef, value
 
   if (!eRef) eRef = useRef()
   if (!id) id = `select-${crypto.randomUUID()}`
+  const containerId = `container-${id}`
 
   useEffect(() => {
     $(eRef.current).select2({
-      dropdownParent,
+      dropdownParent: `#${containerId}`,
       templateResult,
       templateSelection,
       minimumInputLength,
@@ -24,7 +25,7 @@ const SelectFormGroup = ({ id, col, className, label, specification, eRef, value
     $(eRef.current).on('change', onChange)
   }, [dropdownParent, value, ...effectWith])
 
-  return <div className={`form-group ${col} ${!noMargin && 'mb-2'}`}>
+  return <div id={containerId} className={`form-group ${col} ${!noMargin && 'mb-2'}`}>
     <label htmlFor={id} className="form-label mb-1">
       {
         label &&

@@ -14,7 +14,7 @@ const InputFormGroup = ({ col, label, eRef, type = 'text', specification, placeh
         }
       </label>
     }
-    <input ref={eRef} id={uuid} type={type} className={`form-control ${uppercase && 'text-uppercase'}`} placeholder={placeholder} required={required} disabled={disabled} readOnly={readOnly} defaultValue={value ?? ''} step={step} onChange={onChange} min={min} max={max} />
+    <input ref={eRef} id={uuid} type={type} className={`form-control ${uppercase && 'text-uppercase'}`} placeholder={placeholder} required={required} disabled={disabled} readOnly={readOnly} defaultValue={value ?? ''} value={value ?? ''} step={step} onChange={onChange} min={min} max={max} />
   </div>
 }
 

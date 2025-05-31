@@ -1,39 +1,53 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal"
 import SelectFormGroup from "../form/SelectFormGroup";
 import { renderToString } from "react-dom/server";
 import InputFormGroup from "../form/InputFormGroup";
 import places from '../../../Components/Product/components/places.json';
 import TextareaFormGroup from "../form/TextareaFormGroup";
+import Tippy from "@tippyjs/react";
+import CouponsRest from "../../../Actions/CouponsRest";
+import Number2Currency from "../../../Utils/Number2Currency";
+import SalesRest from "../../../Actions/Admin/SalesRest";
 
-const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
+const couponsRest = new CouponsRest()
+const salesRest = new SalesRest()
+
+const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }) => {
 
   if (!modalRef) modalRef = useRef()
 
-  const [sale, setSale] = useState([]);
+  const [sale, setSale] = useState({});
   const [cart, setCart] = useState([]);
 
   const [couponCode, setCouponCode] = useState('');
   const [coupon, setCoupon] = useState(null);
 
-  const productOptions = [
-    { id: 1, name: 'Shampoo', price: 79.90 },
-    { id: 2, name: 'Acondicionador', price: 79.90 },
-    { id: 3, name: 'Crema de Peinar', price: 79.90 }
-  ];
-
-  const colorOptions = [
-    { id: 1, name: 'Rojo', code: '#FF0000' },
-    { id: 2, name: 'Verde', code: '#00FF00' },
-    { id: 3, name: 'Azul', code: '#0000FF' }
-  ];
-
   const calculateBundle = (cart) => {
-    return null
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const bundle = bundles.find(bundle => {
+      switch (bundle.comparator) {
+        case '<':
+          return totalQuantity < bundle.items_quantity
+        case '>':
+          return totalQuantity > bundle.items_quantity
+        default:
+          return totalQuantity == bundle.items_quantity
+      }
+    });
+    return bundle;
   }
   const calculateCouponDiscount = (coupon, totalPrice) => {
-    return 0
-  } // Implementar esta funci
+    if (!coupon) return 0
+    const amount = Number(coupon.amount) || 0
+    if (coupon.type == 'fixed_amount') {
+      return amount
+    } else if (coupon.type == 'percentage') {
+      return (totalPrice - bundleDiscount) * amount / 100
+    } else {
+      return 0
+    }
+  }
 
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const bundle = calculateBundle(cart); // Implementar esta función según la lógica de bundles
@@ -41,31 +55,11 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
   const couponDiscount = calculateCouponDiscount(coupon, totalPrice); // Implementar esta función
   const finalPrice = totalPrice - bundleDiscount - couponDiscount;
 
-  const onAddProduct = () => {
-    setCart([...cart, {
-      id: Date.now(),
-      productId: '',
-      name: '',
-      price: 79.90,
-      selectedColors: [],
-      quantity: 0
-    }]);
-  };
-
-  const onProductChange = (index, item_id) => {
-    const newCart = [...cart];
-    newCart[index] = {
-      ...newCart[index],
-      item_id,
-      colors: [],
-    };
-    setCart(newCart);
-  };
-
   const onColorClick = (index, color) => {
     const newCart = [...cart];
     const item = newCart[index];
     item.colors.push(color)
+    item.quantity = item.colors.length
     setCart(newCart);
   };
 
@@ -73,29 +67,66 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
     const newCart = [...cart];
     const item = newCart[index];
     item.colors = item.colors.filter(x => x.id !== colorId);
+    item.quantity = item.colors.length
     setCart(newCart);
   };
 
-  const onColorChange = (index, colorId) => {
-    // Implementar lógica para cambiar color
-  };
-
   const onQuantityChange = (index, quantity) => {
-    // Implementar lógica para cambiar cantidad
-  };
-
-  const onRemoveItem = (index) => {
-    // Implementar lógica para remover item
+    const newCart = [...cart];
+    const item = newCart[index];
+    item.quantity = quantity
+    setCart(newCart);
   };
 
   const onApplyCoupon = async () => {
-    // Implementar lógica para aplicar cupón
+    const result = await couponsRest.save({
+      coupon: couponCode,
+      amount: totalPrice,
+      email: sale.email
+    })
+    if (result) setCoupon(result.data)
+    else setCoupon(null)
   };
 
-  const onModalSubmit = (e) => {
+  const getSale = () => {
+    let department = 'Lima';
+    let province = 'Lima'
+    let district = null
+
+    if (Array.isArray(places[sale.department].items)) {
+      department = places[sale.department].name
+      province = sale.province
+      district = null
+    } else {
+      department = sale.province
+      province = null
+      district = sale.district
+    }
+
+    return {
+      ...sale,
+      country: 'Perú',
+      department_code: sale.department,
+      department, province, district
+    }
+  }
+
+  const onModalSubmit = async (e) => {
     e.preventDefault()
 
-    console.log(sale)
+    const request = {
+      sale: {
+        ...getSale(),
+        coupon: coupon.name
+      },
+      details: cart
+    }
+
+    const result = await salesRest.pos(request)
+    if (!result) return
+
+    $(gridRef.current).dxDataGrid('instance').refresh()
+    $(modalRef.current).modal('hide')
   }
 
   const prefixTemplate = (data) => {
@@ -113,10 +144,99 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
     return $(container)
   }
 
+  useEffect(() => {
+    $(modalRef.current).on('shown.bs.modal', () => {
+      setSale({
+        billing_type: 'boleta',
+        phone_prefix: '51'
+      })
+      setCart(items.filter(({ is_default }) => is_default).map(item => {
+        return {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          colors: [],
+          quantity: 0
+        }
+      }))
+      setCouponCode('')
+      setCoupon(null)
+    })
+  }, [])
+
   return <Modal id="new-sale-modal" modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter onSubmit={onModalSubmit}>
     <div className="row">
       <div className="col-md-6">
         <h4 className='mt-0'>Información del cliente</h4>
+        <div className="mb-2">
+          <label className="form-label">
+            Tipo de comprobante <span className="text-danger">*</span>
+          </label>
+          <div className="row g-2">
+            <div className="col-6">
+              <label htmlFor="billing_type_boleta" className="card border mb-0">
+                <div className="card-body p-1 px-2 d-flex align-items-center  gap-1">
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    name="billing_type"
+                    id="billing_type_boleta"
+                    value="boleta"
+                    style={{marginTop : '-2px'}}
+                    checked={sale.billing_type === 'boleta'}
+                    onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))}
+                    required
+                  />
+                  <span className="d-flex align-items-center justify-content-center gap-1" htmlFor="billing_type_boleta">
+                    <i className="mdi mdi-account font-18"></i>
+                    <span>Boleta</span>
+                  </span>
+                </div>
+              </label>
+            </div>
+            <div className="col-6">
+              <label htmlFor="billing_type_factura" className="card border mb-0">
+                <div className="card-body p-1 px-2 d-flex align-items-center gap-1">
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    name="billing_type"
+                    id="billing_type_factura"
+                    value="factura"
+                    style={{marginTop : '-2px'}}
+                    checked={sale.billing_type === 'factura'}
+                    onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))}
+                    required
+                  />
+                  <span className="d-flex align-items-center justify-content-center gap-1" htmlFor="billing_type_factura">
+                    <i className="mdi mdi-office-building font-18"></i>
+                    <span>Factura</span>
+                  </span>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Número de documento */}
+        <div className="mb-2">
+          <label className="form-label" htmlFor="billing_number">
+            Documento <span className="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="billing_number"
+            className="form-control"
+            value={sale.billing_number || ''}
+            maxLength={sale.billing_type === 'boleta' ? 8 : 11}
+            minLength={sale.billing_type === 'boleta' ? 8 : 11}
+            required
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '');
+              setSale(old => ({ ...old, billing_number: value }));
+            }}
+          />
+        </div>
         <div className="row">
           <InputFormGroup label='Nombres'
             col='col-md-6'
@@ -126,7 +246,7 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
           <InputFormGroup label='Apellidos'
             col='col-md-6'
             value={sale.lastname}
-            onChange={(e) => setSale(old => ({ ...old, name: e.target.value }))}
+            onChange={(e) => setSale(old => ({ ...old, lastname: e.target.value }))}
             required />
         </div>
         <InputFormGroup label='Email'
@@ -143,7 +263,9 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
             dropdownParent='#new-sale-modal'
             minimumInputLength={-1}
             templateResult={prefixTemplate}
-            templateSelection={prefixTemplate}>
+            templateSelection={prefixTemplate}
+            value={sale.phone_prefix}
+            onChange={e => setSale(old => ({ ...old, phone_prefix: e.target.value }))}>
             {
               phone_prefixes
                 .sort((a, b) => a.country.localeCompare(b.country))
@@ -164,7 +286,10 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
             col='col-md-8'
             type="tel"
             value={sale.phone}
-            onChange={(e) => setSale(old => ({ ...old, phone: e.target.value }))} />
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '');
+              setSale(old => ({ ...old, phone: value }));
+            }} />
         </div>
 
         <div className="mb-2">
@@ -172,8 +297,8 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
             label='Origen de venta'
             minimumResultsForSearch={-1}
             dropdownParent='#new-sale-modal'
-            value={sale.source}
-            onChange={(e) => setSale(old => ({ ...old, source: e.target.value }))}
+            value={sale.origin}
+            onChange={(e) => setSale(old => ({ ...old, origin: e.target.value }))}
             required
           >
             <option value="">Elige una opción</option>
@@ -257,7 +382,8 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
             col={'col-md-4'}
             type="number"
             value={sale.number}
-            onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))} />
+            onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))} 
+            required/>
         </div>
         <InputFormGroup label='Apartamento, habitación, piso, etc.'
           value={sale.reference}
@@ -271,161 +397,186 @@ const NewSaleModal = ({ modalRef, items, phone_prefixes = [] }) => {
       </div>
 
       <div className="col-12">
-        <h4>Productos</h4>
+        <div className="mb-2">
+          <h4 className="mb-0">Productos</h4>
+          <small className="text-muted">Selecciona los productos que deseas agregar a la compra</small>
+        </div>
+
+        {/* Nuevo componente de selección de productos tipo checkout */}
+        <div className="product-selection mb-1">
+          <div className="row">
+            {items.map((product) => {
+              const isSelected = cart.some(item => item.id === product.id);
+              return <div className="col-sm-6 col-md-3 mb-2" key={product.id}>
+                <div
+                  className={`card mb-0 h-100 cursor-pointer shadow-lg ${isSelected ? 'border border-primary' : ''}`}
+                  onClick={() => {
+                    if (!isSelected) {
+                      setCart([...cart, {
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        colors: [],
+                        quantity: 0
+                      }]);
+                    } else {
+                      const newCart = [...cart];
+                      newCart.splice(newCart.findIndex(item => item.id === product.id), 1);
+                      setCart(newCart);
+                    }
+                  }}
+                >
+                  <div className="card-body p-2">
+                    <h5 className={`card-title mt-0 mb-0 ${isSelected ? 'text-primary' : ''}`}>{product.name}</h5>
+                    <small className="card-text text-muted">S/ {product.price || 79.90}</small>
+                  </div>
+                </div>
+              </div>
+            })}
+          </div>
+        </div>
+
         <div className="table-responsive">
-          <table className="table table-centered table-nowrap">
+          <table className="table table-centered table-nowrap table-bordered table-sm">
             <thead>
               <tr>
                 <th>Producto</th>
                 <th>Color</th>
-                <th>Cant.</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-                <th></th>
+                <th style={{ width: '92px' }}>Cant.</th>
+                <th style={{ width: '88px' }}>Precio</th>
+                <th style={{ width: '88px' }}>Subtotal</th>
               </tr>
             </thead>
             <tbody>
               {cart.map((detail, index) => {
-                const colors = items.find(item => item.id === detail.item_id)?.colors || [];
+                const product = items.find(item => item.id === detail.id);
+                const colors = product?.colors || [];
                 const colorsCount = detail.colors?.length ?? 0;
                 return <tr key={index}>
                   <td>
-                    <SelectFormGroup
-                      noMargin
-                      dropdownParent="#new-sale-modal"
-                      value={detail.item_id}
-                      onChange={(e) => onProductChange(index, e.target.value)}
-                    >
-                      <option value="">Seleccionar producto</option>
-                      {
-                        items.map((product, index) => {
-                          return <option key={index} value={product.id}>
-                            {product.name}
-                          </option>
-                        })
-                      }
-                    </SelectFormGroup>
+                    {product?.name || 'Producto no encontrado'}
                   </td>
-                  <td style={{ width: '150px' }}>
+                  <td style={{ width: '240px' }}>
                     <div className="d-flex flex-wrap gap-1">
                       {colors.map(color => {
                         const selecteds = detail.colors.filter(x => x.id === color.id).length;
                         return (
-                          <div
-                            key={color.id}
-                            onClick={() => onColorClick(index, color)}
-                            className="position-relative cursor-pointer"
-                          >
+                          <Tippy key={color.id} content={color.name}>
                             <div
-                              className={`rounded-circle position-relative p-2 border ${selecteds > 0 ? 'border-primary' : ''}`}
-                              style={{ backgroundColor: color.hex }}
-                            ></div>
-                            {selecteds > 0 && (
-                              <small
-                                className="position-absolute translate-middle badge rounded-pill bg-primary"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onColorBadgeClick(index, color.id);
-                                }}
-                                style={{
-                                  padding: '2px 4px',	
-                                  top: '4px',
-                                  fontSize: '10px',
-                                  right: '-12px',
-                                }}
-                              >
-                                {selecteds}
-                              </small>
-                            )}
-                          </div>
+                              onClick={() => onColorClick(index, color)}
+                              className="position-relative cursor-pointer"
+                            >
+                              <div
+                                className={`rounded-circle position-relative p-2 border ${selecteds > 0 ? 'border-primary' : ''}`}
+                                style={{ backgroundColor: color.hex }}
+                              ></div>
+                              {selecteds > 0 && (
+                                <small
+                                  className="position-absolute translate-middle badge rounded-pill bg-primary"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onColorBadgeClick(index, color.id);
+                                  }}
+                                  style={{
+                                    padding: '2px 4px',
+                                    top: '4px',
+                                    fontSize: '10px',
+                                    right: '-12px',
+                                  }}
+                                >
+                                  {selecteds}
+                                </small>
+                              )}
+                            </div>
+                          </Tippy>
                         );
                       })}
                     </div>
                   </td>
-                  <td>{colorsCount}</td>
-                  <td>S/.{detail.price}</td>
-                  <td>S/.{(detail.price * colorsCount).toFixed(2)}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-danger btn-sm"
-                      onClick={() => onRemoveItem(index)}
-                    >
-                      <i className="fa fa-trash"></i>
-                    </button>
-                  </td>
+                  <td>{
+                    colors.length == 0
+                      ? <input
+                        className="form-control form-control-sm"
+                        type="number"
+                        style={{ width: '75px' }}
+                        value={detail.quantity}
+                        onChange={e => onQuantityChange(index, e.target.value)} />
+                      : detail.quantity
+                  }</td>
+                  <td className="text-end">S/ {detail.price}</td>
+                  <td className="text-end">S/ {(detail.price * detail.quantity).toFixed(2)}</td>
                 </tr>
               })}
             </tbody>
             <tfoot>
               <tr>
                 <td colSpan={4} className="text-end">Subtotal:</td>
-                <td>S/.{totalPrice.toFixed(2)}</td>
-                <td></td>
+                <td className="text-end">S/ {totalPrice.toFixed(2)}</td>
               </tr>
               {bundle && (
                 <tr>
-                  <td colSpan={4} className="text-end">Descuento por paquete ({(bundle.percentage * 100).toFixed(2)}%):</td>
-                  <td>-S/.{bundleDiscount.toFixed(2)}</td>
-                  <td></td>
+                  <td colSpan={4} className="text-end">
+                    <span className="d-block">Descuento por paquete</span>
+                    <small className="text-muted -mt-1">
+                      Escogiste un {bundle.name} ({(bundle.percentage * 100).toFixed(2)}%)
+                    </small>
+                  </td>
+                  <td className="text-end">S/ -{Number2Currency(Math.round(bundleDiscount * 10) / 10)}</td>
                 </tr>
               )}
               {coupon && (
                 <tr>
-                  <td colSpan={4} className="text-end">Cupón ({coupon.code}):</td>
-                  <td>-S/.{couponDiscount.toFixed(2)}</td>
-                  <td></td>
+                  <td colSpan={4} className="text-end">
+                    <span className="d-block">
+                      Cupón aplicado
+                      <Tippy content='Eliminar'>
+                        <i className="text-danger mdi mdi-close cursor-pointer ms-1" onClick={() => setCoupon(null)} />
+                      </Tippy>
+                    </span>
+                    <small className="text-muted">{coupon.name} ({coupon.type == 'fixed_amount' ? `S/ -${Number2Currency(coupon.amount)}` : `-${Math.round(coupon.amount * 100) / 100}%`})</small>
+                  </td>
+                  <td className="text-end">S/ -{Number2Currency(Math.round(couponDiscount * 10) / 10)}</td>
                 </tr>
               )}
               <tr>
                 <td colSpan={4} className="text-end">Total:</td>
-                <td>S/.{finalPrice.toFixed(2)}</td>
-                <td></td>
+                <td className="text-end">S/ {Number2Currency(Math.round(finalPrice * 10) / 10)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
-
-        <div className="row mt-3">
-          <div className="col-md-6">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={onAddProduct}
-            >
-              <i className="fa fa-plus me-1"></i>
-              Agregar producto
-            </button>
-          </div>
-          <div className="col-md-6">
-            <div className="input-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Código de cupón"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-              />
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={onApplyCoupon}
-              >
-                Aplicar cupón
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <div className="text-end mt-4">
-      <button type="button" className="btn btn-light me-2" onClick={() => $(modalRef.current).modal('hide')}>
-        Cancelar
-      </button>
-      <button type="submit" className="btn btn-primary">
-        Guardar venta
-      </button>
+    <div className="row">
+      <div className="col-md-6">{
+        !coupon &&
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Código de cupón"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+          />
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onApplyCoupon}
+          >
+            Aplicar cupón
+          </button>
+        </div>
+      }
+      </div>
+      <div className="col-md-6 text-end">
+        {/* <button type="button" className="btn btn-light me-2" onClick={() => $(modalRef.current).modal('hide')}>
+          Cancelar
+        </button> */}
+        <button type="submit" className="btn btn-primary">
+          Guardar venta
+        </button>
+      </div>
     </div>
   </Modal>
 }

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
+use App\Http\Controllers\SaleController as PublicSaleController;
+use App\Models\Bundle;
 use App\Models\Formula;
+use App\Models\General;
 use App\Models\Item;
 use App\Models\Sale;
 use App\Models\Status;
+use App\Models\UserFormula;
 use Exception;
 use Illuminate\Http\Request;
 use SoDe\Extend\File;
@@ -43,7 +47,8 @@ class SaleController extends BasicController
         $response = Response::simpleTryCatch(function () use ($id) {
             $jpa  = $this->model::with($this->with4get)->find($id);
             if (!$jpa) throw new Exception('El pedido que buscas no existe');
-            $hairGoals = Formula::whereIn('id', $jpa->formula->hair_goals)->get();
+            if (!$jpa->formula) $jpa->formula = new UserFormula();
+            $hairGoals = Formula::whereIn('id', $jpa->formula->hair_goals ?? [])->get();
             $jpa->formula->hair_goals_list = $hairGoals;
             $details = [];
             foreach ($jpa->details as $key => $detailJpa) {
@@ -62,6 +67,16 @@ class SaleController extends BasicController
         return \response($response->toArray(), $response->status);
     }
 
+    public function pos(Request $request) {
+        $response = Response::simpleTryCatch(function () use ($request) {
+
+            [$status, $sale] = PublicSaleController::create($request->sale, $request->details);
+            if (!$status) throw new Exception($sale['error']);
+
+        });
+        return response($response->toArray(), $response->status);
+    }
+
     public function setReactViewProperties(Request $request)
     {
         $statusesJpa = Status::select()
@@ -76,10 +91,24 @@ class SaleController extends BasicController
 
         $phone_prefixes = JSON::parse(File::get('../storage/app/utils/phone_prefixes.json'));
 
+        $bundlesJpa = Bundle::with(['items'])
+            ->where('status', true)
+            ->get();
+
+        $free_shipping = General::select(['description'])->where('correlative', 'free_shipping')->first();
+        $free_shipping_minimum_amount = General::select(['description'])->where('correlative', 'free_shipping_minimum_amount')->first();
+        $free_shipping_amount = General::select(['description'])->where('correlative', 'free_shipping_amount')->first();
+        $free_shipping_zones = General::select(['description'])->where('correlative', 'free_shipping_zones')->first();
+
         return [
             'statuses' => $statusesJpa,
             'items' => $itemsJpa,
-            'phone_prefixes' => $phone_prefixes
+            'phone_prefixes' => $phone_prefixes,
+            'bundles' => $bundlesJpa,
+            'free_shipping' => $free_shipping->description ?? 'false',
+            'free_shipping_minimum_amount' => $free_shipping_minimum_amount->description ?? '100',
+            'free_shipping_amount' => $free_shipping_amount->description ?? '10',
+            'free_shipping_zones' => $free_shipping_zones->description ?? 'metropolitana',
         ];
     }
 

@@ -115,6 +115,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')->group(function () {
             Route::get('/sales/{id}', [AdminSaleController::class, 'get']);
             Route::post('/sales', [AdminSaleController::class, 'save']);
+            Route::post('/sales/pos', [AdminSaleController::class, 'pos']);
             Route::post('/sales/paginate', [AdminSaleController::class, 'paginate']);
             Route::patch('/sales/status', [AdminSaleController::class, 'status']);
             Route::patch('/sales/{field}', [AdminSaleController::class, 'boolean']);
