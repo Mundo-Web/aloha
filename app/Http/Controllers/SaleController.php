@@ -52,7 +52,7 @@ class SaleController extends Controller
             $saleJpa->status_id = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b';
             $saleJpa->billing_type = $sale['billing_type'];
             $saleJpa->billing_number = $sale['billing_number'];
-            $saleJpa->origin = $sale['origin'] ?? null; // web, app, adm
+            $saleJpa->origin = $sale['origin'] ?? 'Web'; // web, app, adm
             $saleJpa->origin_comment = $sale['origin_comment'] ?? null; // web, app, adm
 
             // Address info
