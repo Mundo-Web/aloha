@@ -14,6 +14,7 @@ import Number2Currency from '../Utils/Number2Currency';
 import ReactAppend from '../Utils/ReactAppend';
 import UserFormulaInfo from '../Components/Adminto/UserFormulas/UserFormulaInfo';
 import NewSaleModal from '../Components/Adminto/Sales/NewSaleModal';
+import { renderToString } from 'react-dom/server';
 
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
@@ -248,6 +249,16 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
         {
           dataField: 'courier',
           caption: 'Enviado por',
+          width: '100px',
+          cellTemplate: (container, { data }) => {
+            container.html(renderToString(<>
+              <span className='d-block'>{data.courier}</span>
+              {
+                data.courier_amount &&
+                <small className='text-muted'>S/. {Number2Currency(data.courier_amount)}</small>
+              }
+            </>));
+          }
         },
         {
           dataField: 'origin',
@@ -518,8 +529,8 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
               <div className="form-group">
                 <label htmlFor="courierAmountInput" className='form-label'>Costo de envío</label>
                 <div className='input-group'>
-                <input type="number" className="form-control" id="courierAmountInput" step={0.01} defaultValue={0} disabled={!saleLoaded?.status?.reversible} />
-                <button className='btn btn-success btn-sm' disabled={!saleLoaded?.status?.reversible} type='button' onClick={() => onCourierAmountChange()}>Guardar</button>
+                  <input type="number" className="form-control" id="courierAmountInput" step={0.01} defaultValue={0} disabled={!saleLoaded?.status?.reversible} />
+                  <button className='btn btn-success btn-sm' disabled={!saleLoaded?.status?.reversible} type='button' onClick={() => onCourierAmountChange()}>Guardar</button>
                 </div>
               </div>
             </div>
