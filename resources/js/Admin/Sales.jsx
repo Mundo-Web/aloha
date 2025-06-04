@@ -63,6 +63,17 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
+  const onCourierAmountChange = async (e) => {
+    const courier_amount = $('#courierAmountInput').val()
+    const result = await salesRest.save({
+      id: saleLoaded.id,
+      courier_amount
+    })
+    if (!result) return
+    setSaleLoaded(result.data)
+    $(gridRef.current).dxDataGrid('instance').refresh()
+  }
+
   const onDeleteClicked = async (id) => {
     const { isConfirmed } = await Swal.fire({
       title: 'Anular pedido',
@@ -92,6 +103,8 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
       if (data) setSaleStatuses(data)
       else setSaleStatuses([])
     })
+
+    $('#courierAmountInput').val(saleLoaded?.courier_amount)
   }, [saleLoaded])
 
   const totalAmount = Number(saleLoaded?.amount)
@@ -493,7 +506,7 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
               <h5 className="card-title mb-0">Enviado por</h5>
             </div>
             <div className="card-body p-2">
-              <div className="">
+              <div className="form-group mb-2">
                 <label htmlFor="courierSelect" className="form-label">Agencia de envío</label>
                 <select className="form-select" id="courierSelect" value={saleLoaded?.courier ?? ''} onChange={onCourierChange} disabled={!saleLoaded?.status?.reversible}>
                   <option value="">- Selecciona -</option>
@@ -501,6 +514,13 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
                   <option value="Olva">Olva</option>
                   <option value="Shalom">Shalom</option>
                 </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="courierAmountInput" className='form-label'>Costo de envío</label>
+                <div className='input-group'>
+                <input type="number" className="form-control" id="courierAmountInput" step={0.01} defaultValue={0} disabled={!saleLoaded?.status?.reversible} />
+                <button className='btn btn-success btn-sm' disabled={!saleLoaded?.status?.reversible} type='button' onClick={() => onCourierAmountChange()}>Guardar</button>
+                </div>
               </div>
             </div>
           </div>
