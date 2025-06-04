@@ -21,7 +21,7 @@ use SoDe\Extend\Text;
 
 class SaleController extends Controller
 {
-    static function create(array $sale, array $details): array
+    static function create(array $sale, array $details, string $initialStatus = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b'): array
     {
         try {
             $itemsJpa = Item::whereIn('id', array_map(fn($item) => $item['id'], $details))->get();
@@ -49,7 +49,7 @@ class SaleController extends Controller
             $saleJpa->lastname = $sale['lastname'];
             $saleJpa->email = $sale['email'];
             $saleJpa->phone = Text::keep($sale['phone'], '0123456789');
-            $saleJpa->status_id = 'f13fa605-72dd-4729-beaa-ee14c9bbc47b';
+            $saleJpa->status_id = $initialStatus;
             $saleJpa->billing_type = $sale['billing_type'];
             $saleJpa->billing_number = $sale['billing_number'];
             $saleJpa->origin = $sale['origin'] ?? 'Web'; // web, app, adm

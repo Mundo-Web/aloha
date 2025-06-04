@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BasicController;
 use App\Http\Controllers\SaleController as PublicSaleController;
+use App\Jobs\SendSaleEmail;
 use App\Models\Bundle;
 use App\Models\Formula;
 use App\Models\General;
@@ -69,10 +70,9 @@ class SaleController extends BasicController
 
     public function pos(Request $request) {
         $response = Response::simpleTryCatch(function () use ($request) {
-
-            [$status, $sale] = PublicSaleController::create($request->sale, $request->details);
+            [$status, $sale] = PublicSaleController::create($request->sale, $request->details, '312f9a91-d3f2-4672-a6bf-678967616cac');
             if (!$status) throw new Exception($sale['error']);
-
+            SendSaleEmail::dispatchAfterResponse($sale);
         });
         return response($response->toArray(), $response->status);
     }

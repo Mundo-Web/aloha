@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Http\Controllers\MailingController;
 use App\Models\Formula;
 use App\Models\Sale;
+use App\Models\UserFormula;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -50,7 +51,8 @@ class SendSaleEmail implements ShouldQueue
         'bundle',
         'coupon'
       ])->find($data->id);
-      $hairGoals = Formula::whereIn('id', $jpa->formula->hair_goals)->get();
+      $hairGoals = Formula::whereIn('id', $jpa->formula->hair_goals ?? [])->get();
+      if (!$jpa->formula) $jpa->formula = new UserFormula();
       $jpa->formula->hair_goals_list = $hairGoals;
 
       $data =  [
@@ -92,7 +94,7 @@ class SendSaleEmail implements ShouldQueue
         ]);
       }
     } catch (\Throwable $th) {
-      // dump($th->getMessage());
+      dump($th->getMessage());
     }
   }
 }

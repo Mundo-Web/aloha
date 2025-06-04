@@ -22,68 +22,77 @@
 
 <body>
     <div style="background: linear-gradient(to bottom right, #C3B9D2, #EACCB0); padding: 40px; width: 680px;">
+        @if (isset($sale->formula->id))
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 style="color: #fff; padding: 10px 20px; border: 1px solid #fff; border-radius: 16px;">
+                    Tu fórmula única, {{ explode(' ', $sale->name)[0] }}:
+                </h2>
+                <img src="https://vua.pe/assets/img/logo.svg" alt="Vua" style="height: 40px; margin-top: -15px;">
+            </div>
+            <div
+                style="background-color: #fff; padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/face-glass.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        ¿Tu cabello recibió tratamiento?
+                    </b>
+                    {{ $sale->formula->hasTreatment->description }}
+                </p>
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/eyes.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        Tipo de cabello
+                    </b>
+                    {{ $sale->formula->scalpType->description }}
+                </p>
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/check.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        Cuero cabelludo
+                    </b>
+                    {{ $sale->formula->hairType->description }}
+                </p>
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/check.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        Grosor de cabello
+                    </b>
+                    {{ $sale->formula->hairThickness->description }}
+                </p>
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/bulb.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        Objetivos
+                    </b>
+                    @foreach ($sale->formula->hair_goals_list as $goal)
+                        {{ $goal->description }},
+                    @endforeach
+                </p>
+                <p>
+                    <b>
+                        <img src="https://vua.pe/assets/img/emojis/flower.png" alt=""
+                            style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
+                        Fragancia
+                    </b>
+                    {{ $sale->formula->fragrance->name }}
+                </p>
+            </div>
+        @endif
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h2 style="color: #fff; padding: 10px 20px; border: 1px solid #fff; border-radius: 16px;">
-                Tu fórmula única, {{ explode(' ', $sale->name)[0] }}:
+                Resumen de tu pedido @if (!isset($sale->formula->id))
+                    - {{ explode(' ', $sale->name)[0] }}:
+                @endif
             </h2>
-            <img src="https://vua.pe/assets/img/logo.svg" alt="Vua" style="height: 40px; margin-top: -15px;">
+            @if (!isset($sale->formula->id))
+                <img src="https://vua.pe/assets/img/logo.svg" alt="Vua" style="height: 40px; margin-top: -15px;">
+            @endif
         </div>
-        <div
-            style="background-color: #fff; padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/face-glass.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    ¿Tu cabello recibió tratamiento?
-                </b>
-                {{ $sale->formula->hasTreatment->description }}
-            </p>
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/eyes.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    Tipo de cabello
-                </b>
-                {{ $sale->formula->scalpType->description }}
-            </p>
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/check.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    Cuero cabelludo
-                </b>
-                {{ $sale->formula->hairType->description }}
-            </p>
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/check.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    Grosor de cabello
-                </b>
-                {{ $sale->formula->hairThickness->description }}
-            </p>
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/bulb.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    Objetivos
-                </b>
-                @foreach ($sale->formula->hair_goals_list as $goal)
-                    {{ $goal->description }},
-                @endforeach
-            </p>
-            <p>
-                <b>
-                    <img src="https://vua.pe/assets/img/emojis/flower.png" alt=""
-                        style="height: 18px; width: 18px; object-fit: contain; object-position: center; padding-top: 5px;">
-                    Fragancia
-                </b>
-                {{ $sale->formula->fragrance->name }}
-            </p>
-        </div>
-        <h2
-            style="color: #fff; padding: 10px 20px; border: 1px solid #fff; border-radius: 16px; width: max-content; margin-bottom: 10px;">
-            Resumen de tu pedido</h2>
         <div style="display: flex; gap: 5px; margin-bottom: 10px;">
             @php
                 $lastFormula = $sale->user_formula_id;

@@ -117,7 +117,7 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
     const request = {
       sale: {
         ...getSale(),
-        coupon: coupon.name
+        coupon: coupon?.name || null,
       },
       details: cart
     }

@@ -52,6 +52,17 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
+  const onCourierChange = async (e) => {
+    const courier = e.target.value
+    const result = await salesRest.save({
+      id: saleLoaded.id,
+      courier
+    })
+    if (!result) return
+    setSaleLoaded(result.data)
+    $(gridRef.current).dxDataGrid('instance').refresh()
+  }
+
   const onDeleteClicked = async (id) => {
     const { isConfirmed } = await Swal.fire({
       title: 'Anular pedido',
@@ -64,8 +75,8 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
     if (!isConfirmed) return
     const result = await salesRest.delete(id)
     if (!result) return
-    
-    
+
+
   }
 
   const onModalOpen = async (saleId) => {
@@ -222,9 +233,13 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
           }
         },
         {
+          dataField: 'courier',
+          caption: 'Enviado por',
+        },
+        {
           dataField: 'origin',
           caption: 'Origen',
-        }, 
+        },
         {
           caption: 'Acciones',
           cellTemplate: (container, { data }) => {
@@ -475,6 +490,23 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
 
           <div className="card">
             <div className="card-header p-2">
+              <h5 className="card-title mb-0">Enviado por</h5>
+            </div>
+            <div className="card-body p-2">
+              <div className="">
+                <label htmlFor="courierSelect" className="form-label">Agencia de envío</label>
+                <select className="form-select" id="courierSelect" value={saleLoaded?.courier ?? ''} onChange={onCourierChange} disabled={!saleLoaded?.status?.reversible}>
+                  <option value="">- Selecciona -</option>
+                  <option value="Kamary">Kamary</option>
+                  <option value="Olva">Olva</option>
+                  <option value="Shalom">Shalom</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-header p-2">
               <h5 className="card-title mb-0">Cambios de Estado</h5>
             </div>
             <div className="card-body p-2 d-flex flex-column gap-1" style={{
@@ -507,7 +539,7 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
         </div>
       </div>
     </Modal>
-    <NewSaleModal modalRef={modalRef} gridRef={gridRef} items={items} phone_prefixes={phone_prefixes} bundles={bundles}/>
+    <NewSaleModal modalRef={modalRef} gridRef={gridRef} items={items} phone_prefixes={phone_prefixes} bundles={bundles} />
   </>
   )
 }

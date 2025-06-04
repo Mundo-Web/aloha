@@ -46,7 +46,8 @@ class Sale extends Model
         'billing_number',
         'status_id',
         'origin',
-        'origin_comment'
+        'origin_comment',
+        'courier'
     ];
 
     public function formula(): BelongsTo
