@@ -13,7 +13,14 @@ import SalesRest from "../../../Actions/Admin/SalesRest";
 const couponsRest = new CouponsRest()
 const salesRest = new SalesRest()
 
-const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }) => {
+const NewSaleModal = ({
+  modalRef, gridRef, items,
+  phone_prefixes = [], bundles,
+  free_shipping,
+  free_shipping_minimum_amount,
+  free_shipping_amount,
+  free_shipping_zones
+}) => {
 
   if (!modalRef) modalRef = useRef()
 
@@ -53,7 +60,21 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
   const bundle = calculateBundle(cart); // Implementar esta función según la lógica de bundles
   const bundleDiscount = totalPrice * (bundle?.percentage || 0);
   const couponDiscount = calculateCouponDiscount(coupon, totalPrice); // Implementar esta función
-  const finalPrice = totalPrice - bundleDiscount - couponDiscount;
+
+  let delivery = 0
+  if (free_shipping == 'true') {
+    for (const zone of free_shipping_zones.split(',')) {
+      if ((totalPrice - bundleDiscount) >= free_shipping_minimum_amount) {
+        places[zone].delivery = 'Gratis'
+        delivery = 0
+      } else {
+        places[zone].delivery = `S/ ${Number2Currency(free_shipping_amount)}`
+        delivery = Number(free_shipping_amount)
+      }
+    }
+  }
+
+  const finalPrice = totalPrice - bundleDiscount - couponDiscount + delivery;
 
   const onColorClick = (index, color) => {
     const newCart = [...cart];
@@ -182,7 +203,7 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
                     name="billing_type"
                     id="billing_type_boleta"
                     value="boleta"
-                    style={{marginTop : '-2px'}}
+                    style={{ marginTop: '-2px' }}
                     checked={sale.billing_type === 'boleta'}
                     onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))}
                     required
@@ -203,7 +224,7 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
                     name="billing_type"
                     id="billing_type_factura"
                     value="factura"
-                    style={{marginTop : '-2px'}}
+                    style={{ marginTop: '-2px' }}
                     checked={sale.billing_type === 'factura'}
                     onChange={(e) => setSale(old => ({ ...old, billing_type: e.target.value }))}
                     required
@@ -307,6 +328,10 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
             <option value="Instagram">Instagram</option>
             <option value="WhatsApp">WhatsApp</option>
             <option value="TikTok">TikTok</option>
+            <option value="Recompra">Recompra</option>
+            <option value="Instagram recompra">Instagram recompra</option>
+            <option value="WhatsApp recompra">WhatsApp recompra</option>
+            <option value="Cancelado">Cancelado</option>
           </SelectFormGroup>
         </div>
         <TextareaFormGroup label='Comentario interno'
@@ -382,8 +407,8 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
             col={'col-md-4'}
             type="number"
             value={sale.number}
-            onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))} 
-            required/>
+            onChange={(e) => setSale(old => ({ ...old, number: e.target.value }))}
+            required />
         </div>
         <InputFormGroup label='Apartamento, habitación, piso, etc.'
           value={sale.reference}
@@ -451,7 +476,6 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
               {cart.map((detail, index) => {
                 const product = items.find(item => item.id === detail.id);
                 const colors = product?.colors || [];
-                const colorsCount = detail.colors?.length ?? 0;
                 return <tr key={index}>
                   <td>
                     {product?.name || 'Producto no encontrado'}
@@ -538,6 +562,16 @@ const NewSaleModal = ({ modalRef, gridRef, items, phone_prefixes = [], bundles }
                   <td className="text-end">S/ -{Number2Currency(Math.round(couponDiscount * 10) / 10)}</td>
                 </tr>
               )}
+              <tr>
+                <td colSpan={4} className="text-end">Envío:</td>
+                <td className="text-end">
+                  {
+                    typeof places?.[sale.department]?.delivery == 'number'
+                      ? `S/ ${Number2Currency(places?.[sale.department]?.delivery)}`
+                      : places?.[sale.department]?.delivery
+                  }
+                </td>
+              </tr>
               <tr>
                 <td colSpan={4} className="text-end">Total:</td>
                 <td className="text-end">S/ {Number2Currency(Math.round(finalPrice * 10) / 10)}</td>

@@ -48,7 +48,9 @@ class Sale extends Model
         'origin',
         'origin_comment',
         'courier',
-        'courier_amount'
+        'courier_amount',
+        'pickup',
+        'pickup_amount'
     ];
 
     public function formula(): BelongsTo

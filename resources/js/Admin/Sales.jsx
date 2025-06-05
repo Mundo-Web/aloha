@@ -19,7 +19,14 @@ import { renderToString } from 'react-dom/server';
 const salesRest = new SalesRest()
 const saleStatusesRest = new SaleStatusesRest()
 
-const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
+const Sales = ({
+  statuses, items,
+  phone_prefixes, bundles,
+  free_shipping,
+  free_shipping_minimum_amount,
+  free_shipping_amount,
+  free_shipping_zones
+}) => {
   const gridRef = useRef()
   const detailsModalRef = useRef()
   const modalRef = useRef()
@@ -75,6 +82,28 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
+  const onPickupChange = async (e) => {
+    const pickup = e.target.value
+    const result = await salesRest.save({
+      id: saleLoaded.id,
+      pickup
+    })
+    if (!result) return
+    setSaleLoaded(result.data)
+    $(gridRef.current).dxDataGrid('instance').refresh()
+  }
+
+  const onPickupAmountChange = async (e) => {
+    const pickup_amount = $('#pickupAmountInput').val()
+    const result = await salesRest.save({
+      id: saleLoaded.id,
+      pickup_amount
+    })
+    if (!result) return
+    setSaleLoaded(result.data)
+    $(gridRef.current).dxDataGrid('instance').refresh()
+  }
+
   const onDeleteClicked = async (id) => {
     const { isConfirmed } = await Swal.fire({
       title: 'Anular pedido',
@@ -105,14 +134,24 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
       else setSaleStatuses([])
     })
 
-    $('#courierAmountInput').val(saleLoaded?.courier_amount)
+    $('#pickupAmountInput').val(saleLoaded?.pickup_amount ?? 0)
+    $('#courierAmountInput').val(saleLoaded?.courier_amount ?? 0)
   }, [saleLoaded])
 
-  const totalAmount = Number(saleLoaded?.amount)
-    + Number(saleLoaded?.delivery)
-    - Number(saleLoaded?.bundle_discount)
-    - Number(saleLoaded?.renewal_discount)
-    - Number(saleLoaded?.coupon_discount)
+  const onDeliveryChange = async () => {
+    const courier_amount = $('#courierAmountInput').val()
+    const pickup_amount = $('#pickupAmountInput').val()
+
+    const result = await salesRest.save({
+      id: saleLoaded.id,
+      courier_amount,
+      pickup_amount
+    })
+
+    if (!result) return
+    setSaleLoaded(result.data)
+    $(gridRef.current).dxDataGrid('instance').refresh()
+  }
 
   const saleLoadedPhone = saleLoaded?.phone.clean('0-9').startsWith('51')
     ? saleLoaded?.phone.clean('0-9')
@@ -247,17 +286,30 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
           }
         },
         {
+          dataField: 'pickup',
+          caption: 'Recogido por',
+          width: '100px',
+        },
+        {
+          dataField: 'pickup_amount',
+          caption: 'Costo de recogo',
+          dataType: 'number',
+          width: '80px',
+          cellTemplate: (container, { data }) => {
+            container.text(`S/. ${Number2Currency(data.pickup_amount)}`);
+          }
+        },
+        {
           dataField: 'courier',
           caption: 'Enviado por',
-          width: '100px',
+        },
+        {
+          dataField: 'courier_amount',
+          caption: 'Costo de envío',
+          dataType: 'number',
+          width: '80px',
           cellTemplate: (container, { data }) => {
-            container.html(renderToString(<>
-              <span className='d-block'>{data.courier}</span>
-              {
-                data.courier_amount &&
-                <small className='text-muted'>S/. {Number2Currency(data.courier_amount)}</small>
-              }
-            </>));
+            container.text(`S/. ${Number2Currency(data.courier_amount)}`);
           }
         },
         {
@@ -513,24 +565,45 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
           </div>
 
           <div className="card">
-            <div className="card-header p-2">
+            <div className="card-header p-2 d-flex justify-content-between align-items-center">
               <h5 className="card-title mb-0">Enviado por</h5>
+              <button className='btn btn-success btn-xs pull-rigth' disabled={!saleLoaded?.status?.reversible} type='button' onClick={() => onDeliveryChange()}>Guardar</button>
             </div>
             <div className="card-body p-2">
-              <div className="form-group mb-2">
-                <label htmlFor="courierSelect" className="form-label">Agencia de envío</label>
-                <select className="form-select" id="courierSelect" value={saleLoaded?.courier ?? ''} onChange={onCourierChange} disabled={!saleLoaded?.status?.reversible}>
-                  <option value="">- Selecciona -</option>
-                  <option value="Kamary">Kamary</option>
-                  <option value="Olva">Olva</option>
-                  <option value="Shalom">Shalom</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="courierAmountInput" className='form-label'>Costo de envío</label>
-                <div className='input-group'>
-                  <input type="number" className="form-control" id="courierAmountInput" step={0.01} defaultValue={0} disabled={!saleLoaded?.status?.reversible} />
-                  <button className='btn btn-success btn-sm' disabled={!saleLoaded?.status?.reversible} type='button' onClick={() => onCourierAmountChange()}>Guardar</button>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group mb-2">
+                    <label htmlFor="pickupSelect" className="form-label">Agencia de recojo</label>
+                    <select className="form-select" id="pickupSelect" value={saleLoaded?.pickup ?? ''} onChange={onPickupChange} disabled={!saleLoaded?.status?.reversible}>
+                      <option value="">- Selecciona -</option>
+                      <option value="Kamary">Kamary</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="pickupAmountInput" className='form-label'>Costo de recojo</label>
+                    <div className='input-group'>
+                      <span className='input-group-text'>S/</span>
+                      <input type="number" className="form-control" id="pickupAmountInput" disabled={!saleLoaded?.status?.reversible} />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group mb-2">
+                    <label htmlFor="courierSelect" className="form-label">Agencia de envío</label>
+                    <select className="form-select" id="courierSelect" value={saleLoaded?.courier ?? ''} onChange={onCourierChange} disabled={!saleLoaded?.status?.reversible}>
+                      <option value="">- Selecciona -</option>
+                      <option value="Kamary">Kamary</option>
+                      <option value="Olva">Olva</option>
+                      <option value="Shalom">Shalom</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="courierAmountInput" className='form-label'>Costo de envío</label>
+                    <div className='input-group'>
+                      <span className='input-group-text'>S/</span>
+                      <input type="number" className="form-control" id="courierAmountInput" step={0.01} disabled={!saleLoaded?.status?.reversible} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -570,7 +643,12 @@ const Sales = ({ statuses, items, phone_prefixes, bundles }) => {
         </div>
       </div>
     </Modal>
-    <NewSaleModal modalRef={modalRef} gridRef={gridRef} items={items} phone_prefixes={phone_prefixes} bundles={bundles} />
+    <NewSaleModal modalRef={modalRef} gridRef={gridRef} items={items} phone_prefixes={phone_prefixes} bundles={bundles}
+      free_shipping={free_shipping}
+      free_shipping_minimum_amount={free_shipping_minimum_amount}
+      free_shipping_amount={free_shipping_amount}
+      free_shipping_zones={free_shipping_zones}
+    />
   </>
   )
 }
