@@ -114,7 +114,7 @@ class SaleController extends BasicController
 
     public function setPaginationInstance(string $model)
     {
-        $model::where('created_at', '<=', now()->subDays(1))
+        $model::where('created_at', '<=', now()->subDays(3))
             ->where('status_id', 'f13fa605-72dd-4729-beaa-ee14c9bbc47b')
             ->update([
                 'status_id' => 'c063efb2-1e9b-4a43-8991-b444c14d30dd'
