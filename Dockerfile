@@ -29,14 +29,14 @@ COPY . .
 RUN composer install --no-interaction --no-dev --optimize-autoloader
 RUN php artisan key:generate 
 
-RUN sudo chmod -R 777 storage
-RUN sudo chmod -R 777 bootstrap/cache
-RUN sudo chmod -R 777 public/uploads
+RUN chmod -R 777 storage
+RUN chmod -R 777 bootstrap/cache
+RUN chmod -R 777 public/uploads
 
 RUN php artisan storage:link
 
 # Configurar permisos
-RUN sudo chown -R www-data:www-data storage bootstrap/cache public/uploads
+RUN chown -R www-data:www-data storage bootstrap/cache public/uploads
 
 # Exponer puerto 9001
 EXPOSE 9000
