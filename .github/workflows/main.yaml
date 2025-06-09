@@ -26,5 +26,5 @@ jobs:
             docker compose up -d
             docker images -f "dangling=true" -q | xargs docker rmi
             CONTAINER_ID=$(docker ps -qf "ancestor=vua/laravel-app" -q)
-            docker exec -i $CONTAINER_ID bash -c "cd /var/www && php artisan migrate --force && php artisan config:clear && php artisan cache:clear && curl https://wajs.factusode.xyz/api/github/Vuá"
+            docker exec -i $CONTAINER_ID bash -c "cd /var/www && php artisan migrate --force && php artisan config:clear && php artisan cache:clear && curl https://whatsapp.sode.pe/api/github/Vuá"
           EOF
