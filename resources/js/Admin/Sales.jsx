@@ -484,10 +484,13 @@ const Sales = ({
                 <b>Subtotal:</b>
                 <span>S/ {Number2Currency(saleLoaded?.amount)}</span>
               </div>
-              <div className="d-flex justify-content-between">
-                <b>Descuento interno:</b>
-                <span>S/ {Number2Currency(saleLoaded?.amount_discount)}</span>
-              </div>
+              {
+                saleLoaded?.amount_discount > 0 &&
+                <div className="d-flex justify-content-between">
+                  <b>Descuento interno:</b>
+                  <span>S/ {Number2Currency(saleLoaded?.amount_discount)}</span>
+                </div>
+              }
               <div className="d-flex justify-content-between">
                 <b>Envío:</b>
                 <span>{
