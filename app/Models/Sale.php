@@ -34,6 +34,7 @@ class Sale extends Model
         'number',
         'reference',
         'amount',
+        'amount_discount',
         'delivery',
         'bundle_discount',
         'bundle_id',

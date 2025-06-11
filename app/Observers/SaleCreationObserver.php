@@ -11,6 +11,7 @@ class SaleCreationObserver
     {
         $total_amount = $sale->amount;
 
+        if ($sale->amount_discount) $total_amount -= $sale->amount_discount;
         if ($sale->delivery) $total_amount += $sale->delivery;
         if ($sale->bundle_discount) $total_amount -= $sale->bundle_discount;
         if ($sale->renewal_discount) $total_amount -= $sale->renewal_discount;

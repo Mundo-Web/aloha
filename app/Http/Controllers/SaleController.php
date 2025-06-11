@@ -66,7 +66,12 @@ class SaleController extends Controller
             $saleJpa->reference = $sale['reference'] ?? null;
             $saleJpa->comment = $sale['comment'] ?? null;
 
+            
             if (Auth::check()) {
+                $userJpa = User::find(Auth::user()->id);
+                if ($userJpa->hasRole('Admin')) {
+                    $saleJpa->amount_discount = $sale['amount_discount'] ?? 0;
+                }
                 $userJpa = User::find(Auth::user()->id);
                 $userJpa->phone = $sale['phone'];
                 $userJpa->country = $sale['country'];

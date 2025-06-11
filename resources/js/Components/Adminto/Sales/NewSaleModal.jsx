@@ -9,6 +9,7 @@ import Tippy from "@tippyjs/react";
 import CouponsRest from "../../../Actions/CouponsRest";
 import Number2Currency from "../../../Utils/Number2Currency";
 import SalesRest from "../../../Actions/Admin/SalesRest";
+import Swal from "sweetalert2";
 
 const couponsRest = new CouponsRest()
 const salesRest = new SalesRest()
@@ -24,7 +25,29 @@ const NewSaleModal = ({
 
   if (!modalRef) modalRef = useRef()
 
-  const [sale, setSale] = useState({});
+  const [sale, setSale] = useState({
+    "billing_type": 'boleta',
+    "phone_prefix": '51',
+    "billing_number": '',
+    "email": '',
+    "phone": '',
+    "origin": '',
+    "origin_comment": '',
+    "department": '',
+    "province": '',
+    "zip_code": '',
+    "address": '',
+    "number": '',
+    "reference": '',
+    "comment": '',
+    "name": '',
+    "lastname": '',
+    "country": '',
+    "department_code": '',
+    "district": '',
+    "coupon": '',
+    "amount_discount": 0,
+  });
   const [cart, setCart] = useState([]);
 
   const [couponCode, setCouponCode] = useState('');
@@ -74,7 +97,9 @@ const NewSaleModal = ({
     }
   }
 
-  const finalPrice = totalPrice - bundleDiscount - couponDiscount + delivery;
+  const amountDiscount = Number(sale.amount_discount) || 0
+
+  const finalPrice = totalPrice - bundleDiscount - couponDiscount - amountDiscount + delivery;
 
   const onColorClick = (index, color) => {
     const newCart = [...cart];
@@ -135,6 +160,16 @@ const NewSaleModal = ({
   const onModalSubmit = async (e) => {
     e.preventDefault()
 
+    const cleanCart = cart.filter(item => item.quantity > 0)
+    if (cleanCart.length == 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No hay productos en la venta',
+        text: 'Debe agregar al menos un producto a la venta'
+      })
+      return
+    }
+
     const request = {
       sale: {
         ...getSale(),
@@ -165,24 +200,51 @@ const NewSaleModal = ({
     return $(container)
   }
 
+  const resetSale = () => {
+    setSale({
+      "billing_type": 'boleta',
+      "phone_prefix": '51',
+      "billing_number": '',
+      "email": '',
+      "phone": '',
+      "origin": '',
+      "origin_comment": '',
+      "department": '',
+      "province": '',
+      "zip_code": '',
+      "address": '',
+      "number": '',
+      "reference": '',
+      "comment": '',
+      "name": '',
+      "lastname": '',
+      "country": '',
+      "department_code": '',
+      "district": '',
+      "coupon": '',
+      "amount_discount": 0,
+    })
+    setCart(items.filter(({ is_default }) => is_default).map(item => {
+      return {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        colors: [],
+        quantity: 0
+      }
+    }))
+    setCouponCode('')
+    setCoupon(null)
+  }
+
   useEffect(() => {
     $(modalRef.current).on('shown.bs.modal', () => {
-      setSale({
-        billing_type: 'boleta',
-        phone_prefix: '51'
-      })
-      setCart(items.filter(({ is_default }) => is_default).map(item => {
-        return {
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          colors: [],
-          quantity: 0
-        }
-      }))
-      setCouponCode('')
-      setCoupon(null)
+      resetSale()
     })
+
+    return () => {
+      $(modalRef.current).off('shown.bs.modal')
+    }
   }, [])
 
   return <Modal id="new-sale-modal" modalRef={modalRef} title='Nueva venta' size='lg' isStatic hideFooter onSubmit={onModalSubmit}>
@@ -536,6 +598,24 @@ const NewSaleModal = ({
               <tr>
                 <td colSpan={4} className="text-end">Subtotal:</td>
                 <td className="text-end">S/ {totalPrice.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td colSpan={4} className="text-end">Descuento interno:</td>
+                <td className="text-end p-0">
+                  <div className="input-group input-group-sm flex-nowrap">
+                    <span className="input-group-text">S/ </span>
+                    <input
+                      type="number"
+                      className="form-control form-control-sm"
+                      style={{ width: '100px' }}
+                      value={sale.amount_discount}
+                      onChange={e => setSale({
+                        ...sale,
+                        amount_discount: e.target.value
+                      })}
+                    />
+                  </div>
+                </td>
               </tr>
               {bundle && (
                 <tr>

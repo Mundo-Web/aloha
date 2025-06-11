@@ -14,7 +14,7 @@ const TextareaFormGroup = ({ col, label, eRef, placeholder, specification, requi
         </>
       }
     </label>
-    <textarea ref={eRef} className='form-control' placeholder={placeholder} required={required} rows={rows} defaultValue={value} style={{ minHeight: (rows * 27), fieldSizing: 'content' }} onChange={onChange} />
+    <textarea ref={eRef} className='form-control' placeholder={placeholder} required={required} rows={rows} defaultValue={value} value={value} style={{ minHeight: (rows * 27), fieldSizing: 'content' }} onChange={onChange} />
   </div>
 }
 
