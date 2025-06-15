@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\SaleController as AdminSaleController;
 use App\Http\Controllers\Admin\SaleStatusController as AdminSaleStatusController;
 use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
 use App\Http\Controllers\Admin\SupplyController as AdminSupplyController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 // Customer
@@ -158,6 +159,12 @@ Route::middleware('auth')->group(function () {
             Route::patch('/fragrances/status', [AdminFragranceController::class, 'status']);
             Route::patch('/fragrances/{field}', [AdminFragranceController::class, 'boolean']);
             Route::delete('/fragrances/{id}', [AdminFragranceController::class, 'delete']);
+
+            Route::post('/transactions', [AdminTransactionController::class, 'save']);
+            Route::post('/transactions/paginate', [AdminTransactionController::class, 'paginate']);
+            Route::patch('/transactions/status', [AdminTransactionController::class, 'status']);
+            Route::patch('/transactions/{field}', [AdminTransactionController::class, 'boolean']);
+            Route::delete('/transactions/{id}', [AdminTransactionController::class, 'delete']);
 
             Route::post('/ads', [AdminAdController::class, 'save']);
             Route::post('/ads/paginate', [AdminAdController::class, 'paginate']);

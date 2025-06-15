@@ -26,7 +26,7 @@ const SelectFormGroup = ({ id, col, className, label, specification, eRef, value
   }, [dropdownParent, value, ...effectWith])
 
   return <div id={containerId} className={`form-group ${col} ${!noMargin && 'mb-2'}`}>
-    <label htmlFor={id} className="form-label mb-1">
+    <label htmlFor={id} className="form-label">
       {
         label &&
         <>
