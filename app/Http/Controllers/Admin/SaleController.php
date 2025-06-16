@@ -127,7 +127,7 @@ class SaleController extends BasicController
             ]);
 
         return $model::select('sales.*')
-            ->where('status_id', '!=', 'c063efb2-1e9b-4a43-8991-b444c14d30dd')
+            // ->where('status_id', '!=', 'c063efb2-1e9b-4a43-8991-b444c14d30dd')
             ->with(['status', 'renewal'])
             ->join('statuses AS status', 'status.id', 'sales.status_id');
     }
