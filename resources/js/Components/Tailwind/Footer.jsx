@@ -18,35 +18,104 @@ const Footer = ({ socials, terms, footerLinks = [] }) => {
 
   return (
     <>
-      <footer className="px-[5%] py-[10%] md:px-[10%] md:py-[7.5%] lg:py-[5%] bg-transparent text-white relative grid grid-cols-3 md:grid-cols-2 gap-x-4 gap-y-6 text-sm">
-        <div className="col-span-2 flex flex-col gap-4 md:flex-row-reverse items-start justify-evenly md:col-span-1">
-          <ul className="flex flex-col gap-2">
-            {links.whatsapp && <li><a href={`//wa.me/${links.whatsapp}`}>Conversemos</a></li>}
-            <li><a href="/faqs">Preguntas frecuentes</a></li>
-            <li>
-              <span className="cursor-pointer" onClick={openModal}>
-                Términos y condiciones
-              </span>
-            </li>
-            {links['customer-complaints'] && <li><a href={links['customer-complaints']} target="_blank">Libro de reclamaciones</a></li>}
-          </ul>
-          <img src="/assets/img/logo.svg" alt="Trasciende Logo" className="h-8 w-max" />
-        </div>
-        <div className="col-span-1 flex flex-col gap-4 md:flex-row items-start justify-evenly md:col-span-1">
-          <ul className="flex flex-col gap-2">
-            {links.phone && <li><a href={`tel:${links.phone}`}>Teléfono</a></li>}
-            {links.email && <li><a href={`mailto:${links.email}`}>Mail</a></li>}
-            {links.whatsapp && <li><a href={`//wa.me/${links.whatsapp}`}>WhatsApp</a></li>}
-          </ul>
-          <div className="flex items-end justify-start gap-2">
-            {socials.map((social, index) => (
-              <Tippy key={index} content={`Ver ${social.name} en ${social.description}`}>
-                <a
-                  href={social.link}
-                  className={`text-xl bg-white text-[#f1d7c1] ${social.icon} w-8 h-8 pt-0.5 text-center rounded-full`}
-                />
-              </Tippy>
-            ))}
+      <footer className="bg-[#1A0B3D] text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                  <i className="w-5 h-5 mdi mdi-earth text-[#1A0B3D]" />
+                </div>
+                <span className="text-xl font-bold">AlohaPeru</span>
+              </div>
+              <p className="text-gray-300 mb-4">Tu socio confiable para el éxito online</p>
+              <div className="flex space-x-2">
+                <input placeholder="Tu email" className="bg-gray-800 border-gray-700" />
+                <button className="bg-blue-600 hover:bg-blue-700">Suscribirse</button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Productos</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Hosting Web
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Dominios
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    VPS
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Email
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Soporte</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Centro de ayuda
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Contacto
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Estado del servicio
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Documentación
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Empresa</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Acerca de
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Carreras
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white">
+                    Términos
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 AlohaPeru. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

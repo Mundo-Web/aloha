@@ -24,7 +24,7 @@
   @endisset
 
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
+  {{-- <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png"> --}}
 
   <link href="/lte/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
   <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
