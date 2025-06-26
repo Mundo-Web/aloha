@@ -28,7 +28,7 @@ const Footer = ({ socials, terms, footerLinks = [] }) => {
                 </div>
                 <span className="text-xl font-bold">AlohaPeru</span>
               </div>
-              <p className="text-gray-300 mb-4">Tu socio confiable para el éxito online</p>
+              <p className="text-gray-300 mb-4"><a href="/" className="underline">alohaperu.com</a> es un servicio de alojamiento web económico, estable y de alta calidad.</p>002000
               <div className="flex space-x-2">
                 <input placeholder="Tu email" className="bg-gray-800 border-gray-700" />
                 <button className="bg-blue-600 hover:bg-blue-700">Suscribirse</button>

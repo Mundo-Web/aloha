@@ -3,7 +3,7 @@ import { Local } from 'sode-extend-react'
 
 const RigthBar = () => {
 
-  const settings = Local.get('adminto_settings') ?? { menuColor: 'gradient' }
+  const settings = Local.get('adminto_settings') ?? { menuColor: 'light' }
 
   // Theme
   const bsLight = document.getElementById('bs-default-stylesheet')
