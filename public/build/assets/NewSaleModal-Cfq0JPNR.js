@@ -1,0 +1,1 @@
+import"./AboutHeader-DEdD30eg.js";import"./index-RYns6xqu.js";import"./server.browser-D0dT10Bs.js";import{C as o}from"./CouponsRest-B3_jfIBN.js";import{S as m}from"./SalesRest-CjAnAtP7.js";import"./sweetalert2.all-DJo0UVK6.js";import"./main-BjVPLcVK.js";import"./___vite-browser-external_commonjs-proxy-DbMF7jdq.js";import"./BasicRest-Dts8qu_l.js";new o;new m;

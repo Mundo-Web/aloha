@@ -1,0 +1,1 @@
+import"./AboutHeader-DEdD30eg.js";import"./index-RYns6xqu.js";import{R as p}from"./index-SDlHnhXR.js";import"./sweetalert2.all-DJo0UVK6.js";import"./main-BjVPLcVK.js";import"./index-CXU7o9CY.js";import"./index-DNUR7M9R.js";import"./___vite-browser-external_commonjs-proxy-DbMF7jdq.js";p.setAppElement("#app");

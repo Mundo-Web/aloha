@@ -59,7 +59,7 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
             <span className="text-xl font-bold">AlohaPeru</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#" className="hover:text-blue-300">
+            <a href="/hostings" className="hover:text-blue-300">
               Hosting
             </a>
             <a href="#" className="hover:text-blue-300">

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Página no encontrada | VUA</title>
+    <title>Error 404 | {{ env('APP_NAME') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href="/lte/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
@@ -14,48 +14,52 @@
             box-sizing: border-box;
         }
 
-        .bg-vua-purple {
-            background-color: #a393c0;
+        .bg-aloha-purple {
+            background-color: #21133C;
         }
 
-        .bg-vua-light {
+        .bg-aloha-light {
             background-color: #e8d8df;
         }
 
-        .text-vua-purple {
-            color: #a393c0;
+        .text-aloha-purple {
+            color: #21133C;
         }
 
-        .border-vua-purple {
-            border-color: #a393c0;
+        .border-aloha-purple {
+            border-color: #21133C;
         }
 
-        .hover\:bg-vua-purple:hover {
-            background-color: #a393c0;
+        .hover\:bg-aloha-purple:hover {
+            background-color: #21133C;
         }
     </style>
 </head>
 
 <body class="bg-white min-h-screen flex flex-col">
-    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 text-center">
-        <div class="max-w-md mx-auto">
-            <h1 class="text-9xl font-bold text-vua-purple">404</h1>
+    <img src="/images/img/bg-home.png"
+        class='absolute h-full w-full top-0 object-cover object-bottom z-0 select-none' alt='Fondo AlohaPeru' />
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 text-center z-20">
+        <div class="max-w-md mx-auto text-white">
+            <h1 class="text-9xl font-bold ">404</h1>
 
             <div class="mt-6 mb-10">
-                <h2 class="text-3xl font-semibold text-gray-700">¡Página no encontrada!</h2>
-                <p class="mt-4 text-gray-600">
+                <h2 class="text-3xl font-semibold ">¡Página no encontrada!</h2>
+                <p class="mt-4 opacity-75">
                     Lo sentimos, la página que estás buscando no existe o ha sido movida.
                 </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                <a href="/" class="w-full bg-vua-purple text-white px-6 py-3 rounded-md hover:bg-opacity-90 transition-all">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8 font-bold">
+                <a href="/"
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-opacity-90 transition-all">
                     <i class="mdi mdi-home me-1"></i>
                     Inicio
                 </a>
-                <a href="/test" class="w-full bg-white border border-vua-purple text-vua-purple px-6 py-3 rounded-md hover:bg-vua-purple hover:text-white transition-all">
-                    <i class="mdi mdi-flask me-1"></i>
-                    Crea tu fórmula
+                <a href="/hostings"
+                    class="w-full bg-transparent hover:bg-blue-600 border border-white hover:border-blue-600 text-white px-6 py-3 rounded-md hover:text-white transition-all">
+                    <i class="mdi mdi-server me-1"></i>
+                    Hosting
                 </a>
             </div>
         </div>

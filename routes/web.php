@@ -84,8 +84,8 @@ Route::get('/thanks', [ThankController::class, 'reactView'])->name('Thanks.jsx')
 Route::get('/loginvua', [LoginVuaController::class, 'reactView'])->name('LoginVua.jsx');
 Route::get('/popup', [PopupController::class, 'reactView'])->name('Popup.jsx');
 
-// Route::get('/login', [AuthController::class, 'loginView'])->name('Login.jsx');
-// Route::get('/register', [AuthController::class, 'registerView'])->name('Register.jsx');
+Route::get('/login', [AuthController::class, 'loginView'])->name('Login.jsx');
+Route::get('/register', [AuthController::class, 'registerView'])->name('Register.jsx');
 Route::get('/confirm-email/{token}', [AuthController::class, 'confirmEmailView'])->name('ConfirmEmail.jsx');
 Route::get('/confirmation/{token}', [AuthController::class, 'loginView'])->name('confirmation');
 
