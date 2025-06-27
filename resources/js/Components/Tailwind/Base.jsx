@@ -12,9 +12,7 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
   //   };
   // }, []);
 
-  return <section style={{
-    backgroundImage: `linear-gradient(to right bottom, ${gradientStart}, ${gradientEnd})`
-  }}>
+  return <section className="text-[#21133C]">
     {/* <div className="fixed inset-0 backdrop-blur-sm bg-black/70 z-50 flex items-center justify-center min-h-screen w-full">
       <div className="text-center">
         <h2 className="text-4xl font-bold mb-4 text-white">En Mantenimiento</h2>
@@ -25,7 +23,7 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
     <main className="overflow-hidden min-h-[360px] relative">
       {children}
 
-      <div className="flex justify-end relative">
+      {/* <div className="flex justify-end relative">
         <div className="fixed bottom-[36px] z-[10] right-[18px] md:right-[25px] fixedWhastapp">
 
           <a href={`https://api.whatsapp.com/send?phone=${numWhatsApp?.description ?? ''}&text=${waMessage?.description ?? ''}`}
@@ -33,7 +31,7 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
             <img src='/images/img/WhatsApp.png' alt="whatsapp" className="w-20" />
           </a>
         </div>
-      </div>
+      </div> */}
     </main>
     {
       showFooter &&

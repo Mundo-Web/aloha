@@ -124,7 +124,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
         <fm.div 
           variants={fadeInUp}
           className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Plan Emprende</h2>
+          <h2 className="text-4xl font-bold mb-4">Plan Emprende</h2>
           <p className="text-xl text-gray-600">
             Quieres emprender y tienes una web, y no sabes por donde empezar, este es tu buen punto de partida
           </p>
@@ -159,7 +159,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
             </div>
           </fm.div>
           <fm.div variants={fadeInUp}>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Buenas razones para cambiar a AlohaPeru!</h2>
+            <h2 className="text-4xl font-bold mb-6">Buenas razones para cambiar a AlohaPeru!</h2>
             <p className="text-lg text-gray-600 mb-8">
               AlohaPerú ofrece tecnologías de alta calidad para que sus sitios web funcionen más rápido. Puede elegir cualquier versión de PHP, desde la 5.x hasta la 8.x, y usar APcache y LSCache, que, en combinación con el protocolo HTTP/2, garantizan un rendimiento web muy eficiente.
             </p>
@@ -208,7 +208,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           <fm.div 
             variants={fadeInUp}
             className='md:col-span-2'>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">El paquete elegido con mayor frecuencia</h2>
+            <h2 className="text-4xl font-bold mb-6">El paquete elegido con mayor frecuencia</h2>
             <p className="text-lg text-gray-600 mb-8">
               Apueste por la estabilidad y seguridad operacional y disfrute de servicios de hosting del más alto nivel.
             </p>
@@ -234,7 +234,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           <fm.div 
             variants={fadeInUp}
             className='md:col-span-3'>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Free migration</h2>
+            <h2 className="text-4xl font-bold mb-6">Free migration</h2>
             <p className="text-lg text-gray-600 mb-8">
               ¿Ya no estás satisfecho con tu proveedor de hosting actual? Pásate a AlohaPerú. No tienes que preocuparte por nada, y mucho menos, no necesitas conocimientos técnicos para hacerlo. Nuestros administradores migrarán tu sitio web lo antes posible y, lo más importante, lo harán de forma eficiente y simn costo adicional. Tu sitio web, correo electrónico y bases de datos funcionarán mucho más rápido que antes.
             </p>
@@ -273,7 +273,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           <fm.div 
             variants={fadeInUp}
             className='md:col-span-3'>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl font-bold mb-6">
               Brindamos servicios las 24 horas del día, los 365 días del año.
             </h2>
             <p className="text-lg text-gray-600 mb-8">
