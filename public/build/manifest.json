@@ -378,9 +378,9 @@
       "_index-B80Lgev0.js"
     ]
   },
-  "_swiper-!~{02G}~.js": {
+  "_swiper-!~{02H}~.js": {
     "file": "swiper.css",
-    "src": "_swiper-!~{02G}~.js"
+    "src": "_swiper-!~{02H}~.js"
   },
   "_swiper-react-DQ5P19HL.js": {
     "file": "assets/swiper-react-DQ5P19HL.js",
@@ -389,9 +389,9 @@
       "_index-B80Lgev0.js"
     ]
   },
-  "_tippy-!~{02A}~.js": {
+  "_tippy-!~{02B}~.js": {
     "file": "tippy.css",
-    "src": "_tippy-!~{02A}~.js"
+    "src": "_tippy-!~{02B}~.js"
   },
   "_tippy-react.esm-CHhA99mn.js": {
     "file": "assets/tippy-react.esm-CHhA99mn.js",
@@ -1851,7 +1851,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-BpChv1vD.js",
+    "file": "assets/SelectAPIFormGroup-B2ZCJ3xv.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -1883,7 +1883,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
+    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/Adminto/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2112,7 +2112,7 @@
     ]
   },
   "resources/js/Components/DataGrid.jsx": {
-    "file": "assets/DataGrid-uOWZuDyS.js",
+    "file": "assets/DataGrid-ClxeGkIS.js",
     "name": "DataGrid",
     "src": "resources/js/Components/DataGrid.jsx",
     "isEntry": true,
@@ -2414,7 +2414,7 @@
     ]
   },
   "resources/js/Components/Tailwind/DataGrid.jsx": {
-    "file": "assets/DataGrid-ClxeGkIS.js",
+    "file": "assets/DataGrid-uOWZuDyS.js",
     "name": "DataGrid",
     "src": "resources/js/Components/Tailwind/DataGrid.jsx",
     "isEntry": true,
@@ -2448,6 +2448,16 @@
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js"
     ]
   },
+  "resources/js/Components/Tailwind/Home/PlanCard.jsx": {
+    "file": "assets/PlanCard-uOWZuDyS.js",
+    "name": "PlanCard",
+    "src": "resources/js/Components/Tailwind/Home/PlanCard.jsx",
+    "isEntry": true,
+    "imports": [
+      "resources/js/Components/About/AboutHeader.jsx",
+      "_index-B80Lgev0.js"
+    ]
+  },
   "resources/js/Components/Tailwind/Table.jsx": {
     "file": "assets/Table-uOWZuDyS.js",
     "name": "Table",
@@ -2474,9 +2484,17 @@
     "file": "icon-server.svg",
     "src": "resources/js/Components/Tailwind/images/icon-server.svg"
   },
+  "resources/js/Components/Tailwind/images/infrastructure.png": {
+    "file": "infrastructure.png",
+    "src": "resources/js/Components/Tailwind/images/infrastructure.png"
+  },
   "resources/js/Components/Tailwind/images/reasons-to-change.svg": {
     "file": "reasons-to-change.svg",
     "src": "resources/js/Components/Tailwind/images/reasons-to-change.svg"
+  },
+  "resources/js/Components/Tailwind/images/top-package.png": {
+    "file": "top-package.png",
+    "src": "resources/js/Components/Tailwind/images/top-package.png"
   },
   "resources/js/Components/Test/Email.jsx": {
     "file": "assets/Email-DLJQnew_.js",
@@ -2508,10 +2526,10 @@
     ]
   },
   "resources/js/Components/Test/HairGoals.jsx": {
-    "file": "assets/HairGoals-uOWZuDyS.js",
+    "file": "assets/HairGoals-bgIArxrK.js",
     "name": "HairGoals",
     "src": "resources/js/Components/Test/HairGoals.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js"
@@ -2531,10 +2549,10 @@
     ]
   },
   "resources/js/Components/Test/HairType.jsx": {
-    "file": "assets/HairType-DuYlV-c2.js",
+    "file": "assets/HairType-CpPx52vs.js",
     "name": "HairType",
     "src": "resources/js/Components/Test/HairType.jsx",
-    "isDynamicEntry": true,
+    "isEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2554,10 +2572,10 @@
     ]
   },
   "resources/js/Components/Test/ScalpType.jsx": {
-    "file": "assets/ScalpType-BgZeougA.js",
+    "file": "assets/ScalpType-CpPx52vs.js",
     "name": "ScalpType",
     "src": "resources/js/Components/Test/ScalpType.jsx",
-    "isDynamicEntry": true,
+    "isEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js",
@@ -2705,7 +2723,7 @@
     ]
   },
   "resources/js/Components/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-B2ZCJ3xv.js",
+    "file": "assets/SelectAPIFormGroup-BpChv1vD.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -2727,7 +2745,7 @@
     ]
   },
   "resources/js/Components/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
+    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2902,7 +2920,7 @@
     ]
   },
   "resources/js/Home.jsx": {
-    "file": "assets/Home-CCkaJoA1.js",
+    "file": "assets/Home-SQ-t-1MC.js",
     "name": "Home",
     "src": "resources/js/Home.jsx",
     "isEntry": true,
@@ -2925,10 +2943,12 @@
       "tippy.css"
     ],
     "assets": [
+      "icon-server.svg",
       "bg-home.png",
       "bot-aloha.svg",
-      "icon-server.svg",
-      "reasons-to-change.svg"
+      "reasons-to-change.svg",
+      "infrastructure.png",
+      "top-package.png"
     ]
   },
   "resources/js/Login.jsx": {
