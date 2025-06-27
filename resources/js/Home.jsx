@@ -299,7 +299,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
             <fm.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3 rounded">
               Mira nuestros planes
             </fm.button>
           </div>
