@@ -1,14 +1,33 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Base from './Components/Tailwind/Base';
 import CreateReactScript from './Utils/CreateReactScript';
+import Base from './Components/Tailwind/Base';
+import PlanCard from './Components/Tailwind/Home/PlanCard';
+import { motion as fm } from 'framer-motion';
 
+// BEGIN: Images
 import BackgroundHome from './Components/Tailwind/images/bg-home.png'
 import BotAloha from './Components/Tailwind/images/bot-aloha.svg'
 import ReasonsToChange from './Components/Tailwind/images/reasons-to-change.svg'
 import Infrastructure from './Components/Tailwind/images/infrastructure.png'
 import TopPackage from './Components/Tailwind/images/top-package.png'
-import PlanCard from './Components/Tailwind/Home/PlanCard';
+import FreeMigration from './Components/Tailwind/images/free-migration.png'
+import Support247 from './Components/Tailwind/images/support-24-7.png'
+// END: Images
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
 
 const Home = ({ sliders, items, supplies, testimonies, popups }) => {
   const planes = [
@@ -44,7 +63,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
     },
     {
       name: "Premium",
-      description: "Para emprendedores que quieren tener un sitio web aún más avanzado",
+      description: "Para emprendedores que quieren tener un sitio web aún más avanzado", 
       price: "S/. 468.00",
       period: "anual",
       features: [
@@ -59,12 +78,22 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
       ],
     },
   ];
+
   return (<div className="min-h-screen bg-white">
-    <section className="text-white py-20 relative overflow-visible">
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      className="text-white py-20 relative overflow-visible">
       <img src={BackgroundHome} className='absolute h-full w-full top-0 object-cover object-bottom z-0 select-none' alt='Fondo AlohaPeru' />
       <div className="container relative mx-auto px-4 grid justify-center md:grid-cols-2 gap-12 items-center z-20 bg-transparent">
-        <div className='h-max'>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight md:text-start text-center"><u className='underline-offset-4'>El éxito</u> empieza con el dominio</h1>
+        <fm.div 
+          variants={fadeInUp}
+          className='h-max'>
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight md:text-start text-center">
+            <u className='underline-offset-4'>El éxito</u> empieza con el dominio
+          </h1>
           <p className="text-xl mb-8 opacity-90 md:text-start text-center">
             ¡Un dominio atractivo e inventivo es la base del éxito!
           </p>
@@ -75,154 +104,208 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
             </button>
           </div>
           <p className="text-sm mt-4 opacity-75 md:text-start text-center">Empieza desde S/. 45.00 al año</p>
-        </div>
-        <div className="relative h-full w-full">
-          <img src={BotAloha} className="w-10/12 z-30 -top-8 mx-auto block h-full object-contain">
-          </img>
-        </div>
+        </fm.div>
+        <fm.div 
+          variants={fadeInUp}
+          className="relative h-full w-full">
+          <img src={BotAloha} className="w-10/12 z-30 -top-8 mx-auto block h-full object-contain" />
+        </fm.div>
       </div>
-    </section>
+    </fm.section>
 
     {/* Pricing Section */}
-    <section className="py-20 bg-gray-50">
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={staggerContainer}
+      className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <fm.div 
+          variants={fadeInUp}
+          className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Plan Emprende</h2>
           <p className="text-xl text-gray-600">
             Quieres emprender y tienes una web, y no sabes por donde empezar, este es tu buen punto de partida
           </p>
-        </div>
+        </fm.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {planes.map((plan, index) => <PlanCard key={index} {...plan} />)}
-        </div>
+        <fm.div 
+          variants={staggerContainer}
+          className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {planes.map((plan, index) => (
+            <fm.div key={index} variants={fadeInUp}>
+              <PlanCard {...plan} />
+            </fm.div>
+          ))}
+        </fm.div>
       </div>
-    </section>
+    </fm.section>
 
     {/* Features Section */}
-    <section className="py-20">
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      className="py-20">
       <div className="container mx-auto px-4 pb-80">
         <div className="grid md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-          <div className="relative">
+          <fm.div 
+            variants={fadeInUp}
+            className="relative">
             <div className="w-full h-full mx-auto relative">
               <img src={ReasonsToChange} alt="" className='w-full h-full' />
             </div>
-          </div>
-          <div>
+          </fm.div>
+          <fm.div variants={fadeInUp}>
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Buenas razones para cambiar a AlohaPeru!</h2>
             <p className="text-lg text-gray-600 mb-8">
               AlohaPerú ofrece tecnologías de alta calidad para que sus sitios web funcionen más rápido. Puede elegir cualquier versión de PHP, desde la 5.x hasta la 8.x, y usar APcache y LSCache, que, en combinación con el protocolo HTTP/2, garantizan un rendimiento web muy eficiente.
             </p>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div>
+            <fm.div 
+              variants={staggerContainer}
+              className="grid grid-cols-2 gap-6">
+              <fm.div variants={fadeInUp}>
                 <a className="mdi mdi-database-sync mdi-48px text-blue-600 mr-2" />
                 <h3 className="font-semibold mb-2">Copias de seguridad</h3>
                 <p className="text-sm text-gray-600">
                   Servidor web muy rápido, que es LiteSpeed, que en combinación con OPcache y LSCache, permite una aceleración radical del funcionamiento de los sitios web.
                 </p>
-              </div>
+              </fm.div>
 
-              <div>
+              <fm.div variants={fadeInUp}>
                 <i className="mdi mdi-rocket-launch mdi-48px text-blue-600 mr-2" />
                 <h3 className="font-semibold mb-2">El sitio más rápido</h3>
                 <p className="text-sm text-gray-600">
                   InfHost le brinda la posibilidad de disfrutar de los beneficios de HTTP/2. Puede usar recursos para cargar en paralelo e incluso cargarlos ANTES de que el navegador los solicite.
                 </p>
-              </div>
-            </div>
-          </div>
+              </fm.div>
+            </fm.div>
+          </fm.div>
         </div>
       </div>
-    </section>
+    </fm.section>
 
     {/* Popular Package Section */}
-    <section className="py-20 bg-gray-50">
-      <div className="container  mx-auto px-4">
-        <div className='relative w-full aspect-video -mb-80 max-w-7xl mx-auto'>
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      className="py-20 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <fm.div 
+          variants={fadeInUp}
+          className='relative w-full aspect-video -mb-80 max-w-7xl mx-auto'>
           <img
             className='absolute left-0 right-0 w-full h-auto -translate-y-[400px]'
             src={Infrastructure}
             alt="Infraestructura InfHost segura y eficiente" />
-        </div>
+        </fm.div>
         <div className="grid md:grid-cols-3 gap-8 items-center max-w-7xl mx-auto">
-          <div className='md:col-span-2'>
+          <fm.div 
+            variants={fadeInUp}
+            className='md:col-span-2'>
             <h2 className="text-4xl font-bold text-gray-900 mb-6">El paquete elegido con mayor frecuencia</h2>
             <p className="text-lg text-gray-600 mb-8">
               Apueste por la estabilidad y seguridad operacional y disfrute de servicios de hosting del más alto nivel.
             </p>
-
-            {/* Team illustration placeholder */}
             <img src={TopPackage} alt='El paquete mas frecuente' />
-          </div>
+          </fm.div>
 
-          <div>
+          <fm.div variants={fadeInUp}>
             <PlanCard {...planes.find(plan => plan.popular)} />
-          </div>
+          </fm.div>
         </div>
       </div>
-    </section>
+    </fm.section>
 
     {/* Migration Section */}
-    <section className="py-20">
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      className="py-20">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div>
+        <div className="grid md:grid-cols-5 gap-16 items-center max-w-7xl mx-auto">
+          <fm.div 
+            variants={fadeInUp}
+            className='md:col-span-3'>
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Free migration</h2>
             <p className="text-lg text-gray-600 mb-8">
-              Nos encargamos de migrar tu sitio web actual sin costo adicional. Nuestro equipo técnico se asegura de
-              que la transición sea perfecta y sin interrupciones.
+              ¿Ya no estás satisfecho con tu proveedor de hosting actual? Pásate a AlohaPerú. No tienes que preocuparte por nada, y mucho menos, no necesitas conocimientos técnicos para hacerlo. Nuestros administradores migrarán tu sitio web lo antes posible y, lo más importante, lo harán de forma eficiente y simn costo adicional. Tu sitio web, correo electrónico y bases de datos funcionarán mucho más rápido que antes.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700">Solicitar migración gratuita</button>
-          </div>
+            <fm.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white">
+              Transfiere tu alojamiento, Ya!
+            </fm.button>
+          </fm.div>
 
-          <div className="relative">
-            <div className="w-80 h-80 mx-auto bg-gradient-to-br from-purple-400 to-pink-600 rounded-full flex items-center justify-center">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
-                <i className="w-10 h-10 mdi mdi-earth text-purple-500" />
-              </div>
-            </div>
-          </div>
+          <fm.div 
+            variants={fadeInUp}
+            className="relative md:col-span-2">
+            <img src={FreeMigration} alt="Brindamos migraciones gratis" className='w-full h-full object-contain object-center' />
+          </fm.div>
         </div>
       </div>
-    </section>
+    </fm.section>
 
     {/* Support Section */}
-    <section className="py-20 bg-gray-50">
+    <fm.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeInUp}
+      className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative">
-            <div className="w-80 h-80 mx-auto bg-gradient-to-br from-blue-400 to-green-500 rounded-lg flex items-center justify-center">
-              <i className="w-16 h-16 mdi mdi-headphones text-white" />
-            </div>
-          </div>
+        <div className="grid md:grid-cols-5 gap-16 items-center max-w-7xl mx-auto">
+          <fm.div 
+            variants={fadeInUp}
+            className="relative md:col-span-2">
+            <img src={Support247} alt="Brindamos soporte las 24 horas del dia" className='w-full h-full object-contain object-center' />
+          </fm.div>
 
-          <div>
+          <fm.div 
+            variants={fadeInUp}
+            className='md:col-span-3'>
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Brindamos servicios las 24 horas del día, los 365 días del año
+              Brindamos servicios las 24 horas del día, los 365 días del año.
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Nuestro equipo de soporte técnico está disponible en todo momento para resolver cualquier consulta o
-              problema que puedas tener.
+              El departamento de soporte está disponible 24/7, los 7 días de la semana, durante todo el año. Por lo tanto, no tiene que preocuparse de que su sitio web deje de funcionar repentinamente ni de tener que esperar varias horas para recibir una respuesta del soporte del operador actual.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700">Contactar soporte</button>
-          </div>
+            <fm.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white">
+              Contáctanos
+            </fm.button>
+          </fm.div>
         </div>
+        <fm.div 
+          variants={fadeInUp}
+          className='max-w-7xl mx-auto text-center mt-20 relative rounded-lg'>
+          <img src={BackgroundHome} className='absolute h-full w-full top-0 object-cover object-bottom z-0 select-none rounded-lg' alt='Fondo AlohaPeru' />
+          <div className='relative z-10 p-20 text-white'>
+            <h2 className="text-4xl font-bold mb-6">¿Te convencemos?</h2>
+            <p className="text-xl mb-8 mx-auto opacity-90">
+              Claro que lo hicimos, en lo que mas debes fijarte es en la calidad del servicio, ven y revisa nuestros planes
+            </p>
+            <fm.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+              Mira nuestros planes
+            </fm.button>
+          </div>
+        </fm.div>
       </div>
-    </section>
-
-    {/* Final CTA Section */}
-    <section className="py-20 bg-gradient-to-br from-[#2D1B69] to-[#4C3A9B] text-white">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold mb-6">¿Te convencemos?</h2>
-        <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-          Únete a miles de clientes satisfechos que confían en AlohaPeru para su presencia online
-        </p>
-        <button className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">Comenzar ahora</button>
-      </div>
-    </section>
-
-    {/* Footer */}
+    </fm.section>
   </div>);
 };
 

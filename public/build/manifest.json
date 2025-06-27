@@ -1821,7 +1821,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/InputFormGroup.jsx": {
-    "file": "assets/InputFormGroup-ClxeGkIS.js",
+    "file": "assets/InputFormGroup-uOWZuDyS.js",
     "name": "InputFormGroup",
     "src": "resources/js/Components/Adminto/form/InputFormGroup.jsx",
     "isEntry": true,
@@ -1831,7 +1831,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/PasswordFormGroup.jsx": {
-    "file": "assets/PasswordFormGroup-ClxeGkIS.js",
+    "file": "assets/PasswordFormGroup-uOWZuDyS.js",
     "name": "PasswordFormGroup",
     "src": "resources/js/Components/Adminto/form/PasswordFormGroup.jsx",
     "isEntry": true,
@@ -1841,7 +1841,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/QuillFormGroup.jsx": {
-    "file": "assets/QuillFormGroup-ClxeGkIS.js",
+    "file": "assets/QuillFormGroup-uOWZuDyS.js",
     "name": "QuillFormGroup",
     "src": "resources/js/Components/Adminto/form/QuillFormGroup.jsx",
     "isEntry": true,
@@ -1851,7 +1851,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-B2ZCJ3xv.js",
+    "file": "assets/SelectAPIFormGroup-BpChv1vD.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -1883,7 +1883,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
+    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/Adminto/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -1936,7 +1936,7 @@
     ]
   },
   "resources/js/Components/Blog/Filter.jsx": {
-    "file": "assets/Filter-uOWZuDyS.js",
+    "file": "assets/Filter-ClxeGkIS.js",
     "name": "Filter",
     "src": "resources/js/Components/Blog/Filter.jsx",
     "isEntry": true,
@@ -2019,7 +2019,7 @@
     ]
   },
   "resources/js/Components/Courses/Filter.jsx": {
-    "file": "assets/Filter-ClxeGkIS.js",
+    "file": "assets/Filter-uOWZuDyS.js",
     "name": "Filter",
     "src": "resources/js/Components/Courses/Filter.jsx",
     "isEntry": true,
@@ -2476,6 +2476,10 @@
     "file": "bot-aloha.svg",
     "src": "resources/js/Components/Tailwind/images/bot-aloha.svg"
   },
+  "resources/js/Components/Tailwind/images/free-migration.png": {
+    "file": "free-migration.png",
+    "src": "resources/js/Components/Tailwind/images/free-migration.png"
+  },
   "resources/js/Components/Tailwind/images/icon-aloha.svg": {
     "file": "icon-aloha.svg",
     "src": "resources/js/Components/Tailwind/images/icon-aloha.svg"
@@ -2491,6 +2495,10 @@
   "resources/js/Components/Tailwind/images/reasons-to-change.svg": {
     "file": "reasons-to-change.svg",
     "src": "resources/js/Components/Tailwind/images/reasons-to-change.svg"
+  },
+  "resources/js/Components/Tailwind/images/support-24-7.png": {
+    "file": "support-24-7.png",
+    "src": "resources/js/Components/Tailwind/images/support-24-7.png"
   },
   "resources/js/Components/Tailwind/images/top-package.png": {
     "file": "top-package.png",
@@ -2512,24 +2520,26 @@
     ]
   },
   "resources/js/Components/Test/Fragrance.jsx": {
-    "file": "assets/Fragrance-Dxjull-t.js",
+    "file": "assets/Fragrance-B9J_XAm4.js",
     "name": "Fragrance",
     "src": "resources/js/Components/Test/Fragrance.jsx",
-    "isEntry": true,
+    "isDynamicEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
+      "_tippy-react.esm-CHhA99mn.js",
       "_index-B80Lgev0.js",
       "_UserFormulasRest-CUuZlsfm.js",
       "_main-B2CtU6ez.js",
+      "_index-DO3Aws4m.js",
       "_BasicRest-Dr9i-95X.js",
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js"
     ]
   },
   "resources/js/Components/Test/HairGoals.jsx": {
-    "file": "assets/HairGoals-bgIArxrK.js",
+    "file": "assets/HairGoals-uOWZuDyS.js",
     "name": "HairGoals",
     "src": "resources/js/Components/Test/HairGoals.jsx",
-    "isDynamicEntry": true,
+    "isEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
       "_index-B80Lgev0.js"
@@ -2693,7 +2703,7 @@
     ]
   },
   "resources/js/Components/form/InputFormGroup.jsx": {
-    "file": "assets/InputFormGroup-uOWZuDyS.js",
+    "file": "assets/InputFormGroup-ClxeGkIS.js",
     "name": "InputFormGroup",
     "src": "resources/js/Components/form/InputFormGroup.jsx",
     "isEntry": true,
@@ -2703,7 +2713,7 @@
     ]
   },
   "resources/js/Components/form/PasswordFormGroup.jsx": {
-    "file": "assets/PasswordFormGroup-uOWZuDyS.js",
+    "file": "assets/PasswordFormGroup-ClxeGkIS.js",
     "name": "PasswordFormGroup",
     "src": "resources/js/Components/form/PasswordFormGroup.jsx",
     "isEntry": true,
@@ -2713,7 +2723,7 @@
     ]
   },
   "resources/js/Components/form/QuillFormGroup.jsx": {
-    "file": "assets/QuillFormGroup-uOWZuDyS.js",
+    "file": "assets/QuillFormGroup-ClxeGkIS.js",
     "name": "QuillFormGroup",
     "src": "resources/js/Components/form/QuillFormGroup.jsx",
     "isEntry": true,
@@ -2723,7 +2733,7 @@
     ]
   },
   "resources/js/Components/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-BpChv1vD.js",
+    "file": "assets/SelectAPIFormGroup-B2ZCJ3xv.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -2745,7 +2755,7 @@
     ]
   },
   "resources/js/Components/form/TextareaFormGroup.jsx": {
-    "file": "assets/TextareaFormGroup-uOWZuDyS.js",
+    "file": "assets/TextareaFormGroup-ClxeGkIS.js",
     "name": "TextareaFormGroup",
     "src": "resources/js/Components/form/TextareaFormGroup.jsx",
     "isEntry": true,
@@ -2920,23 +2930,24 @@
     ]
   },
   "resources/js/Home.jsx": {
-    "file": "assets/Home-SQ-t-1MC.js",
+    "file": "assets/Home-Db3GtnEF.js",
     "name": "Home",
     "src": "resources/js/Home.jsx",
     "isEntry": true,
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
-      "_index-B80Lgev0.js",
       "resources/js/Utils/ReactAppend.jsx",
-      "_Base-du4kT-WE.js",
       "_CreateReactScript-DH4VP3S3.js",
+      "_Base-du4kT-WE.js",
+      "_proxy-BWRiLWDQ.js",
+      "_index-B80Lgev0.js",
       "_index-DO3Aws4m.js",
-      "_main-B2CtU6ez.js",
+      "_index.esm-Cu-mVv1q.js",
       "____vite-browser-external_commonjs-proxy-C9-083JZ.js",
+      "_main-B2CtU6ez.js",
       "resources/js/Components/Tailwind/Base.jsx",
       "_index-B1nVdsa0.js",
-      "_index-CqrOtH36.js",
-      "_index.esm-Cu-mVv1q.js"
+      "_index-CqrOtH36.js"
     ],
     "css": [
       "swiper.css",
@@ -2948,7 +2959,9 @@
       "bot-aloha.svg",
       "reasons-to-change.svg",
       "infrastructure.png",
-      "top-package.png"
+      "top-package.png",
+      "free-migration.png",
+      "support-24-7.png"
     ]
   },
   "resources/js/Login.jsx": {
