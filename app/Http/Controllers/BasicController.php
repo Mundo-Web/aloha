@@ -116,7 +116,7 @@ class BasicController extends Controller
       'waMessage' => $waMessage,
       'global' => [
         'PUBLIC_RSA_KEY' => Controller::$PUBLIC_RSA_KEY,
-        'APP_NAME' => env('APP_NAME', 'Trasciende'),
+        'APP_NAME' => env('APP_NAME', 'AlohaPeru'),
         'APP_ENV' => env('APP_ENV'),
         'APP_URL' => env('APP_URL'),
         'WA_URL' => env('WA_URL'),
