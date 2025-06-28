@@ -11,7 +11,7 @@
     @viteReactRefresh
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>Panel - {{ env('APP_NAME', 'Vuá') }}</title>
+    <title>Panel | {{ env('APP_NAME', 'Vuá') }}</title>
     <link rel="shortcut icon" href="/assets/img/favicon.png" type="image/png">
 
     <meta name="csrf_token" content="{{ csrf_token() }}">
