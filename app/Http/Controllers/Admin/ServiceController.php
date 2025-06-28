@@ -11,4 +11,17 @@ class ServiceController extends BasicController
 {
     public $model = Service::class;
     public $reactView = 'Services';
+
+    public function beforeSave(Request $request)
+    {
+        $body = $request->all();
+
+        if (isset($body['attributes']) && is_array($body['attributes'])) {
+            $body['attributes'] = array_filter($body['attributes'], function ($value) {
+                return !is_null($value) && $value !== '';
+            });
+        }
+
+        return $body;
+    }
 }

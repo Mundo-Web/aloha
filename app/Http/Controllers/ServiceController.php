@@ -9,20 +9,15 @@ use Illuminate\Http\Request;
 
 class ServiceController extends BasicController
 {
-   public $model = Service::class;
-   public $reactView = 'Hostings';
-   public $reactRootView = 'public';
+    public $model = Service::class;
+    public $reactView = 'Hostings';
+    public $reactRootView = 'public';
 
-   public function beforeSave(Request $request)
-   {
-        $body = $request->all();
-
-        if (isset($body['attributes']) && is_array($body['attributes'])) {
-            $body['attributes'] = array_filter($body['attributes'], function($value) {
-                return !is_null($value) && $value !== '';
-            });
-        }
-
-        return $body;
-   }
+    public function setReactViewProperties(Request $request)
+    {
+        $services = Service::all();
+        return [
+            'services' => $services,
+        ];
+    }
 }

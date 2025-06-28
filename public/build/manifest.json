@@ -292,8 +292,8 @@
       "_index-RYns6xqu.js"
     ]
   },
-  "_support-24-7-d2wcbUtY.js": {
-    "file": "assets/support-24-7-d2wcbUtY.js",
+  "_support-24-7-BevqWjlw.js": {
+    "file": "assets/support-24-7-BevqWjlw.js",
     "name": "support-24-7",
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
@@ -304,10 +304,6 @@
       "_CreateReactScript-CXQforvT.js"
     ],
     "assets": [
-      "icon-server.svg",
-      "reasons-to-change.svg",
-      "infrastructure.png",
-      "top-package.png",
       "free-migration.png",
       "support-24-7.png"
     ]
@@ -1497,7 +1493,7 @@
     ]
   },
   "resources/js/Components/Adminto/Modal.jsx": {
-    "file": "assets/Modal-CeKzIQaI.js",
+    "file": "assets/Modal-B_CKjPyD.js",
     "name": "Modal",
     "src": "resources/js/Components/Adminto/Modal.jsx",
     "isEntry": true,
@@ -1571,7 +1567,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-B_CKjPyD.js",
+    "file": "assets/CheckboxFormGroup-CeKzIQaI.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -1611,7 +1607,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/PasswordFormGroup.jsx": {
-    "file": "assets/PasswordFormGroup-B_CKjPyD.js",
+    "file": "assets/PasswordFormGroup-CeKzIQaI.js",
     "name": "PasswordFormGroup",
     "src": "resources/js/Components/Adminto/form/PasswordFormGroup.jsx",
     "isEntry": true,
@@ -1715,7 +1711,7 @@
     ]
   },
   "resources/js/Components/Blog/Filter.jsx": {
-    "file": "assets/Filter-CeKzIQaI.js",
+    "file": "assets/Filter-B_CKjPyD.js",
     "name": "Filter",
     "src": "resources/js/Components/Blog/Filter.jsx",
     "isEntry": true,
@@ -1796,7 +1792,7 @@
     ]
   },
   "resources/js/Components/Courses/Filter.jsx": {
-    "file": "assets/Filter-B_CKjPyD.js",
+    "file": "assets/Filter-CeKzIQaI.js",
     "name": "Filter",
     "src": "resources/js/Components/Courses/Filter.jsx",
     "isEntry": true,
@@ -1888,7 +1884,7 @@
     ]
   },
   "resources/js/Components/DataGrid.jsx": {
-    "file": "assets/DataGrid-CeKzIQaI.js",
+    "file": "assets/DataGrid-B_CKjPyD.js",
     "name": "DataGrid",
     "src": "resources/js/Components/DataGrid.jsx",
     "isEntry": true,
@@ -2076,7 +2072,7 @@
     ]
   },
   "resources/js/Components/Modal.jsx": {
-    "file": "assets/Modal-B_CKjPyD.js",
+    "file": "assets/Modal-CeKzIQaI.js",
     "name": "Modal",
     "src": "resources/js/Components/Modal.jsx",
     "isEntry": true,
@@ -2191,7 +2187,7 @@
     ]
   },
   "resources/js/Components/Tailwind/DataGrid.jsx": {
-    "file": "assets/DataGrid-B_CKjPyD.js",
+    "file": "assets/DataGrid-CeKzIQaI.js",
     "name": "DataGrid",
     "src": "resources/js/Components/Tailwind/DataGrid.jsx",
     "isEntry": true,
@@ -2468,7 +2464,7 @@
     "isEntry": true
   },
   "resources/js/Components/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-CeKzIQaI.js",
+    "file": "assets/CheckboxFormGroup-B_CKjPyD.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -2488,7 +2484,7 @@
     ]
   },
   "resources/js/Components/form/PasswordFormGroup.jsx": {
-    "file": "assets/PasswordFormGroup-CeKzIQaI.js",
+    "file": "assets/PasswordFormGroup-B_CKjPyD.js",
     "name": "PasswordFormGroup",
     "src": "resources/js/Components/form/PasswordFormGroup.jsx",
     "isEntry": true,
@@ -2569,7 +2565,7 @@
     ]
   },
   "resources/js/Home.jsx": {
-    "file": "assets/Home-ggysrE7c.js",
+    "file": "assets/Home-BXZaM1i2.js",
     "name": "Home",
     "src": "resources/js/Home.jsx",
     "isEntry": true,
@@ -2577,7 +2573,7 @@
       "resources/js/Components/About/AboutHeader.jsx",
       "resources/js/Utils/ReactAppend.jsx",
       "_CreateReactScript-CXQforvT.js",
-      "_support-24-7-d2wcbUtY.js",
+      "_support-24-7-BevqWjlw.js",
       "_bg-home-kjIyf_ZI.js",
       "_index-RYns6xqu.js",
       "_index-CXU7o9CY.js",
@@ -2594,11 +2590,15 @@
       "tippy.css"
     ],
     "assets": [
-      "bot-aloha.svg"
+      "icon-server.svg",
+      "bot-aloha.svg",
+      "reasons-to-change.svg",
+      "infrastructure.png",
+      "top-package.png"
     ]
   },
   "resources/js/Hostings.jsx": {
-    "file": "assets/Hostings-CG6_kM2E.js",
+    "file": "assets/Hostings-BKp3MoHR.js",
     "name": "Hostings",
     "src": "resources/js/Hostings.jsx",
     "isEntry": true,
@@ -2606,7 +2606,7 @@
       "resources/js/Components/About/AboutHeader.jsx",
       "resources/js/Utils/ReactAppend.jsx",
       "_CreateReactScript-CXQforvT.js",
-      "_support-24-7-d2wcbUtY.js",
+      "_support-24-7-BevqWjlw.js",
       "_bg-home-kjIyf_ZI.js",
       "_index-RYns6xqu.js",
       "_index-CXU7o9CY.js",

@@ -29,55 +29,34 @@ const staggerContainer = {
   }
 };
 
-const Hostings = ({ }) => {
-  const planes = [
+const Hostings = ({ services }) => {
+  const features = [
     {
-      name: "Básico",
-      description: "Para principiantes y emprendedores que quieren tener un sitio web",
-      price: "S/. 350.00",
-      period: "anual",
-      features: [
-        "1 Sitio Web",
-        "10 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "1 Base de datos MySQL",
-        "Certificado SSL gratuito",
-        "Soporte 24/7",
-      ],
+      "icon": "mdi-language-php",
+      "name": "Multiple PHP versions to choose from",
+      "description": "Nisi pellentesque adipiscing vestibulum suspendisse elementum. Aliquet quam in at nulla quam purus."
     },
     {
-      name: "Avanzado",
-      description: "Para emprendedores que quieren tener un sitio web más avanzado",
-      price: "S/. 390.00",
-      period: "anual",
-      popular: true,
-      features: [
-        "5 Sitios Web",
-        "25 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "5 Bases de datos MySQL",
-        "Certificado SSL gratuito",
-        "Soporte prioritario 24/7",
-        "Backup automático",
-      ],
+      "icon": "mdi-domain",
+      "name": "Managing subdomains",
+      "description": "Suspendisse volutpat non adipiscing nulla dui egestas consectetur interdum adipiscing. Lorem."
     },
     {
-      name: "Premium",
-      description: "Para emprendedores que quieren tener un sitio web aún más avanzado",
-      price: "S/. 468.00",
-      period: "anual",
-      features: [
-        "Sitios Web ilimitados",
-        "50 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "Bases de datos ilimitadas",
-        "Certificado SSL gratuito",
-        "Soporte VIP 24/7",
-        "Backup automático",
-        "CDN gratuito",
-      ],
+      "icon": "mdi-chart-line",
+      "name": "Account load statistics",
+      "description": "Odio ultricies senectus sed risus risus consectetur duis. Vel nullam lectus arcu, massa ut. Lacinia."
     },
-  ];
+    {
+      "icon": "mdi-shield-check",
+      "name": "Anti-spam and anti-virus mail protection",
+      "description": "Arcu sodales augue porttitor tellus sollicitudin sed enim cursus. Velit amet ultrices adipiscing porttitor."
+    },
+    {
+      "icon": "mdi-view-dashboard",
+      "name": "DirectAdmin panel",
+      "description": "Iaculis quis egestas eu massa morbi in urna. Velit tellus cras tempor rhoncus id ornare sem mauris."
+    }
+  ]
 
   return (<div className="min-h-screen bg-white">
     <fm.section
@@ -114,7 +93,7 @@ const Hostings = ({ }) => {
           <thead>
             <tr>
               <th className="py-4 px-6"></th>
-              {planes.map((plan, index) => <th key={index} className='text-center py-4 px-6'>{plan.name}</th>)}
+              {services.map((plan, index) => <th key={index} className='text-center py-4 px-6'>{plan.name}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -130,53 +109,45 @@ const Hostings = ({ }) => {
       </div>
     </fm.section>
 
-    {/* Features Section */}
+    {/* Migration Section */}
     <fm.section
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
       variants={fadeInUp}
       className="py-20">
-      <div className="container mx-auto px-4 pb-80">
-        <div className="grid md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-5 gap-16 items-start max-w-7xl mx-auto">
           <fm.div
             variants={fadeInUp}
-            className="relative">
-            <div className="w-full h-full mx-auto relative">
-              <img src={ReasonsToChange} alt="" className='w-full h-full' />
-            </div>
-          </fm.div>
-          <fm.div variants={fadeInUp}>
-            <h2 className="text-4xl font-bold mb-6">Buenas razones para cambiar a AlohaPeru!</h2>
+            className='md:col-span-3'>
+            <h2 className="text-4xl font-bold mb-6">Common features of hosting accounts</h2>
             <p className="text-lg text-gray-600 mb-8">
-              AlohaPerú ofrece tecnologías de alta calidad para que sus sitios web funcionen más rápido. Puede elegir cualquier versión de PHP, desde la 5.x hasta la 8.x, y usar APcache y LSCache, que, en combinación con el protocolo HTTP/2, garantizan un rendimiento web muy eficiente.
+              Nunc, facilisis bibendum enim nunc, facilisi ac phasellus aenean ultricies. Orci velit nunc, adipiscing auctor. In amet, urna, neque, consectetur penatibus velit nunc nullam. Scelerisque suspendisse ut gravida aliquam habitant.
             </p>
+          </fm.div>
 
-            <fm.div
-              variants={staggerContainer}
-              className="grid grid-cols-2 gap-6">
-              <fm.div variants={fadeInUp}>
-                <a className="mdi mdi-database-sync mdi-48px text-blue-600 mr-2" />
-                <h3 className="font-semibold mb-2">Copias de seguridad</h3>
-                <p className="text-sm text-gray-600">
-                  Servidor web muy rápido, que es LiteSpeed, que en combinación con OPcache y LSCache, permite una aceleración radical del funcionamiento de los sitios web.
-                </p>
-              </fm.div>
-
-              <fm.div variants={fadeInUp}>
-                <i className="mdi mdi-rocket-launch mdi-48px text-blue-600 mr-2" />
-                <h3 className="font-semibold mb-2">El sitio más rápido</h3>
-                <p className="text-sm text-gray-600">
-                  InfHost le brinda la posibilidad de disfrutar de los beneficios de HTTP/2. Puede usar recursos para cargar en paralelo e incluso cargarlos ANTES de que el navegador los solicite.
-                </p>
-              </fm.div>
-            </fm.div>
+          <fm.div
+            variants={fadeInUp}
+            className="relative md:col-span-2">
+            <ul>
+              {
+                features.map((feature, index) => {
+                  return <li key={index} className='flex gap-6 mb-4'>
+                    <i className={`mdi mdi-36px ${feature.icon}`}></i>
+                    <div>
+                      <span className='font-bold block mb-1'>{feature.name}</span>
+                      <span className='block text-gray-600'>{feature.description}</span>
+                    </div>
+                  </li>
+                })
+              }
+            </ul>
           </fm.div>
         </div>
       </div>
     </fm.section>
 
-    {/* Popular Package Section */}
     <fm.section
       initial="hidden"
       whileInView="visible"
@@ -184,27 +155,28 @@ const Hostings = ({ }) => {
       variants={fadeInUp}
       className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <fm.div
-          variants={fadeInUp}
-          className='relative w-full aspect-video -mb-80 max-w-7xl mx-auto'>
-          <img
-            className='absolute left-0 right-0 w-full h-auto -translate-y-[400px]'
-            src={Infrastructure}
-            alt="Infraestructura InfHost segura y eficiente" />
-        </fm.div>
-        <div className="grid md:grid-cols-3 gap-8 items-center max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-5 gap-16 items-center max-w-7xl mx-auto">
           <fm.div
             variants={fadeInUp}
-            className='md:col-span-2'>
-            <h2 className="text-4xl font-bold mb-6">El paquete elegido con mayor frecuencia</h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Apueste por la estabilidad y seguridad operacional y disfrute de servicios de hosting del más alto nivel.
-            </p>
-            <img src={TopPackage} alt='El paquete mas frecuente' />
+            className="relative md:col-span-2">
+            <img src={Support247} alt="Brindamos soporte las 24 horas del dia" className='w-full h-full object-contain object-center' />
           </fm.div>
 
-          <fm.div variants={fadeInUp}>
-            <PlanCard {...planes.find(plan => plan.popular)} />
+          <fm.div
+            variants={fadeInUp}
+            className='md:col-span-3'>
+            <h2 className="text-4xl font-bold mb-6">
+              Professional service at the highest level
+            </h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Hosting is a basic service that allows not only to publish a website, but also an online application. It is a space on the server that operates around the clock. Our company offers the best solutions - with them the smooth and fast operation of your site will be ensured at all times.
+            </p>
+            <fm.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white">
+              Transfer your hosting
+            </fm.button>
           </fm.div>
         </div>
       </div>
@@ -222,15 +194,15 @@ const Hostings = ({ }) => {
           <fm.div
             variants={fadeInUp}
             className='md:col-span-3'>
-            <h2 className="text-4xl font-bold mb-6">Free migration</h2>
+            <h2 className="text-4xl font-bold mb-6">The solution you are looking for</h2>
             <p className="text-lg text-gray-600 mb-8">
-              ¿Ya no estás satisfecho con tu proveedor de hosting actual? Pásate a AlohaPerú. No tienes que preocuparte por nada, y mucho menos, no necesitas conocimientos técnicos para hacerlo. Nuestros administradores migrarán tu sitio web lo antes posible y, lo más importante, lo harán de forma eficiente y simn costo adicional. Tu sitio web, correo electrónico y bases de datos funcionarán mucho más rápido que antes.
+              The operation of hosting is based on a server owned by us. First, the user obtains a domain name, which is, in simplest terms, the address of his site. The next, equally important step is the configuration of nameservers for the new domain. This is extremely important, because it allows the browser to know which server it should connect to.
             </p>
             <fm.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white">
-              Transfiere tu alojamiento, Ya!
+              Contact us
             </fm.button>
           </fm.div>
 
@@ -251,33 +223,9 @@ const Hostings = ({ }) => {
       variants={fadeInUp}
       className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-5 gap-16 items-center max-w-7xl mx-auto">
-          <fm.div
-            variants={fadeInUp}
-            className="relative md:col-span-2">
-            <img src={Support247} alt="Brindamos soporte las 24 horas del dia" className='w-full h-full object-contain object-center' />
-          </fm.div>
-
-          <fm.div
-            variants={fadeInUp}
-            className='md:col-span-3'>
-            <h2 className="text-4xl font-bold mb-6">
-              Brindamos servicios las 24 horas del día, los 365 días del año.
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              El departamento de soporte está disponible 24/7, los 7 días de la semana, durante todo el año. Por lo tanto, no tiene que preocuparse de que su sitio web deje de funcionar repentinamente ni de tener que esperar varias horas para recibir una respuesta del soporte del operador actual.
-            </p>
-            <fm.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded text-white">
-              Contáctanos
-            </fm.button>
-          </fm.div>
-        </div>
         <fm.div
           variants={fadeInUp}
-          className='max-w-7xl mx-auto text-center mt-20 relative rounded-lg'>
+          className='max-w-7xl mx-auto text-center relative rounded-lg'>
           <img src={BackgroundHome} className='absolute h-full w-full top-0 object-cover object-bottom z-0 select-none rounded-lg' alt='Fondo AlohaPeru' />
           <div className='relative z-10 p-20 text-white'>
             <h2 className="text-4xl font-bold mb-6">¿Te convencemos?</h2>
