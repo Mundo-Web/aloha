@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import Header from "./Header";
 import Footer from "./Footer";
+import Global from "../../Utils/Global";
 
 const Base = ({ children, footerLinks, socials, terms, showFooter = true, numWhatsApp, waMessage, title }) => {
 
