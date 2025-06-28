@@ -4,7 +4,9 @@ import Footer from "./Footer";
 
 const Base = ({ children, footerLinks, socials, terms, showFooter = true, numWhatsApp, waMessage, title }) => {
 
-  document.body.title = title
+  useEffect(() => {
+    document.title = `${title} | ${Global.APP_NAME}`
+  }, [null])
   // useEffect(() => {
   //   document.body.style.overflow = 'hidden';
   //   return () => {

@@ -292,8 +292,8 @@
       "_index-RYns6xqu.js"
     ]
   },
-  "_support-24-7-B9-7-7gz.js": {
-    "file": "assets/support-24-7-B9-7-7gz.js",
+  "_support-24-7-3SSk83Qm.js": {
+    "file": "assets/support-24-7-3SSk83Qm.js",
     "name": "support-24-7",
     "imports": [
       "resources/js/Components/About/AboutHeader.jsx",
@@ -1571,7 +1571,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-CeKzIQaI.js",
+    "file": "assets/CheckboxFormGroup-B_CKjPyD.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/Adminto/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -1631,7 +1631,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-DYKugbDi.js",
+    "file": "assets/SelectAPIFormGroup-D_Fb_wbA.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/Adminto/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -1643,7 +1643,7 @@
     ]
   },
   "resources/js/Components/Adminto/form/SelectFormGroup.jsx": {
-    "file": "assets/SelectFormGroup-CeKzIQaI.js",
+    "file": "assets/SelectFormGroup-B_CKjPyD.js",
     "name": "SelectFormGroup",
     "src": "resources/js/Components/Adminto/form/SelectFormGroup.jsx",
     "isEntry": true,
@@ -1715,7 +1715,7 @@
     ]
   },
   "resources/js/Components/Blog/Filter.jsx": {
-    "file": "assets/Filter-CeKzIQaI.js",
+    "file": "assets/Filter-B_CKjPyD.js",
     "name": "Filter",
     "src": "resources/js/Components/Blog/Filter.jsx",
     "isEntry": true,
@@ -1796,7 +1796,7 @@
     ]
   },
   "resources/js/Components/Courses/Filter.jsx": {
-    "file": "assets/Filter-B_CKjPyD.js",
+    "file": "assets/Filter-CeKzIQaI.js",
     "name": "Filter",
     "src": "resources/js/Components/Courses/Filter.jsx",
     "isEntry": true,
@@ -1888,7 +1888,7 @@
     ]
   },
   "resources/js/Components/DataGrid.jsx": {
-    "file": "assets/DataGrid-B_CKjPyD.js",
+    "file": "assets/DataGrid-CeKzIQaI.js",
     "name": "DataGrid",
     "src": "resources/js/Components/DataGrid.jsx",
     "isEntry": true,
@@ -2191,7 +2191,7 @@
     ]
   },
   "resources/js/Components/Tailwind/DataGrid.jsx": {
-    "file": "assets/DataGrid-CeKzIQaI.js",
+    "file": "assets/DataGrid-B_CKjPyD.js",
     "name": "DataGrid",
     "src": "resources/js/Components/Tailwind/DataGrid.jsx",
     "isEntry": true,
@@ -2468,7 +2468,7 @@
     "isEntry": true
   },
   "resources/js/Components/form/CheckboxFormGroup.jsx": {
-    "file": "assets/CheckboxFormGroup-B_CKjPyD.js",
+    "file": "assets/CheckboxFormGroup-CeKzIQaI.js",
     "name": "CheckboxFormGroup",
     "src": "resources/js/Components/form/CheckboxFormGroup.jsx",
     "isEntry": true,
@@ -2508,7 +2508,7 @@
     ]
   },
   "resources/js/Components/form/SelectAPIFormGroup.jsx": {
-    "file": "assets/SelectAPIFormGroup-D_Fb_wbA.js",
+    "file": "assets/SelectAPIFormGroup-DYKugbDi.js",
     "name": "SelectAPIFormGroup",
     "src": "resources/js/Components/form/SelectAPIFormGroup.jsx",
     "isEntry": true,
@@ -2520,7 +2520,7 @@
     ]
   },
   "resources/js/Components/form/SelectFormGroup.jsx": {
-    "file": "assets/SelectFormGroup-B_CKjPyD.js",
+    "file": "assets/SelectFormGroup-CeKzIQaI.js",
     "name": "SelectFormGroup",
     "src": "resources/js/Components/form/SelectFormGroup.jsx",
     "isEntry": true,
@@ -2569,7 +2569,7 @@
     ]
   },
   "resources/js/Home.jsx": {
-    "file": "assets/Home-Bdb_ZIoy.js",
+    "file": "assets/Home-B8XsQ0T6.js",
     "name": "Home",
     "src": "resources/js/Home.jsx",
     "isEntry": true,
@@ -2577,7 +2577,7 @@
       "resources/js/Components/About/AboutHeader.jsx",
       "resources/js/Utils/ReactAppend.jsx",
       "_CreateReactScript-CXQforvT.js",
-      "_support-24-7-B9-7-7gz.js",
+      "_support-24-7-3SSk83Qm.js",
       "_bg-home-kjIyf_ZI.js",
       "_index-RYns6xqu.js",
       "_index-CXU7o9CY.js",
@@ -2598,7 +2598,7 @@
     ]
   },
   "resources/js/Hostings.jsx": {
-    "file": "assets/Hostings-B6HK-BQr.js",
+    "file": "assets/Hostings-C4kCeiVg.js",
     "name": "Hostings",
     "src": "resources/js/Hostings.jsx",
     "isEntry": true,
@@ -2606,7 +2606,7 @@
       "resources/js/Components/About/AboutHeader.jsx",
       "resources/js/Utils/ReactAppend.jsx",
       "_CreateReactScript-CXQforvT.js",
-      "_support-24-7-B9-7-7gz.js",
+      "_support-24-7-3SSk83Qm.js",
       "_bg-home-kjIyf_ZI.js",
       "_index-RYns6xqu.js",
       "_index-CXU7o9CY.js",
