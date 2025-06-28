@@ -11,11 +11,11 @@ import TextareaFormGroup from '@Adminto/form/TextareaFormGroup';
 import SwitchFormGroup from '@Adminto/form/SwitchFormGroup';
 import ImageFormGroup from '../Components/Adminto/form/ImageFormGroup';
 import Swal from 'sweetalert2';
-import ItemsRest from '../Actions/Admin/ItemsRest';
+import ServicesRest from '../Actions/Admin/ServicesRest';
 
-const itemsRest = new ItemsRest()
+const servicesRest = new ServicesRest()
 
-const Items = ({ }) => {
+const Services = ({ }) => {
   const gridRef = useRef()
   const modalRef = useRef()
 
@@ -61,7 +61,7 @@ const Items = ({ }) => {
       formData.append('image', file)
     }
 
-    const result = await itemsRest.save(formData)
+    const result = await servicesRest.save(formData)
     if (!result) return
 
     $(gridRef.current).dxDataGrid('instance').refresh()
@@ -69,19 +69,19 @@ const Items = ({ }) => {
   }
 
   const onFeaturedChange = async ({ id, value }) => {
-    const result = await itemsRest.boolean({ id, field: 'featured', value })
+    const result = await servicesRest.boolean({ id, field: 'featured', value })
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
   const onIsDefaultChange = async ({ id, value }) => {
-    const result = await itemsRest.boolean({ id, field: 'is_default', value })
+    const result = await servicesRest.boolean({ id, field: 'is_default', value })
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
   const onVisibleChange = async ({ id, value }) => {
-    const result = await itemsRest.boolean({ id, field: 'visible', value })
+    const result = await servicesRest.boolean({ id, field: 'visible', value })
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
@@ -96,13 +96,13 @@ const Items = ({ }) => {
       cancelButtonText: 'Cancelar'
     })
     if (!isConfirmed) return
-    const result = await itemsRest.delete(id)
+    const result = await servicesRest.delete(id)
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
   return (<>
-    <Table gridRef={gridRef} title='Items' rest={itemsRest}
+    <Table gridRef={gridRef} title='Servicios' rest={servicesRest}
       toolBar={(container) => {
         container.unshift({
           widget: 'dxButton', location: 'after',
@@ -226,7 +226,7 @@ const Items = ({ }) => {
 }
 
 CreateReactScript((el, properties) => {
-  createRoot(el).render(<BaseAdminto {...properties} title='Items'>
-    <Items {...properties} />
+  createRoot(el).render(<BaseAdminto {...properties} title='Servicios'>
+    <Services {...properties} />
   </BaseAdminto>);
 })

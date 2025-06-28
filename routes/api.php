@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\RepositoryController as AdminRepositoryController
 use App\Http\Controllers\Admin\SaleController as AdminSaleController;
 use App\Http\Controllers\Admin\SaleStatusController as AdminSaleStatusController;
 use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SupplyController as AdminSupplyController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -53,6 +54,7 @@ use App\Http\Controllers\MailingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\UserFormulaController;
@@ -135,6 +137,12 @@ Route::middleware('auth')->group(function () {
             Route::patch('/items/status', [AdminItemController::class, 'status']);
             Route::patch('/items/{field}', [AdminItemController::class, 'boolean']);
             Route::delete('/items/{id}', [AdminItemController::class, 'delete']);
+
+            Route::post('/services', [AdminServiceController::class, 'save']);
+            Route::post('/services/paginate', [AdminServiceController::class, 'paginate']);
+            Route::patch('/services/status', [AdminServiceController::class, 'status']);
+            Route::patch('/services/{field}', [AdminServiceController::class, 'boolean']);
+            Route::delete('/services/{id}', [AdminServiceController::class, 'delete']);
 
             Route::post('/colors', [AdminColorController::class, 'save']);
             Route::post('/colors/paginate', [AdminColorController::class, 'paginate']);

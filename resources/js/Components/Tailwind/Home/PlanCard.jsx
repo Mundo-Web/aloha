@@ -1,10 +1,19 @@
 import IconServer from '../images/icon-server.svg'
 
-const PlanCard = (plan) => {
-    return <div className={`relative ${plan.popular ? "ring-2 ring-blue-500" : ""} p-6 pb-14 bg-white rounded-lg shadow-xl`}>
-        {plan.popular && (
+const PlanCard = ({ mostFrequent, ...plan }) => {
+    return <div className={`relative ${plan.popular ? `ring-2 ${mostFrequent ? 'ring-orange-500' : 'ring-blue-500'}` : ""} h-full bg-white rounded-lg shadow-xl`}>
+        {plan.popular && !mostFrequent && (
             <span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full px-3 py-1">Más Popular</span>
         )}
+        {
+            mostFrequent &&
+            <span className='bg-orange-500 text-white block w-full text-center text-sm py-1 px-2 rounded-t-lg'>
+                <i className='mdi mdi-fire me-2'></i>
+                The most frequently chosen package
+            </span>
+        }
+        <div className='p-6 pb-14'>
+
         <div className="text-start">
             <div className='flex justify-between items-start'>
                 <div>
@@ -29,6 +38,7 @@ const PlanCard = (plan) => {
                 ))}
             </ul>
             <button className="left-6 right-6 absolute bottom-6 block px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded">Lo quiero</button>
+        </div>
         </div>
     </div>
 }

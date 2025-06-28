@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react'
 import React from 'react'
 import 'tippy.js/dist/tippy.css'
-import Logout from '../../Actions/Logout'
+import Logout from '../../actions/Logout'
 import MenuItem from '../MenuItem'
 import MenuItemContainer from '../MenuItemContainer'
 
@@ -77,15 +77,13 @@ const Menu = ({ session, hasRole, salesCount }) => {
                 <span className="badge bg-primary float-end">{salesCount}</span>
                 Pedidos
               </MenuItem>
-              <MenuItemContainer title='Productos y colores' icon='mdi mdi-cube'>
-                <MenuItem href="/admin/items" icon='mdi mdi-cube-send'>Items</MenuItem>
-                <MenuItem href="/admin/colors" icon='mdi mdi-palette-outline'>Colores</MenuItem>
-              </MenuItemContainer>
+              <MenuItem href="/admin/services" icon='mdi mdi-cogs'>Servicios</MenuItem>
+              <MenuItem href="/admin/features" icon='mdi mdi-feature-search'>Características</MenuItem>
               {/* <MenuItem href='/admin/gifts' icon='mdi mdi-gift' badge >
                 <span className="badge bg-primary float-end">Nuevo</span>
                 Gifts
               </MenuItem> */}
-              <MenuItemContainer title='Características' icon='mdi mdi-flask-round-bottom'>
+              {/* <MenuItemContainer title='Características' icon='mdi mdi-flask-round-bottom'>
                 <MenuItem href="/admin/supplies" icon='mdi mdi-flask-round-bottom'>Ingredientes</MenuItem>
                 <MenuItem href="/admin/formulas" icon='mdi mdi-flask'>Fórmulas</MenuItem>
                 <MenuItem href="/admin/fragrances" icon='mdi mdi-fleur-de-lis'>Fragancias</MenuItem>
@@ -100,14 +98,14 @@ const Menu = ({ session, hasRole, salesCount }) => {
               <MenuItemContainer title='Mailing' icon='mdi mdi-email-send'>
                 <MenuItem href="/admin/mailing/templates" icon='mdi mdi-calendar-month'>Plantillas</MenuItem>
                 <MenuItem href="/admin/mailing/history" icon='mdi mdi-history'>Historial</MenuItem>
-              </MenuItemContainer>
+              </MenuItemContainer> */}
               <MenuItem href="/admin/subscriptions" icon='mdi mdi-email-multiple'>Subscripciones</MenuItem>
               <li className="menu-title">Landing Page</li>
-              <MenuItem href="/admin/ads" icon='mdi mdi-google-ads'>Pop-ups</MenuItem>
-              <MenuItem href="/admin/sliders" icon='mdi mdi-page-layout-body'>Sliders</MenuItem>
-              <MenuItem href="/admin/about" icon='mdi mdi-briefcase'>Nosotros</MenuItem>
+              {/* <MenuItem href="/admin/ads" icon='mdi mdi-google-ads'>Pop-ups</MenuItem> */}
+              {/* <MenuItem href="/admin/sliders" icon='mdi mdi-page-layout-body'>Sliders</MenuItem> */}
+              {/* <MenuItem href="/admin/about" icon='mdi mdi-briefcase'>Nosotros</MenuItem> */}
               <MenuItem href="/admin/testimonies" icon='mdi mdi-forum'>Testimonios</MenuItem>
-              <MenuItem href="/admin/faqs" icon='mdi mdi-frequently-asked-questions'>FAQs</MenuItem>
+              {/* <MenuItem href="/admin/faqs" icon='mdi mdi-frequently-asked-questions'>FAQs</MenuItem> */}
               <MenuItem href="/admin/socials" icon='mdi mdi-web'>Redes Sociales</MenuItem>
               <li className="menu-title">Configuraciones</li>
               <MenuItem href="/admin/users" icon='mdi mdi-account-multiple'>Usuarios</MenuItem>

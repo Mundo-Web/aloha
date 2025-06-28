@@ -4,6 +4,8 @@ import ReactModal from "react-modal";
 import Tippy from "@tippyjs/react";
 import HtmlContent from "../../Utils/HtmlContent";
 
+import IconAloha from './images/icon-aloha.svg'
+
 ReactModal.setAppElement('#app')
 
 const Footer = ({ socials, terms, footerLinks = [] }) => {
@@ -18,16 +20,14 @@ const Footer = ({ socials, terms, footerLinks = [] }) => {
 
   return (
     <>
-      <footer className="bg-[#1A0B3D] text-white py-16">
+      <footer className="bg-[#26203C] text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-5 gap-8">
             <div className="md:col-span-3">
-              <div className="flex items-center space-x-2 mb-6">
-                <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                  <i className="w-5 h-5 mdi mdi-earth text-[#1A0B3D]" />
-                </div>
+              <a href="/" className="flex items-center space-x-2 mb-6">
+                <img src={IconAloha} alt="Icono AlohaPeru" className="w-8" />
                 <span className="text-xl font-bold">AlohaPeru</span>
-              </div>
+              </a>
               <p className="text-gray-300 mb-8"><a href="/" className="underline">alohaperu.com</a> es un servicio de alojamiento web económico, estable y de alta calidad.</p>
               <div className="mb-4">
                 <p className="text-lg font-bold">Únase a nuestro boletín</p>
@@ -121,15 +121,15 @@ const Footer = ({ socials, terms, footerLinks = [] }) => {
           </div>
           <div className="border-t border-gray-700 mt-12 pt-8 text-gray-400 grid md:grid-cols-2 gap-6 justify-center md:justify-between">
             <p>&copy; {new Date().getFullYear()} AlohaPerú. Todos los derechos reservados</p>
-              <ul className="flex justify-center md:justify-end space-x-6">
-                {socials.map(s => (
-                  <li key={s.correlative}>
-                    <a href={s.description} className="hover:text-white text-2xl">
-                      <i className={s.icon} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            <ul className="flex justify-center md:justify-end space-x-6">
+              {socials.map(s => (
+                <li key={s.correlative}>
+                  <a href={s.description} className="hover:text-white text-2xl">
+                    <i className={s.icon} />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </footer>

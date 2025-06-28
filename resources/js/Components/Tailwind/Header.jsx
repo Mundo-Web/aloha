@@ -54,10 +54,10 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
     <>
       <header className="bg-[#31294c] text-white sticky top-0 z-30">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <a href="/" className="flex items-center space-x-2">
             <img src={IconAloha} alt="Icono AlohaPeru" className="w-8" />
             <span className="text-xl font-bold">AlohaPeru</span>
-          </div>
+          </a>
           <nav className="hidden md:flex items-center space-x-6">
             <a href="/hostings" className="hover:text-blue-300">
               Hosting
@@ -82,8 +82,8 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
       </header>
       {
         showSlogan &&
-        <div className="bg-[#26203c] text-white text-sm">
-          <div className="flex justify-between container mx-auto px-4 py-4">
+        <div className="bg-[#26203c] text-white text-sm border-b border-white border-opacity-10">
+          <div className="flex justify-between container mx-auto px-4 py-3">
             <div>
               <b>New!</b> Superfast WordPress hosting
             </div>

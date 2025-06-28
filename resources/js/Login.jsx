@@ -8,6 +8,9 @@ import Swal from 'sweetalert2'
 import { GET } from 'sode-extend-react'
 import Global from './Utils/Global'
 
+import BackgroundHome from './Components/Tailwind/images/bg-home.png'
+import IconAloha from './Components/Tailwind/images/icon-aloha.svg'
+
 const Login = ({ }) => {
 
   document.title = `Login | ${Global.APP_NAME}`
@@ -55,22 +58,34 @@ const Login = ({ }) => {
   return (
     <>
       <div className="account-pages my-5">
+        <img
+          src={BackgroundHome}
+          style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            top: 0,
+            objectFit: 'cover',
+            objectPosition: 'bottom',
+            zIndex: 0,
+            userSelect: 'none'
+          }}
+          alt='Fondo AlohaPeru'
+        />
         <div className="container">
 
           <div className="row justify-content-center">
-            <div className="col-md-8 col-lg-6 col-xl-4">
+            <div className="col-md-8 col-lg-6 col-xl-4" style={{ zIndex: 20 }}>
               <div className="text-center mb-4">
                 <Link href="/" className='d-block mb-2'>
-                  <img src='/assets/img/logo-dark.svg' alt="" className="mx-auto" style={{ height: '40px' }} />
+                  <img src={IconAloha} alt="" className="mx-auto" style={{ height: '40px' }} />
                 </Link>
-                <b className='mb-4' style={{ color: '#404040', fontSize: 'x-large' }}>¡Ahora puedes ser una Vuá lover!</b>
-                <ul className='d-flex flex-wrap justify-content-center gap-x-4 gap-y-0 text-sm'>
-                  <li><i className='mdi mdi-circle-small'></i> Guarda tus fórmulas únicas</li>
-                  <li><i className='mdi mdi-circle-small'></i> Beneficios en tu cumpleaños</li>
-                  <li><i className='mdi mdi-circle-small'></i> Recibe las promos del mes primero</li>
-                </ul>
+                <b className='mb-4' style={{ color: '#ffffff', fontSize: 'x-large' }}>AlohaPeru</b>
               </div>
-              <div className="card">
+              <div className="card" style={{
+                  boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)'
+                }}>
                 <div className="card-body p-4">
                   <div className="text-center mb-4 d-flex align-items-center justify-content-evenly gap-1 border p-1" style={{
                     borderRadius: '8px'

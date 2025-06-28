@@ -38,6 +38,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\RepositoryController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
@@ -49,6 +50,7 @@ use App\Http\Controllers\MyAccountController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PopupController;
 use App\Http\Controllers\SendingHistoryController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestResultController;
@@ -67,6 +69,7 @@ use App\Http\Controllers\ThankController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'reactView'])->name('Home.jsx');
+Route::get('/hostings', [ServiceController::class, 'reactView'])->name('Hostings.jsx');
 Route::get('/plans', [PlanController::class, 'reactView'])->name('Plans.jsx');
 Route::get('/supplies', [SupplyController::class, 'reactView'])->name('Supplies.jsx');
 Route::get('/faqs', [FaqController::class, 'reactView'])->name('FAQs.jsx');
@@ -99,7 +102,7 @@ Route::middleware(['can:Admin', 'auth'])->prefix('admin')->group(function () {
     Route::get('/sales', [AdminSaleController::class, 'reactView'])->name('Admin/Sales.jsx');
     Route::get('/posts', [AdminPostController::class, 'reactView'])->name('Admin/Posts.jsx');
     Route::get('/items', [AdminItemController::class, 'reactView'])->name('Admin/Items.jsx');
-    Route::get('/services', [AdminItemController::class, 'reactView'])->name('Admin/Services.jsx');
+    Route::get('/services', [AdminServiceController::class, 'reactView'])->name('Admin/Services.jsx');
     Route::get('/colors', [AdminColorController::class, 'reactView'])->name('Admin/Colors.jsx');
     Route::get('/supplies', [AdminSupplyController::class, 'reactView'])->name('Admin/Supplies.jsx');
     Route::get('/gifts', [AdminSupplyController::class, 'reactView'])->name('Admin/Gifts.jsx');

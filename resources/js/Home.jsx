@@ -216,7 +216,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           </fm.div>
 
           <fm.div variants={fadeInUp}>
-            <PlanCard {...planes.find(plan => plan.popular)} />
+            <PlanCard {...planes.find(plan => plan.popular)} mostFrequent />
           </fm.div>
         </div>
       </div>
@@ -293,7 +293,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           <img src={BackgroundHome} className='absolute h-full w-full top-0 object-cover object-bottom z-0 select-none rounded-lg' alt='Fondo AlohaPeru' />
           <div className='relative z-10 p-20 text-white'>
             <h2 className="text-4xl font-bold mb-6">¿Te convencemos?</h2>
-            <p className="text-xl mb-8 mx-auto opacity-90">
+            <p className="text-xl mb-8 mx-auto opacity-75">
               Claro que lo hicimos, en lo que mas debes fijarte es en la calidad del servicio, ven y revisa nuestros planes
             </p>
             <fm.button 

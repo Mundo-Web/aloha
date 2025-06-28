@@ -4,9 +4,9 @@
     "display": "fullscreen",
     "scope": "/",
     "start_url": "/",
-    "name": "Vuá Cosmetics",
-    "short_name": "Vuá",
-    "description": "Creamos shampoos y acondiconadores 100%personalizados veganos, orgánicos, sin parabenos ni sulfatos y libres de crueldad animal.",
+    "name": "Aloha Peru",
+    "short_name": "Aloha Peru",
+    "description": "AlohaPerú ofrece tecnologías de alta calidad para que sus sitios web funcionen más rápido. Puede elegir cualquier versión de PHP, desde la 5.x hasta la 8.x, y usar APcache y LSCache, que, en combinación con el protocolo HTTP/2, garantizan un rendimiento web muy eficiente.",
     "icons": [
         {
             "src": "/icon-192x192.png",
