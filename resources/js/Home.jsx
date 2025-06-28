@@ -30,54 +30,6 @@ const staggerContainer = {
 };
 
 const Home = ({ services }) => {
-  const planes = [
-    {
-      name: "Básico",
-      description: "Para principiantes y emprendedores que quieren tener un sitio web",
-      price: "S/. 350.00",
-      period: "anual",
-      features: [
-        "1 Sitio Web",
-        "10 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "1 Base de datos MySQL",
-        "Certificado SSL gratuito",
-        "Soporte 24/7",
-      ],
-    },
-    {
-      name: "Avanzado",
-      description: "Para emprendedores que quieren tener un sitio web más avanzado",
-      price: "S/. 390.00",
-      period: "anual",
-      popular: true,
-      features: [
-        "5 Sitios Web",
-        "25 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "5 Bases de datos MySQL",
-        "Certificado SSL gratuito",
-        "Soporte prioritario 24/7",
-        "Backup automático",
-      ],
-    },
-    {
-      name: "Premium",
-      description: "Para emprendedores que quieren tener un sitio web aún más avanzado", 
-      price: "S/. 468.00",
-      period: "anual",
-      features: [
-        "Sitios Web ilimitados",
-        "50 GB de almacenamiento",
-        "Tráfico ilimitado",
-        "Bases de datos ilimitadas",
-        "Certificado SSL gratuito",
-        "Soporte VIP 24/7",
-        "Backup automático",
-        "CDN gratuito",
-      ],
-    },
-  ];
 
   return (<div className="min-h-screen bg-white">
     <fm.section 
