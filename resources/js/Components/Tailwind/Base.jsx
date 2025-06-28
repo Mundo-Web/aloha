@@ -2,9 +2,9 @@ import React, { useEffect } from "react"
 import Header from "./Header";
 import Footer from "./Footer";
 
-const Base = ({ children, footerLinks, session, socials, terms, showSlogan = true, showFooter = true, gradientStart = '#c4b8d3',
-  gradientEnd = '#f1d7c1', menuGradientEnd = '#dbc8c9', numWhatsApp, waMessage }) => {
+const Base = ({ children, footerLinks, socials, terms, showFooter = true, numWhatsApp, waMessage, title }) => {
 
+  document.body.title = title
   // useEffect(() => {
   //   document.body.style.overflow = 'hidden';
   //   return () => {
@@ -19,7 +19,7 @@ const Base = ({ children, footerLinks, session, socials, terms, showSlogan = tru
         <p className="text-gray-200 text-xl">Estamos realizando actualizaciones en el sistema. Por favor, vuelva más tarde.</p>
       </div>
     </div> */}
-    <Header showSlogan={showSlogan} gradientStart={gradientStart} menuGradientEnd={menuGradientEnd} session={session} />
+    <Header />
     <main className="overflow-hidden min-h-[360px] relative">
       {children}
 

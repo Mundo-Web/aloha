@@ -298,7 +298,7 @@ const Hostings = ({ }) => {
 };
 
 CreateReactScript((el, properties) => {
-  createRoot(el).render(<Base {...properties}>
+  createRoot(el).render(<Base {...properties} title='Hosting'>
     <Hostings {...properties} />
   </Base>);
 })

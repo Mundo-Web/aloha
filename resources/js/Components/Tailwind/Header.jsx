@@ -4,7 +4,7 @@ import { Local } from "sode-extend-react";
 import Logout from "../../actions/Logout";
 import IconAloha from './images/icon-aloha.svg'
 
-const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
+const Header = ({ ...props }) => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
   const btnToggleRef = useRef(null);
@@ -80,37 +80,33 @@ const Header = ({ session, showSlogan, gradientStart, menuGradientEnd }) => {
           </div>
         </div>
       </header>
-      {
-        showSlogan &&
-        <div className="bg-[#26203c] text-white text-sm border-b border-white border-opacity-10">
-          <div className="flex justify-between container mx-auto px-4 py-3">
-            <div>
-              <b>New!</b> Superfast WordPress hosting
-            </div>
-            <ul className="flex justify-center gap-4">
-              <li>
-                <a href="#" className="hover:text-blue-300">
-                  <span className="hidden md:inline">Ayuda</span>
-                  <i className="mdi mdi-help-circle md:hidden"></i>
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-300">
-                  <span className="hidden md:inline">FAQs</span>
-                  <i className="mdi mdi-frequently-asked-questions md:hidden"></i>
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-300">
-                  <span className="hidden md:inline">Contacto</span>
-                  <i className="mdi mdi-account-box md:hidden"></i>
-                </a>
-              </li>
-              {/* ENVÍO GRATIS A LIMA METROPOLITANA <br className="md:hidden" /><b>POR COMPRAS MAYORES A S/100</b> */}
-            </ul>
+      <div className="bg-[#26203c] text-white text-sm border-b border-white border-opacity-10">
+        <div className="flex justify-between container mx-auto px-4 py-3">
+          <div>
+            <b>New!</b> Superfast WordPress hosting
           </div>
+          <ul className="flex justify-center gap-4">
+            <li>
+              <a href="#" className="hover:text-blue-300">
+                <span className="hidden md:inline">Ayuda</span>
+                <i className="mdi mdi-help-circle md:hidden"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-blue-300">
+                <span className="hidden md:inline">FAQs</span>
+                <i className="mdi mdi-frequently-asked-questions md:hidden"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-blue-300">
+                <span className="hidden md:inline">Contacto</span>
+                <i className="mdi mdi-account-box md:hidden"></i>
+              </a>
+            </li>
+          </ul>
         </div>
-      }
+      </div>
     </>
   )
 };

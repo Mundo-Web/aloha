@@ -310,7 +310,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
 };
 
 CreateReactScript((el, properties) => {
-  createRoot(el).render(<Base {...properties}>
+  createRoot(el).render(<Base {...properties} title='Home'>
     <Home {...properties} />
   </Base>);
 })
