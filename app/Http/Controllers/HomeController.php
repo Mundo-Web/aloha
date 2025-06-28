@@ -7,6 +7,7 @@ use App\Models\Ad;
 use App\Models\Indicator;
 use App\Models\Item;
 use App\Models\Post;
+use App\Models\Service;
 use App\Models\Slider;
 use App\Models\Supply;
 use App\Models\Testimony;
@@ -19,18 +20,10 @@ class HomeController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $sliders = Slider::where('status', true)->where('visible', true)->get();
-        $testimonies = Testimony::where('status', true)->where('visible', true)->get();
-        $items = Item::where('featured', true)->where('visible', true)->where('status', true)->get();
-        $supplies = Supply::where('status', true)->where('visible', true)->where('featured', true)->get();
-        $popups = Ad::today();
+        $services = Service::all();
 
         return [
-            'sliders' => $sliders,
-            'testimonies' => $testimonies,
-            'items' => $items,
-            'supplies' => $supplies,
-            'popups' => $popups
+            'services' => $services,
         ];
     }
 }

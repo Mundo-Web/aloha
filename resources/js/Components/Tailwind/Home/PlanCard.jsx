@@ -24,16 +24,16 @@ const PlanCard = ({ mostFrequent, ...plan }) => {
             </div>
             <div className="mt-4">
                 <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-gray-600">/{plan.period}</span>
+                <span className="text-gray-600">/anual</span>
             </div>
         </div>
         <hr className='my-4 border' />
         <div >
             <ul className="space-y-3 mb-8">
-                {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center">
+                {plan.attributes.map((attribute, index) => (
+                    <li key={index} className="flex items-center">
                         <i className="w-5 h-5 mdi mdi-checkbox-marked-circle-outline text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
+                        <span className="text-sm">{attribute}</span>
                     </li>
                 ))}
             </ul>

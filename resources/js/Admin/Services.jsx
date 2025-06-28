@@ -9,9 +9,9 @@ import ReactAppend from '../Utils/ReactAppend';
 import DxButton from '../Components/dx/DxButton';
 import TextareaFormGroup from '@Adminto/form/TextareaFormGroup';
 import SwitchFormGroup from '@Adminto/form/SwitchFormGroup';
-import ImageFormGroup from '../Components/Adminto/form/ImageFormGroup';
 import Swal from 'sweetalert2';
-import ServicesRest from '../Actions/Admin/ServicesRest';
+import ServicesRest from '../actions/Admin/ServicesRest.js';
+import Tippy from '@tippyjs/react';
 
 const servicesRest = new ServicesRest()
 
@@ -24,9 +24,9 @@ const Services = ({ }) => {
   const nameRef = useRef()
   const descriptionRef = useRef()
   const priceRef = useRef()
-  const imageRef = useRef()
 
   const [isEditing, setIsEditing] = useState(false)
+  const [attributes, setAttributes] = useState([])
 
   const onModalOpen = (data) => {
     if (data?.id) setIsEditing(true)
@@ -36,8 +36,9 @@ const Services = ({ }) => {
     nameRef.current.value = data?.name ?? ''
     descriptionRef.current.value = data?.description ?? ''
     priceRef.current.value = data?.price ?? ''
-    imageRef.image.src = `/api/items/media/${data?.image}`
-    imageRef.current.value = null
+
+    const serviceAttrs = data?.attributes ?? []
+    setAttributes(serviceAttrs.length == 0 ? [''] : serviceAttrs)
 
     $(modalRef.current).modal('show')
   }
@@ -50,34 +51,14 @@ const Services = ({ }) => {
       name: nameRef.current.value,
       price: priceRef.current.value,
       description: descriptionRef.current.value,
+      attributes: attributes.filter(Boolean)
     }
 
-    const formData = new FormData()
-    for (const key in request) {
-      formData.append(key, request[key])
-    }
-    const file = imageRef.current.files[0]
-    if (file) {
-      formData.append('image', file)
-    }
-
-    const result = await servicesRest.save(formData)
+    const result = await servicesRest.save(request)
     if (!result) return
 
     $(gridRef.current).dxDataGrid('instance').refresh()
     $(modalRef.current).modal('hide')
-  }
-
-  const onFeaturedChange = async ({ id, value }) => {
-    const result = await servicesRest.boolean({ id, field: 'featured', value })
-    if (!result) return
-    $(gridRef.current).dxDataGrid('instance').refresh()
-  }
-
-  const onIsDefaultChange = async ({ id, value }) => {
-    const result = await servicesRest.boolean({ id, field: 'is_default', value })
-    if (!result) return
-    $(gridRef.current).dxDataGrid('instance').refresh()
   }
 
   const onVisibleChange = async ({ id, value }) => {
@@ -116,8 +97,8 @@ const Services = ({ }) => {
           widget: 'dxButton', location: 'after',
           options: {
             icon: 'plus',
-            text: 'Nuevo item',
-            hint: 'Nuevo item',
+            text: 'Nuevo registro',
+            hint: 'Nuevo registro',
             onClick: () => onModalOpen()
           }
         });
@@ -131,8 +112,8 @@ const Services = ({ }) => {
         {
           dataField: 'name',
           caption: 'Nombre',
-          width: '50%',
           cellTemplate: (container, { data }) => {
+            container.css('text-overflow', 'unset')
             ReactAppend(container, <p className='mb-0' style={{ width: '100%' }}>
               <b className='d-block'>{data.name}</b>
               <small className='text-wrap text-muted' style={{
@@ -154,33 +135,6 @@ const Services = ({ }) => {
           }
         },
         {
-          dataField: 'image',
-          caption: 'Imagen',
-          width: '60px',
-          allowFiltering: false,
-          cellTemplate: (container, { data }) => {
-            ReactAppend(container, <img src={`/api/items/media/${data.image}`} style={{ width: '40px', aspectRatio: 3 / 4, objectFit: 'cover', objectPosition: 'center', borderRadius: '4px' }} onError={e => e.target.src = '/assets/img/routine/conditioner.png'} />)
-          }
-        },
-        {
-          dataField: 'is_default',
-          caption: 'Preseleccionar',
-          dataType: 'boolean',
-          width: '120px',
-          cellTemplate: (container, { data }) => {
-            ReactAppend(container, <SwitchFormGroup checked={data.is_default} onChange={(e) => onIsDefaultChange({ id: data.id, value: e.target.checked })} />)
-          }
-        },
-        {
-          dataField: 'featured',
-          caption: 'Destacado',
-          dataType: 'boolean',
-          width: '120px',
-          cellTemplate: (container, { data }) => {
-            ReactAppend(container, <SwitchFormGroup checked={data.featured} onChange={(e) => onFeaturedChange({ id: data.id, value: e.target.checked })} />)
-          }
-        },
-        {
           dataField: 'visible',
           caption: 'Visible',
           dataType: 'boolean',
@@ -191,6 +145,7 @@ const Services = ({ }) => {
         },
         {
           caption: 'Acciones',
+          width: '120px',
           cellTemplate: (container, { data }) => {
             container.css('text-overflow', 'unset')
             container.append(DxButton({
@@ -210,14 +165,112 @@ const Services = ({ }) => {
           allowExporting: false
         }
       ]} />
-    <Modal modalRef={modalRef} title={isEditing ? 'Editar item' : 'Agregar item'} onSubmit={onModalSubmit} size='md'>
+    <Modal modalRef={modalRef} title={isEditing ? 'Editar servicio' : 'Agregar servicio'} onSubmit={onModalSubmit} size='lg' onClose={() => {
+      setAttributes([])
+      console.log('Modal cerrado')
+    }}>
       <div className='row' id='principal-container'>
         <input ref={idRef} type='hidden' />
-        <ImageFormGroup eRef={imageRef} label='Imagen' col='col-md-4' aspect={3 / 4} onError='/assets/img/routine/conditioner.png' />
-        <div className="col-md-8">
+        <div className="col-md-6" style={{ height: 'max-content' }}>
           <InputFormGroup eRef={nameRef} label='Nombre' required />
+          <TextareaFormGroup eRef={descriptionRef} label='Descripción' rows={3} />
           <InputFormGroup eRef={priceRef} label='Precio' type='number' step={0.01} required />
-          <TextareaFormGroup eRef={descriptionRef} label='Resumen' rows={3} required />
+        </div>
+        <div className='col-md-6' style={{ height: 'max-content' }}>
+          <div className="d-flex justify-content-between">
+            <label htmlFor="attributes-btn" className='form-label'>Atributos</label>
+            <Tippy content='Agregar atributo'>
+              <span
+                id='attributes-btn'
+                className="cursor-pointer"
+                onClick={() => {
+                  setAttributes([...attributes, ''])
+                  setTimeout(() => {
+                    const inputs = document.querySelectorAll('.sortable-attributes .form-control');
+                    inputs[inputs.length - 1]?.focus();
+                  }, 0);
+                }}
+              >
+                <i className="mdi mdi-plus me-1"></i>
+                Agregar
+              </span>
+            </Tippy>
+          </div>
+          <div className="sortable-attributes border p-2 rounded d-flex flex-column gap-1" style={{
+            height: 'calc(100% - 40px)',
+            minHeight: '200px',
+          }}>
+            {attributes.map((item, index) => (
+              <div
+                key={index}
+                class="input-group"
+                draggable
+                onDragStart={(e) => e.dataTransfer.setData('index', index)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const dragIndex = parseInt(e.dataTransfer.getData('index'));
+                  const dropIndex = index;
+
+                  const newAttributes = [...attributes];
+                  const [removed] = newAttributes.splice(dragIndex, 1);
+                  newAttributes.splice(dropIndex, 0, removed);
+
+                  setAttributes(newAttributes);
+                }}>
+                <span class="input-group-text" style={{ cursor: 'grab' }}>
+                  <i className='fa fa-grip-vertical'></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder={`Atributo ${index + 1}`}
+                  value={item}
+                  onChange={(e) => {
+                    const newAttributes = [...attributes];
+                    newAttributes[index] = e.target.value;
+                    setAttributes(newAttributes);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const newAttributes = [...attributes, ''];
+                      setAttributes(newAttributes);
+                      // Use setTimeout to wait for the new input to be rendered
+                      setTimeout(() => {
+                        const inputs = document.querySelectorAll('.sortable-attributes .form-control');
+                        inputs[inputs.length - 1]?.focus();
+                      }, 0);
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const pastedText = e.clipboardData.getData('text');
+                    const pastedLines = pastedText.split('\n').filter(line => line.trim());
+                    
+                    // Replace current attribute with first line
+                    const newAttributes = [...attributes];
+                    newAttributes[index] = pastedLines[0];
+                    
+                    // Add remaining lines as new attributes
+                    if (pastedLines.length > 1) {
+                      newAttributes.splice(index + 1, 0, ...pastedLines.slice(1));
+                    }
+                    
+                    setAttributes(newAttributes);
+                  }}
+                />
+                <Tippy content="Eliminar atributo">
+                  <button className='input-group-button btn btn-dark' type='button' onClick={() => {
+                    const newAttributes = attributes.filter((_, i) => i !== index);
+                    setAttributes(newAttributes);
+                  }}>
+                    <i className='fa fa-times'></i>
+                  </button>
+                </Tippy>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Modal>

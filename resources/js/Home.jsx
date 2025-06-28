@@ -29,7 +29,7 @@ const staggerContainer = {
   }
 };
 
-const Home = ({ sliders, items, supplies, testimonies, popups }) => {
+const Home = ({ services }) => {
   const planes = [
     {
       name: "Básico",
@@ -133,7 +133,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
         <fm.div 
           variants={staggerContainer}
           className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {planes.map((plan, index) => (
+          {services.map((plan, index) => (
             <fm.div key={index} variants={fadeInUp}>
               <PlanCard {...plan} />
             </fm.div>
@@ -216,7 +216,7 @@ const Home = ({ sliders, items, supplies, testimonies, popups }) => {
           </fm.div>
 
           <fm.div variants={fadeInUp}>
-            <PlanCard {...planes.find(plan => plan.popular)} mostFrequent />
+            <PlanCard {...services.find(plan => plan.popular || plan.id)} mostFrequent />
           </fm.div>
         </div>
       </div>
