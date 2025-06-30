@@ -1,3 +1,6 @@
+import em from '../../../Utils/em'
+import Number2Currency from '../../../Utils/Number2Currency'
+import SortByAfterField from '../../../Utils/SortByAfterField'
 import IconServer from '../images/icon-server.svg'
 
 const PlanCard = ({ mostFrequent, ...plan }) => {
@@ -14,31 +17,32 @@ const PlanCard = ({ mostFrequent, ...plan }) => {
         }
         <div className='p-6 pb-14'>
 
-        <div className="text-start">
-            <div className='flex justify-between items-start'>
-                <div>
-                    <div className="text-2xl font-bold mb-2">{plan.name}</div>
-                    <div className='text-sm text-gray-600 leading-tight'>{plan.description}</div>
+            <div className="text-start">
+                <div className='flex justify-between items-start'>
+                    <div>
+                        <div className="text-2xl font-bold mb-2">{plan.name}</div>
+                        <div className='text-sm text-gray-600 leading-tight'>{plan.description}</div>
+                    </div>
+                    <img src={IconServer} alt="" className='w-10' />
                 </div>
-                <img src={IconServer} alt="" className='w-10' />
+                <div className="mt-4">
+                    <span className="text-4xl font-bold">S/ {Number2Currency(plan.price)}</span>
+                    <span className="text-gray-600">/anual</span>
+                </div>
             </div>
-            <div className="mt-4">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-gray-600">/anual</span>
+            <hr className='my-4 border' />
+            <div>
+                <ul className="space-y-3 mb-8">
+                    {SortByAfterField(plan.features, 'after_feature').map((feature, index) => {
+                        const alias = feature.alias ? em(feature.alias?.replace('{}', feature.value)) : feature.name
+                        return <li key={index} className="flex items-center">
+                            <i className="w-5 h-5 mdi mdi-checkbox-marked-circle-outline text-green-500 mr-3 flex-shrink-0" />
+                            <span className="text-sm">{alias}</span>
+                        </li>
+                    })}
+                </ul>
+                <button className="left-6 right-6 absolute bottom-6 block px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded">Lo quiero</button>
             </div>
-        </div>
-        <hr className='my-4 border' />
-        <div >
-            <ul className="space-y-3 mb-8">
-                {plan.attributes.map((attribute, index) => (
-                    <li key={index} className="flex items-center">
-                        <i className="w-5 h-5 mdi mdi-checkbox-marked-circle-outline text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-sm">{attribute}</span>
-                    </li>
-                ))}
-            </ul>
-            <button className="left-6 right-6 absolute bottom-6 block px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded">Lo quiero</button>
-        </div>
         </div>
     </div>
 }

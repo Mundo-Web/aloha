@@ -17,11 +17,20 @@ class Service extends Model
         'name',
         'description',
         'price',
-        'attributes',
+        'price_first_year',
     ];
 
     protected $casts = [
-        'attributes' => 'array',
-        'price' => 'decimal:2'
+        'price' => 'decimal:2',
+        'price_first_year' => 'decimal:2'
     ];
+
+    public function features()
+    {
+        return $this->hasManyThrough(Feature::class, ServiceHasFeature::class, 'service_id', 'id', 'id', 'feature_id')
+            ->select([
+                'features.*',
+                'service_has_features.value',
+            ]);
+    }
 }

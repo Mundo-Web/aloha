@@ -1,0 +1,1 @@
+var r=Object.defineProperty;var i=(s,e,a)=>e in s?r(s,e,{enumerable:!0,configurable:!0,writable:!0,value:a}):s[e]=a;var t=(s,e,a)=>(i(s,typeof e!="symbol"?e+"":e,a),a);import{B as c}from"./BasicRest-C-QbPQV-.js";class p extends c{constructor(){super(...arguments);t(this,"path","admin/service-has-features")}}export{p as S};

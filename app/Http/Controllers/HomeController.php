@@ -20,7 +20,7 @@ class HomeController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $services = Service::all();
+        $services = Service::with(['features'])->get();
         return [
             'services' => $services,
         ];

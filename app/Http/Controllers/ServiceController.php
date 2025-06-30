@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
+use App\Models\Feature;
 use Illuminate\Http\Request;
 
 class ServiceController extends BasicController
@@ -15,9 +16,11 @@ class ServiceController extends BasicController
 
     public function setReactViewProperties(Request $request)
     {
-        $services = Service::all();
+        $servicesJpa = Service::with(['features'])->get();
+        $featuresJpa = Feature::where('visible', true)->get();
         return [
-            'services' => $services,
+            'services' => $servicesJpa,
+            'features' => $featuresJpa
         ];
     }
 }

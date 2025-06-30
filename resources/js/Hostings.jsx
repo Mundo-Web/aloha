@@ -12,6 +12,8 @@ import Infrastructure from './Components/Tailwind/images/infrastructure.png'
 import TopPackage from './Components/Tailwind/images/top-package.png'
 import FreeMigration from './Components/Tailwind/images/free-migration.png'
 import Support247 from './Components/Tailwind/images/support-24-7.png'
+import Number2Currency from './Utils/Number2Currency';
+import SortByAfterField from './Utils/SortByAfterField';
 // END: Images
 
 const fadeInUp = {
@@ -29,8 +31,11 @@ const staggerContainer = {
   }
 };
 
-const Hostings = ({ services }) => {
-  const features = [
+const Hostings = ({ services, features }) => {
+
+  const sortedServices = services.sort((a, b) => a.price - b.price)
+
+  const characteristics = [
     {
       "icon": "mdi-language-php",
       "name": "Multiple PHP versions to choose from",
@@ -89,14 +94,37 @@ const Hostings = ({ services }) => {
       <div className="container mx-auto px-4">
         <fm.table
           variants={staggerContainer}
-          className="w-full max-w-7xl mx-auto">
+          className="w-full mx-auto border-separate border-spacing-x-6">
           <thead>
-            <tr>
-              <th className="py-4 px-6"></th>
-              {services.map((plan, index) => <th key={index} className='text-center py-4 px-6'>{plan.name}</th>)}
+            <tr className='text-xl'>
+              <th className="p-6"></th>
+              {sortedServices.map((plan, index) => <th key={index} className={`p-6 text-center`}>{plan.name}</th>)}
             </tr>
           </thead>
           <tbody>
+            {
+              SortByAfterField(features, 'after_feature').map((feature, index) => {
+                return <tr className={`relative`}>
+                  <td className='px-6 py-3 rounded-s z-10'>
+                    {
+                      index % 2 == 1 &&
+                      <div className='absolute top-0 -left-2 bottom-0 right-2 bg-gray-200 rounded-xl z-0' />
+                    }
+                    <b className='block relative z-10'>{feature.name}</b>
+                    {
+                      feature.description &&
+                      <span className='block relative z-10 text-sm text-gray-600 -mt-1'>{feature.description}</span>
+                    }
+                  </td>
+                  {
+                    sortedServices.map((service, jndex) => {
+                      const shf = service.features.find(f => f.id == feature.id)
+                      return <td className={`relative z-10 px-6 py-3 ${jndex % 2 == 0 ? 'bg-white' : ''} ${index % 2 == 1 && 'bg-opacity-25'} ${jndex == services.length - 1 && 'rounded-e'} ${index == 0 && 'rounded-t-xl'} text-center`}>{shf?.value}</td>
+                    })
+                  }
+                </tr>
+              })
+            }
             {/* {planes.map((plan, index) => (
               <fm.tr key={index} variants={fadeInUp}>
                 <td className="py-4 px-6">
@@ -105,6 +133,19 @@ const Hostings = ({ services }) => {
               </fm.tr>
             ))} */}
           </tbody>
+          <tfoot>
+            <th className='p-6'></th>
+            {sortedServices.map((plan, index) => {
+              return <th key={index} className={`p-6 text-start ${index % 2 == 0 ? 'bg-white shadow-xl' : ''} rounded-b-xl`}>
+                <small>El primero año</small>
+                <div className="text-4xl font-bold">
+                  S/ {Number2Currency(plan.price_first_year)}
+                </div>
+                <small className='block text-gray-600 font-normal'>S/ {Number2Currency(plan.price)} después del 2do año</small>
+                <button className="block w-full mt-4 px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded">Lo quiero</button>
+              </th>
+            })}
+          </tfoot>
         </fm.table>
       </div>
     </fm.section>
@@ -132,7 +173,7 @@ const Hostings = ({ services }) => {
             className="relative md:col-span-2">
             <ul>
               {
-                features.map((feature, index) => {
+                characteristics.map((feature, index) => {
                   return <li key={index} className='flex gap-6 mb-4'>
                     <i className={`mdi mdi-36px ${feature.icon}`}></i>
                     <div>

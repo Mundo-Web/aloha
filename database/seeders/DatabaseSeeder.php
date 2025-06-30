@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
             BundleSeeder::class,
             CouponSeeder::class,
             StatusSeeder::class,
+            ServiceSeeder::class,
+            FeatureSeeder::class
         ]);
     }
 }

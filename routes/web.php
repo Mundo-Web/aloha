@@ -37,12 +37,14 @@ use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryCo
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\FeatureController as AdminFeatureController;
 use App\Http\Controllers\Admin\RepositoryController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\LoginVuaController;
 use App\Http\Controllers\MailingTemplateController;
@@ -103,6 +105,7 @@ Route::middleware(['can:Admin', 'auth'])->prefix('admin')->group(function () {
     Route::get('/posts', [AdminPostController::class, 'reactView'])->name('Admin/Posts.jsx');
     Route::get('/items', [AdminItemController::class, 'reactView'])->name('Admin/Items.jsx');
     Route::get('/services', [AdminServiceController::class, 'reactView'])->name('Admin/Services.jsx');
+    Route::get('/features', [AdminFeatureController::class, 'reactView'])->name('Admin/Features.jsx');
     Route::get('/colors', [AdminColorController::class, 'reactView'])->name('Admin/Colors.jsx');
     Route::get('/supplies', [AdminSupplyController::class, 'reactView'])->name('Admin/Supplies.jsx');
     Route::get('/gifts', [AdminSupplyController::class, 'reactView'])->name('Admin/Gifts.jsx');

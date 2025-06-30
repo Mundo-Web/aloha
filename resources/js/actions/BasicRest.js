@@ -155,7 +155,7 @@ class BasicRest {
         type: 'success'
       })
 
-      return true
+      return result?.data ?? true
     } catch (error) {
       Notify.add({
         icon: '/assets/img/favicon.png',

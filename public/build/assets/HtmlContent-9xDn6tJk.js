@@ -1,0 +1,1 @@
+import{j as o}from"./AboutHeader-DEdD30eg.js";import"./index-RYns6xqu.js";const m=({className:t,html:r,properties:n})=>o.jsx("div",{className:t,dangerouslySetInnerHTML:{__html:r},...n});export{m as H};

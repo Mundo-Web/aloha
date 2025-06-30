@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Classes\dxResponse;
 use App\Models\Aboutus;
 use App\Models\dxDataGrid;
+use App\Models\Feature;
 use App\Models\General;
 use App\Models\Sale;
 use App\Models\Social;
@@ -232,72 +233,72 @@ class BasicController extends Controller
 
   public function save(Request $request): HttpResponse|ResponseFactory
   {
-    $response = new Response();
-    try {
+    $response = Response::simpleTryCatch(function () use ($request) {
+      // Start database transaction
+      DB::beginTransaction();
+      
+      try {
+        $body = $this->beforeSave($request);
 
-      $body = $this->beforeSave($request);
+        $snake_case = Text::camelToSnakeCase(str_replace('App\\Models\\', '', $this->model));
 
-      $snake_case = Text::camelToSnakeCase(str_replace('App\\Models\\', '', $this->model));
+        foreach ($this->imageFields as $field) {
+          if (!$request->hasFile($field)) continue;
+          $full = $request->file($field);
+          $uuid = Crypto::randomUUID();
+          $ext = $full->getClientOriginalExtension();
+          $path = storage_path("app/images/{$snake_case}");
+          $filename = "{$uuid}.{$ext}";
 
-      foreach ($this->imageFields as $field) {
-        if (!$request->hasFile($field)) continue;
-        $full = $request->file($field);
-        $uuid = Crypto::randomUUID();
-        $ext = $full->getClientOriginalExtension();
-        $path = storage_path("app/images/{$snake_case}");
-        $filename = "{$uuid}.{$ext}";
-
-        if (!file_exists($path)) {
-          mkdir($path, 0777, true);
-        }
-
-        if ($this->useIntervention) {
-          $image = Image::make($full);
-          if ($image->width() > 1000 || $image->height() > 1000) {
-            $image->resize(1000, null, function ($constraint) {
-              $constraint->aspectRatio();
-              $constraint->upsize();
-            });
+          if (!file_exists($path)) {
+            mkdir($path, 0777, true);
           }
-          $image->save("{$path}/{$filename}"); // Guarda la imagen redimensionada
-        } else {
-          File::save("{$path}/{$filename}", file_get_contents($full));
+
+          if ($this->useIntervention) {
+            $image = Image::make($full);
+            if ($image->width() > 1000 || $image->height() > 1000) {
+              $image->resize(1000, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+              });
+            }
+            $image->save("{$path}/{$filename}"); // Guarda la imagen redimensionada
+          } else {
+            File::save("{$path}/{$filename}", file_get_contents($full));
+          }
+
+          $body[$field] = "{$uuid}.{$ext}";
         }
 
+        $isNew = false;
+        if (Text::startsWith($this->model, 'App\\Models\\')) {
+          $jpa = $this->model::find(isset($body['id']) ? $body['id'] : null);
 
-        $body[$field] = "{$uuid}.{$ext}";
-      }
-
-      $isNew = false;
-      if (Text::startsWith($this->model, 'App\\Models\\')) {
-        $jpa = $this->model::find(isset($body['id']) ? $body['id'] : null);
-
-        if (!$jpa) {
-          $jpa = $this->model::create($body);
-          $isNew = true;
+          if (!$jpa) {
+            $jpa = $this->model::create($body);
+            $isNew = true;
+          } else {
+            $jpa->update($body);
+          }
         } else {
-          $jpa->update($body);
+          $jpa = json_decode(json_encode($body));
         }
-      } else {
-        $jpa = json_decode(json_encode($body));
-      }
 
-      $data = $this->afterSave($request, $jpa, $isNew);
-      if ($data) {
-        $response->data = $data;
+        $data = $this->afterSave($request, $jpa, $isNew);
+        
+        // If everything is successful, commit the transaction
+        DB::commit();
+        
+        return $data;
+        
+      } catch (\Exception $e) {
+        // If any error occurs, rollback the transaction
+        DB::rollback();
+        throw $e;
       }
+    });
 
-      $response->status = 200;
-      $response->message = 'Operacion correcta';
-    } catch (\Throwable $th) {
-      $response->status = 400;
-      $response->message = $th->getMessage();
-    } finally {
-      return response(
-        $response->toArray(),
-        $response->status
-      );
-    }
+    return response($response->toArray(), $response->status);
   }
 
   public function afterSave(Request $request, object $jpa, bool $isNew)
@@ -350,10 +351,16 @@ class BasicController extends Controller
     }
   }
 
+  public function afterDelete(Request $request, Feature $jpa)
+  {
+    return null;
+  }
+
   public function delete(Request $request, string $id)
   {
-    $response = new Response();
-    try {
+    $response = Response::simpleTryCatch(function () use ($request, $id) {
+      $jpa = clone Feature::find($id);
+
       $deleted = $this->softDeletion
         ? $this->model::where('id', $id)
         ->update(['status' => null])
@@ -362,16 +369,9 @@ class BasicController extends Controller
 
       if (!$deleted) throw new Exception('No se ha eliminado ningun registro');
 
-      $response->status = 200;
-      $response->message = 'Operacion correcta';
-    } catch (\Throwable $th) {
-      $response->status = 400;
-      $response->message = $th->getMessage();
-    } finally {
-      return response(
-        $response->toArray(),
-        $response->status
-      );
-    }
+      $data = $this->afterDelete($request, $jpa);
+      return $data;
+    });
+    return response($response->toArray(), $response->status);
   }
 }

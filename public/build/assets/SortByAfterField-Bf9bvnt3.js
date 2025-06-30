@@ -1,0 +1,1 @@
+const i=(t,s="after_item")=>{const c=Object.fromEntries(t.map(e=>[e.id,e])),r=new Set,d=[],o=new Set;function a(e){if(!r.has(e.id)){if(e[s]){const n=c[e[s]];if(n)a(n);else{o.add(e);return}}d.push(e),r.add(e.id)}}t.forEach(e=>{a(e)});const f=Array.from(o).sort((e,n)=>new Date(e.created_at)-new Date(n.created_at)).filter(e=>!r.has(e.id));return[...d,...f]};export{i as S};

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import BaseAdminto from '@Adminto/Base';
 import CreateReactScript from '../Utils/CreateReactScript';
@@ -12,21 +12,26 @@ import SwitchFormGroup from '@Adminto/form/SwitchFormGroup';
 import Swal from 'sweetalert2';
 import ServicesRest from '../actions/Admin/ServicesRest.js';
 import Tippy from '@tippyjs/react';
+import SortByAfterField from '../Utils/SortByAfterField.js';
+import FeatureCard from '../Components/Adminto/Features/FeatureCard.jsx';
 
 const servicesRest = new ServicesRest()
 
-const Services = ({ }) => {
+const Services = ({ features }) => {
   const gridRef = useRef()
   const modalRef = useRef()
+  const featuresModalRef = useRef()
 
   // Form elements ref
   const idRef = useRef()
   const nameRef = useRef()
   const descriptionRef = useRef()
   const priceRef = useRef()
+  const priceFirstYearRef = useRef()
 
   const [isEditing, setIsEditing] = useState(false)
   const [attributes, setAttributes] = useState([])
+  const [dataLoaded, setDataLoaded] = useState(null)
 
   const onModalOpen = (data) => {
     if (data?.id) setIsEditing(true)
@@ -36,6 +41,7 @@ const Services = ({ }) => {
     nameRef.current.value = data?.name ?? ''
     descriptionRef.current.value = data?.description ?? ''
     priceRef.current.value = data?.price ?? ''
+    priceFirstYearRef.current.value = data?.price_first_year ?? ''
 
     const serviceAttrs = data?.attributes ?? []
     setAttributes(serviceAttrs.length == 0 ? [''] : serviceAttrs)
@@ -50,6 +56,7 @@ const Services = ({ }) => {
       id: idRef.current.value || undefined,
       name: nameRef.current.value,
       price: priceRef.current.value,
+      price_first_year: priceFirstYearRef.current.value,
       description: descriptionRef.current.value,
       attributes: attributes.filter(Boolean)
     }
@@ -81,6 +88,14 @@ const Services = ({ }) => {
     if (!result) return
     $(gridRef.current).dxDataGrid('instance').refresh()
   }
+
+  useEffect(() => {
+    if (dataLoaded) {
+      $(featuresModalRef.current).modal('show')
+    } else {
+      $(featuresModalRef.current).modal('hide')
+    }
+  }, [dataLoaded])
 
   return (<>
     <Table gridRef={gridRef} title='Servicios' rest={servicesRest}
@@ -129,9 +144,18 @@ const Services = ({ }) => {
           dataField: 'price',
           caption: 'Precio',
           dataType: 'number',
-          width: '100px',
+          width: '150px',
           cellTemplate: (container, { data }) => {
             container.text(`S/.${Number(data.price).toFixed(2)}`)
+          }
+        },
+        {
+          dataField: 'price_first_year',
+          caption: 'Precio 1er Año',
+          dataType: 'number',
+          width: '150px',
+          cellTemplate: (container, { data }) => {
+            container.text(`S/.${Number(data.price_first_year).toFixed(2)}`)
           }
         },
         {
@@ -145,7 +169,7 @@ const Services = ({ }) => {
         },
         {
           caption: 'Acciones',
-          width: '120px',
+          width: '200px',
           cellTemplate: (container, { data }) => {
             container.css('text-overflow', 'unset')
             container.append(DxButton({
@@ -153,6 +177,12 @@ const Services = ({ }) => {
               title: 'Editar',
               icon: 'fa fa-pen',
               onClick: () => onModalOpen(data)
+            }))
+            container.append(DxButton({
+              className: 'btn btn-xs btn-soft-dark',
+              title: 'Características',
+              icon: 'mdi mdi-feature-search',
+              onClick: () => setDataLoaded(data)
             }))
             container.append(DxButton({
               className: 'btn btn-xs btn-soft-danger',
@@ -165,18 +195,16 @@ const Services = ({ }) => {
           allowExporting: false
         }
       ]} />
-    <Modal modalRef={modalRef} title={isEditing ? 'Editar servicio' : 'Agregar servicio'} onSubmit={onModalSubmit} size='lg' onClose={() => {
-      setAttributes([])
-      console.log('Modal cerrado')
-    }}>
+    <Modal modalRef={modalRef} title={isEditing ? 'Editar servicio' : 'Agregar servicio'} onSubmit={onModalSubmit} onClose={() => setAttributes([])}>
       <div className='row' id='principal-container'>
         <input ref={idRef} type='hidden' />
-        <div className="col-md-6" style={{ height: 'max-content' }}>
-          <InputFormGroup eRef={nameRef} label='Nombre' required />
-          <TextareaFormGroup eRef={descriptionRef} label='Descripción' rows={3} />
-          <InputFormGroup eRef={priceRef} label='Precio' type='number' step={0.01} required />
-        </div>
-        <div className='col-md-6' style={{ height: 'max-content' }}>
+        {/* <div className="col-md-6" style={{ height: 'max-content' }}> */}
+        <InputFormGroup eRef={nameRef} label='Nombre' required />
+        <TextareaFormGroup eRef={descriptionRef} label='Descripción' rows={3} />
+        <InputFormGroup eRef={priceRef} label='Precio' type='number' col='col-md-6' step={0.01} required />
+        <InputFormGroup eRef={priceFirstYearRef} label='Precio 1er Año' type='number' col='col-md-6' step={0.01} required />
+        {/* </div> */}
+        {/* <div className='col-md-6' style={{ height: 'max-content' }}>
           <div className="d-flex justify-content-between">
             <label htmlFor="attributes-btn" className='form-label'>Atributos</label>
             <Tippy content='Agregar atributo'>
@@ -271,8 +299,23 @@ const Services = ({ }) => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
+    </Modal>
+    <Modal modalRef={featuresModalRef} title={`Características del servicio ${dataLoaded?.name}`} onClose={() => {
+      setDataLoaded(null)
+      $(gridRef.current).dxDataGrid('instance').refresh()
+    }} hideFooter>
+      <table className='table table-sm mb-0'>
+        <tbody>
+          {
+            SortByAfterField(features, 'after_feature').map((feature, index) => {
+              const shf = dataLoaded?.features?.find(f => f.id == feature.id)
+              return <FeatureCard key={index} feature={feature} service={dataLoaded} value={shf?.value ?? ''} />
+            })
+          }
+        </tbody>
+      </table>
     </Modal>
   </>
   )

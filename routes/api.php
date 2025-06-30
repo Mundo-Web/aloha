@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\BundleController as AdminBundleController;
 use App\Http\Controllers\Admin\ColorController as AdminColorController;
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
+use App\Http\Controllers\Admin\FeatureController as AdminFeatureController;
 use App\Http\Controllers\Admin\FormulaController as AdminFormulaController;
 use App\Http\Controllers\Admin\FragranceController as AdminFragranceController;
 use App\Http\Controllers\Admin\HistoryDetailController as AdminHistoryDetailController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Admin\SaleController as AdminSaleController;
 use App\Http\Controllers\Admin\SaleStatusController as AdminSaleStatusController;
 use App\Http\Controllers\Admin\SendingHistoryController as AdminSendingHistoryController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\ServiceHasFeatureController as AdminServiceHasFeatureController;
 use App\Http\Controllers\Admin\SupplyController as AdminSupplyController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -54,7 +56,6 @@ use App\Http\Controllers\MailingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SaleController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SupplyController;
 use App\Http\Controllers\UserFormulaController;
@@ -143,6 +144,15 @@ Route::middleware('auth')->group(function () {
             Route::patch('/services/status', [AdminServiceController::class, 'status']);
             Route::patch('/services/{field}', [AdminServiceController::class, 'boolean']);
             Route::delete('/services/{id}', [AdminServiceController::class, 'delete']);
+
+            Route::post('/features', [AdminFeatureController::class, 'save']);
+            Route::post('/features/paginate', [AdminFeatureController::class, 'paginate']);
+            Route::patch('/features/status', [AdminFeatureController::class, 'status']);
+            Route::patch('/features/{field}', [AdminFeatureController::class, 'boolean']);
+            Route::delete('/features/{id}', [AdminFeatureController::class, 'delete']);
+
+            Route::post('/service-has-features', [AdminServiceHasFeatureController::class, 'save']);
+            Route::delete('/service-has-features/{id}', [AdminServiceHasFeatureController::class, 'delete']);
 
             Route::post('/colors', [AdminColorController::class, 'save']);
             Route::post('/colors/paginate', [AdminColorController::class, 'paginate']);
